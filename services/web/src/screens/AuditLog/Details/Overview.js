@@ -1,7 +1,13 @@
 import { Link } from '@bedrockio/router';
-import { Anchor, Divider, Paper, Stack, Table, Text } from '@mantine/core';
 
 import Code from 'components/Code';
+
+import { Card, CardContent } from '@/components/ui/card';
+import {
+  DefinitionItem,
+  DefinitionList,
+} from '@/components/ui/definition-list';
+import { Separator } from '@/components/ui/separator';
 
 import { formatDateTime } from 'utils/date';
 
@@ -11,118 +17,99 @@ export default function Overview({ auditEntry }) {
   }
 
   return (
-    <Stack>
+    <div className="flex flex-col gap-4">
       <div>
-        <Text size="sm" fw="bold">
-          Details
-        </Text>
-        <Table variant="vertical" layout="fixed" withTableBorder>
-          <Table.Tbody>
-            <Table.Tr>
-              <Table.Th w={120}>Activity</Table.Th>
-              <Table.Td>{auditEntry.activity}</Table.Td>
-            </Table.Tr>
-            <Table.Tr>
-              <Table.Th w={120}>Actor</Table.Th>
-              <Table.Td>
-                <Anchor
-                  size="sm"
-                  component={Link}
-                  title={auditEntry.actor.email}
-                  to={`/users/${auditEntry.actor.id}`}>
-                  {auditEntry.actor.firstName} {auditEntry.actor.lastName}
-                </Anchor>
-              </Table.Td>
-            </Table.Tr>
-            {auditEntry.objectType && (
-              <Table.Tr>
-                <Table.Th w={120}>Object Type</Table.Th>
-                <Table.Td>{auditEntry.objectType}</Table.Td>
-              </Table.Tr>
-            )}
-            {auditEntry.objectId && (
-              <Table.Tr>
-                <Table.Th w={120}>Object Id</Table.Th>
-                <Table.Td>{auditEntry.objectId}</Table.Td>
-              </Table.Tr>
-            )}
-            {auditEntry?.owner?.name && (
-              <Table.Tr>
-                <Table.Th w={120}>Object Owner</Table.Th>
-                <Table.Td>
-                  <Anchor
-                    size="sm"
-                    component={Link}
-                    title={auditEntry.owner.name}
-                    to={`/users/${auditEntry.owner.id}`}>
-                    {auditEntry.owner.name}
-                  </Anchor>{' '}
-                  - {auditEntry.ownerType}
-                </Table.Td>
-              </Table.Tr>
-            )}
-            <Table.Tr>
-              <Table.Th w={120}>Method</Table.Th>
-              <Table.Td>{auditEntry.requestMethod}</Table.Td>
-            </Table.Tr>
-            <Table.Tr>
-              <Table.Th w={120}>Path</Table.Th>
-              <Table.Td>{auditEntry.requestUrl}</Table.Td>
-            </Table.Tr>
-            {auditEntry.sessionId && (
-              <Table.Tr>
-                <Table.Th w={120}> Session Id</Table.Th>
-                <Table.Td>{auditEntry.sessionId}</Table.Td>
-              </Table.Tr>
-            )}
-            <Table.Tr>
-              <Table.Th w={120}>Created At</Table.Th>
-              <Table.Td>{formatDateTime(auditEntry.createdAt)}</Table.Td>
-            </Table.Tr>
-          </Table.Tbody>
-        </Table>
+        <p className="mb-2 text-sm font-bold">Details</p>
+        <DefinitionList>
+          <DefinitionItem label="Activity">
+            {auditEntry.activity}
+          </DefinitionItem>
+          <DefinitionItem label="Actor">
+            <Link
+              className="text-primary hover:underline"
+              title={auditEntry.actor.email}
+              to={`/users/${auditEntry.actor.id}`}>
+              {auditEntry.actor.firstName} {auditEntry.actor.lastName}
+            </Link>
+          </DefinitionItem>
+          {auditEntry.objectType && (
+            <DefinitionItem label="Object Type">
+              {auditEntry.objectType}
+            </DefinitionItem>
+          )}
+          {auditEntry.objectId && (
+            <DefinitionItem label="Object Id">
+              {auditEntry.objectId}
+            </DefinitionItem>
+          )}
+          {auditEntry?.owner?.name && (
+            <DefinitionItem label="Object Owner">
+              <Link
+                className="text-primary hover:underline"
+                title={auditEntry.owner.name}
+                to={`/users/${auditEntry.owner.id}`}>
+                {auditEntry.owner.name}
+              </Link>{' '}
+              - {auditEntry.ownerType}
+            </DefinitionItem>
+          )}
+          <DefinitionItem label="Method">
+            {auditEntry.requestMethod}
+          </DefinitionItem>
+          <DefinitionItem label="Path">
+            {auditEntry.requestUrl}
+          </DefinitionItem>
+          {auditEntry.sessionId && (
+            <DefinitionItem label="Session Id">
+              {auditEntry.sessionId}
+            </DefinitionItem>
+          )}
+          <DefinitionItem label="Created At">
+            {formatDateTime(auditEntry.createdAt)}
+          </DefinitionItem>
+        </DefinitionList>
       </div>
 
       {auditEntry.attributes && (
         <>
-          <Divider />
-          <Paper>
-            <Text size="sm" fw="bold">
-              Attributes
-            </Text>
-            <Code language="json">
-              {JSON.stringify(auditEntry.attributes || {}, null, 2)}
-            </Code>
-          </Paper>
+          <Separator />
+          <Card>
+            <CardContent>
+              <p className="mb-2 text-sm font-bold">Attributes</p>
+              <Code language="json">
+                {JSON.stringify(auditEntry.attributes || {}, null, 2)}
+              </Code>
+            </CardContent>
+          </Card>
         </>
       )}
 
       {auditEntry.objectBefore && (
         <>
-          <Divider />
-          <Paper>
-            <Text size="sm" fw="bold">
-              Before
-            </Text>
-            <Code language="json">
-              {JSON.stringify(auditEntry.objectBefore || {}, null, 2)}
-            </Code>
-          </Paper>
+          <Separator />
+          <Card>
+            <CardContent>
+              <p className="mb-2 text-sm font-bold">Before</p>
+              <Code language="json">
+                {JSON.stringify(auditEntry.objectBefore || {}, null, 2)}
+              </Code>
+            </CardContent>
+          </Card>
         </>
       )}
       {auditEntry.objectAfter && (
         <>
-          <Divider />
-          <Paper>
-            <Text size="sm" fw="bold">
-              After
-            </Text>
-            <Code fullWith language="json">
-              {JSON.stringify(auditEntry.objectAfter || {}, null, 2)}
-            </Code>
-          </Paper>
+          <Separator />
+          <Card>
+            <CardContent>
+              <p className="mb-2 text-sm font-bold">After</p>
+              <Code language="json">
+                {JSON.stringify(auditEntry.objectAfter || {}, null, 2)}
+              </Code>
+            </CardContent>
+          </Card>
         </>
       )}
-    </Stack>
+    </div>
   );
 }

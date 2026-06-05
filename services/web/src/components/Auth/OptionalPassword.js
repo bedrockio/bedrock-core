@@ -1,4 +1,4 @@
-import { PasswordInput } from '@mantine/core';
+import { PasswordInput } from '@/components/ui/password-input';
 
 import { AUTH_TYPE } from 'utils/env';
 

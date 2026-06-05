@@ -1,21 +1,20 @@
 import { Link } from '@bedrockio/router';
 
-import {
-  Anchor,
-  Badge,
-  Button,
-  Group,
-  Loader,
-  Stack,
-  Table,
-  Text,
-} from '@mantine/core';
-
 import ErrorMessage from 'components/ErrorMessage';
 import PageHeader from 'components/PageHeader';
 import Protected from 'components/Protected';
 import Search from 'components/Search';
 import SearchFilters from 'components/Search/Filters';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 
 import { request } from 'utils/api';
 
@@ -31,112 +30,99 @@ export default function TemplateList() {
   }
 
   return (
-    <>
-      <Search.Provider onDataNeeded={onDataNeeded}>
-        {({ items: templates, reload, error, loading }) => {
-          return (
-            <Stack>
-              <PageHeader
-                title="Templates"
-                breadcrumbItems={[
-                  {
-                    href: '/',
-                    title: 'Home',
-                  },
-                  {
-                    title: 'Templates',
-                  },
-                ]}
-                rightSection={
-                  <>
-                    <Protected endpoint="templates" permission="create">
-                      <Button
-                        component={Link}
-                        variant="default"
-                        to="/templates/new">
-                        New Template
-                      </Button>
-                    </Protected>
-                  </>
-                }
-              />
+    <Search.Provider onDataNeeded={onDataNeeded}>
+      {({ items: templates, reload, error }) => {
+        return (
+          <div className="flex flex-col gap-4">
+            <PageHeader
+              title="Templates"
+              breadcrumbItems={[
+                { href: '/', title: 'Home' },
+                { title: 'Templates' },
+              ]}
+              rightSection={
+                <Protected endpoint="templates" permission="create">
+                  <Button asChild>
+                    <Link to="/templates/new">New Template</Link>
+                  </Button>
+                </Protected>
+              }
+            />
 
-              <Group justify="space-between">
-                <SearchFilters.Modal>
-                  <SearchFilters.Keyword name="keyword" label="Keyword" />
-                </SearchFilters.Modal>
-                {loading && <Loader size={'sm'} />}
+            <div className="flex items-center justify-between gap-4">
+              <SearchFilters.Modal>
+                <SearchFilters.Keyword name="keyword" label="Keyword" />
+              </SearchFilters.Modal>
 
-                <Group>
-                  <Search.Status />
-                  <SearchFilters.Keyword />
-                </Group>
-              </Group>
+              <div className="flex items-center gap-4">
+                <Search.Status />
+                <SearchFilters.Keyword />
+              </div>
+            </div>
 
-              <ErrorMessage error={error} />
+            <ErrorMessage error={error} />
 
-              <Table.ScrollContainer>
-                <Table stickyHeader striped>
-                  <Table.Thead>
-                    <Table.Tr>
-                      <Search.Header name="name">Name</Search.Header>
-                      <Search.Header name="channels">Channels</Search.Header>
-                      <Search.Header
-                        width={100}
-                        style={{
-                          textAlign: 'right',
-                        }}>
-                        Actions
-                      </Search.Header>
-                    </Table.Tr>
-                  </Table.Thead>
-                  <Table.Tbody>
-                    <Search.EmptyMessage>
-                      <Table.Tr>
-                        <Table.Td colSpan={3}>
-                          <Text p="md" fw="bold" ta="center">
-                            No templates found.
-                          </Text>
-                        </Table.Td>
-                      </Table.Tr>
-                    </Search.EmptyMessage>
-                    {templates.map((template) => {
-                      return (
-                        <Table.Tr key={template.id}>
-                          <Table.Td>
-                            <Anchor
-                              size="sm"
-                              component={Link}
-                              to={`/templates/${template.id}`}>
-                              {template.name}
-                            </Anchor>
-                          </Table.Td>
-                          <Table.Td>
-                            <Group gap="xs">
-                              {template.channels.map((channel) => {
-                                return <Badge key={channel}>{channel}</Badge>;
-                              })}
-                            </Group>
-                          </Table.Td>
-                          <Table.Td justify="flex-end">
-                            <Actions
-                              compact
-                              template={template}
-                              reload={reload}
-                              displayMode="list"
-                            />
-                          </Table.Td>
-                        </Table.Tr>
-                      );
-                    })}
-                  </Table.Tbody>
-                </Table>
-                <Search.Pagination />
-              </Table.ScrollContainer>
-            </Stack>
-          );
-        }}
-      </Search.Provider>
-    </>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <Search.Header name="name">Name</Search.Header>
+                  <Search.Header name="channels">Channels</Search.Header>
+                  <Search.Header width={100} className="text-center">
+                    Actions
+                  </Search.Header>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <Search.EmptyMessage>
+                  <TableRow>
+                    <TableCell colSpan={3}>
+                      <p className="py-4 text-center font-bold">
+                        No templates found.
+                      </p>
+                    </TableCell>
+                  </TableRow>
+                </Search.EmptyMessage>
+                {templates.map((template) => {
+                  return (
+                    <TableRow key={template.id}>
+                      <TableCell>
+                        <Link
+                          className="text-foreground no-underline hover:underline"
+                          to={`/templates/${template.id}`}>
+                          {template.name}
+                        </Link>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-wrap gap-1">
+                          {template.channels.map((channel) => {
+                            return (
+                              <Badge variant="secondary" key={channel}>
+                                {channel}
+                              </Badge>
+                            );
+                          })}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex justify-center">
+                          <Actions
+                            compact
+                            template={template}
+                            reload={reload}
+                            displayMode="list"
+                          />
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+
+            <Search.Pagination />
+          </div>
+        );
+      }}
+    </Search.Provider>
   );
 }

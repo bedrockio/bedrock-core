@@ -1,6 +1,23 @@
 import { useQuery } from '@bedrockio/router';
-import { Loader, Select } from '@mantine/core';
-import { useEffect, useRef } from 'react';
+import { ChevronDown, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+
+import { Button } from '@/components/ui/button';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { Spinner } from '@/components/ui/spinner';
+import { cn } from '@/lib/utils';
 
 import useSearchOptions from './useSearchOptions';
 
@@ -11,25 +28,27 @@ export default function NewSearchDropdownSingle(props) {
     return value?.id || value || '';
   }
 
-  function onClear() {
+  function getSelectedLabel() {
+    const selected = options.find((option) => {
+      return option.value === getValue();
+    });
+    return selected?.label || value?.name || '';
+  }
+
+  function onClear(evt) {
+    evt?.stopPropagation();
     clearOptions();
     props.onChange(name, null);
     loadOptionsDeferred.cancel();
   }
 
-  // NOTE: Mantine calls this both on blur and when an
-  // option is selected for some reason.
   function onSearchChange(keyword) {
-    const isFocused = ref.current === document.activeElement;
-
-    if (isFocused) {
-      if (keyword) {
-        if (keyword !== value?.name) {
-          loadOptionsDeferred(keyword);
-        }
-      } else {
-        clearOptions();
+    if (keyword) {
+      if (keyword !== value?.name) {
+        loadOptionsDeferred(keyword);
       }
+    } else {
+      clearOptions();
     }
   }
 
@@ -40,6 +59,7 @@ export default function NewSearchDropdownSingle(props) {
     if (option) {
       props.onChange(name, option.data);
     }
+    setOpen(false);
     loadOptionsDeferred.cancel();
   }
 
@@ -74,6 +94,7 @@ export default function NewSearchDropdownSingle(props) {
 
   const ref = useRef();
   const queryParams = useQuery();
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     loadParams();
@@ -88,39 +109,67 @@ export default function NewSearchDropdownSingle(props) {
     loadOptionsDeferred,
   } = useSearchOptions(props);
 
-  function render() {
-    return (
-      <Select
-        {...getRightProps()}
-        ref={ref}
-        label={label}
-        error={!!error}
-        onClear={onClear}
-        placeholder={placeholder}
-        onKeyDown={onKeyDown}
-        onSearchChange={onSearchChange}
-        onOptionSubmit={onOptionSubmit}
-        nothingFoundMessage="No results"
-        value={getValue()}
-        data={options}
-        allowDeselect={false}
-        withCheckIcon={false}
-        searchable
-      />
-    );
-  }
+  const selectedValue = getValue();
+  const selectedLabel = getSelectedLabel();
 
-  function getRightProps() {
-    if (loading) {
-      return {
-        rightSection: <Loader size="xs" />,
-      };
-    } else {
-      return {
-        clearable: true,
-      };
-    }
-  }
-
-  return render();
+  return (
+    <div className="flex flex-col gap-1.5">
+      {label && <label className="text-sm font-medium">{label}</label>}
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            ref={ref}
+            type="button"
+            variant="outline"
+            aria-invalid={!!error}
+            className={cn(
+              'h-9 w-full justify-between gap-2 font-normal',
+              error && 'border-destructive',
+            )}>
+            <span
+              className={cn(
+                'flex-1 truncate text-left',
+                !selectedValue && 'text-muted-foreground',
+              )}>
+              {selectedValue ? selectedLabel : placeholder}
+            </span>
+            {loading ? (
+              <Spinner className="size-4" />
+            ) : selectedValue ? (
+              <X className="size-4 opacity-50" onClick={onClear} />
+            ) : (
+              <ChevronDown className="size-4 opacity-50" />
+            )}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent
+          className="w-[var(--radix-popover-trigger-width)] p-0"
+          align="start">
+          <Command shouldFilter={false}>
+            <CommandInput
+              placeholder={placeholder}
+              onValueChange={onSearchChange}
+              onKeyDown={onKeyDown}
+            />
+            <CommandList>
+              {!loading && <CommandEmpty>No results</CommandEmpty>}
+              <CommandGroup>
+                {options.map((option) => (
+                  <CommandItem
+                    key={option.value}
+                    value={option.value}
+                    onSelect={() => onOptionSubmit(option.data.id)}>
+                    <span className="flex-1">{option.label}</span>
+                    {selectedValue === option.value && (
+                      <X className="size-3 opacity-50" />
+                    )}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
 }

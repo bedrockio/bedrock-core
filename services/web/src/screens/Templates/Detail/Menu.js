@@ -1,5 +1,4 @@
 import { Link } from '@bedrockio/router';
-import { Button } from '@mantine/core';
 import React from 'react';
 import { PiPencilSimpleBold } from 'react-icons/pi';
 
@@ -7,6 +6,8 @@ import { usePage } from 'stores/page';
 
 import PageHeader from 'components/PageHeader';
 import Protected from 'components/Protected';
+
+import { Button } from '@/components/ui/button';
 
 import Actions from '../Actions';
 
@@ -54,12 +55,11 @@ export default function TemplateMenu({ displayMode }) {
         rightSection={
           <React.Fragment>
             <Protected endpoint="templates" permission="update">
-              <Button
-                variant="default"
-                rightSection={<PiPencilSimpleBold />}
-                component={Link}
-                to={`/templates/${template.id}/edit`}>
-                Edit
+              <Button variant="outline" asChild>
+                <Link to={`/templates/${template.id}/edit`}>
+                  Edit
+                  <PiPencilSimpleBold />
+                </Link>
               </Button>
             </Protected>
 

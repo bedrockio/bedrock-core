@@ -1,9 +1,12 @@
-import { Alert, Group, Loader, Paper, Stack } from '@mantine/core';
 import { useEffect, useState } from 'react';
 
 import { usePage } from 'stores/page';
 
 import ErrorMessage from 'components/ErrorMessage';
+
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Card } from '@/components/ui/card';
+import { Spinner } from '@/components/ui/spinner';
 
 import { request } from 'utils/api';
 
@@ -46,10 +49,14 @@ export default function Preview() {
   return (
     <>
       <Menu />
-      <Stack mt="md" spacing="md">
+      <div className="mt-4 flex flex-col gap-4">
         <ErrorMessage error={error} />
-        {message && <Alert color="green">{message}</Alert>}
-        <Paper withBorder style={{ position: 'relative' }}>
+        {message && (
+          <Alert variant="success">
+            <AlertDescription>{message}</AlertDescription>
+          </Alert>
+        )}
+        <Card className="relative overflow-hidden p-0">
           {loading && (
             <div
               style={{
@@ -64,22 +71,22 @@ export default function Preview() {
                 backgroundColor: 'rgba(255, 255, 255, 0.8)',
                 zIndex: 1,
               }}>
-              <Loader />
+              <Spinner />
             </div>
           )}
           <iframe
             srcDoc={preview?.html}
             style={{ width: '100%', height: '500px', border: 'none' }}
           />
-        </Paper>
-        <Group justify="flex-end">
+        </Card>
+        <div className="flex justify-end">
           <SendTestButton
             channel="email"
             template={template}
             onSent={onTestSent}
           />
-        </Group>
-      </Stack>
+        </div>
+      </div>
     </>
   );
 }

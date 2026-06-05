@@ -1,7 +1,8 @@
 import { useLocation, useNavigate } from '@bedrockio/router';
-import { ActionIcon, Group, Text } from '@mantine/core';
 import { useEffect } from 'react';
 import { PiArrowClockwiseBold } from 'react-icons/pi';
+
+import { Button } from '@/components/ui/button';
 
 import { useClass } from 'helpers/bem';
 import PortalLayout from 'layouts/Portal';
@@ -92,7 +93,7 @@ export default function ApiDocs() {
   function renderActions() {
     if (canEditDocs()) {
       return (
-        <Group gap="xs" justify="flex-end" m="xs">
+        <div className="m-2 flex items-center justify-end gap-2">
           <EditButton />
           <Confirm
             title="Generate Documentation"
@@ -100,19 +101,22 @@ export default function ApiDocs() {
               return generateDocs();
             }}
             content={
-              <Text>
+              <p>
                 Generates OpenApi documentation based on schemas and route
                 validation. This will not overwrite current documentation.
-              </Text>
+              </p>
             }
             confirmButton="Generate Documentation"
             trigger={
-              <ActionIcon variant="default" title="Generate Documentation">
+              <Button
+                variant="outline"
+                size="icon"
+                title="Generate Documentation">
                 <PiArrowClockwiseBold />
-              </ActionIcon>
+              </Button>
             }
           />
-        </Group>
+        </div>
       );
     }
   }

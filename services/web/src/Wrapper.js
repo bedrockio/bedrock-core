@@ -1,9 +1,4 @@
-// TODO: remove?
-
-// part of integration with mantine
 import { BrowserRouter, Route, Routes } from '@bedrockio/router';
-import { MantineProvider } from '@mantine/core';
-import { Notifications } from '@mantine/notifications';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import React, { Suspense } from 'react';
@@ -12,13 +7,16 @@ import { HelmetProvider } from 'react-helmet-async';
 import SessionSwitch from 'helpers/SessionSwitch';
 import { SessionProvider, useSession } from 'stores/session';
 
+import { ThemeProvider } from '@/components/ThemeProvider';
+import { Toaster } from '@/components/ui/sonner';
+
 import LoadingScreen from 'screens/Loading';
 import Unsubscribe from 'screens/Unsubscribe';
 
 import 'utils/sentry';
 import { hasAccess } from 'utils/user';
 
-import { theme } from './theme';
+import './styles/globals.css';
 
 dayjs.extend(customParseFormat);
 
@@ -41,8 +39,8 @@ function AppSwitch() {
 export default function Wrapper() {
   return (
     <SessionProvider>
-      <MantineProvider theme={theme}>
-        <Notifications />
+      <ThemeProvider>
+        <Toaster />
         <BrowserRouter>
           <HelmetProvider>
             <SessionSwitch>
@@ -57,7 +55,7 @@ export default function Wrapper() {
             </SessionSwitch>
           </HelmetProvider>
         </BrowserRouter>
-      </MantineProvider>
+      </ThemeProvider>
     </SessionProvider>
   );
 }

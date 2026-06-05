@@ -1,7 +1,8 @@
 import { Link, useNavigate } from '@bedrockio/router';
-import { Button, Stack } from '@mantine/core';
 
 import PageHeader from 'components/PageHeader';
+
+import { Button } from '@/components/ui/button';
 
 import Form from './Form';
 
@@ -9,7 +10,7 @@ export default function NewUser() {
   const navigate = useNavigate();
 
   return (
-    <Stack gap="md">
+    <div className="flex flex-col gap-4">
       <PageHeader
         title="New User"
         breadcrumbItems={[
@@ -18,8 +19,8 @@ export default function NewUser() {
           { title: 'New User' },
         ]}
         rightSection={
-          <Button component={Link} to="/users" variant="default">
-            Back
+          <Button asChild variant="outline">
+            <Link to="/users">Back</Link>
           </Button>
         }
       />
@@ -29,6 +30,6 @@ export default function NewUser() {
           navigate(`/users/${user.id}`);
         }}
       />
-    </Stack>
+    </div>
   );
 }

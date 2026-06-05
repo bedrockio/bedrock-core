@@ -1,7 +1,8 @@
-import { Group, Stack, Text } from '@mantine/core';
-import { DateInput } from '@mantine/dates';
 import { isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
+
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 import { useSearch } from '../Context';
 
@@ -36,27 +37,25 @@ export default function DateRangeFilter(props) {
   }
 
   return (
-    <Stack gap={0}>
-      <Text size="sm" fw="500">
-        {label}
-      </Text>
-      <Group wrap="no-wrap">
-        <DateInput
+    <div className="flex flex-col gap-2">
+      <Label>{label}</Label>
+      <div className="flex items-center gap-2">
+        <Input
           name="gte"
-          value={filters[name]?.gte}
+          type="date"
+          value={filters[name]?.gte || ''}
           placeholder="Start"
-          onChange={(value) => onChange('gte', value)}
-          clearable
+          onChange={(evt) => onChange('gte', evt.target.value || null)}
         />
-        <DateInput
+        <Input
           name="lte"
-          value={filters[name]?.lte}
+          type="date"
+          value={filters[name]?.lte || ''}
           placeholder="End"
-          onChange={(value) => onChange('lte', value)}
-          clearable
+          onChange={(evt) => onChange('lte', evt.target.value || null)}
         />
-      </Group>
-    </Stack>
+      </div>
+    </div>
   );
 }
 

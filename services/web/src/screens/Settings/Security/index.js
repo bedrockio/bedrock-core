@@ -1,15 +1,3 @@
-import {
-  ActionIcon,
-  Button,
-  Divider,
-  Fieldset,
-  Grid,
-  Group,
-  LoadingOverlay,
-  Stack,
-  Text,
-} from '@mantine/core';
-
 import { useState } from 'react';
 import { PiTrashBold } from 'react-icons/pi';
 
@@ -19,6 +7,10 @@ import AppleDisableButton from 'components/Auth/Apple/DisableButton';
 import GoogleDisableButton from 'components/Auth/Google/DisableButton';
 import ErrorMessage from 'components/ErrorMessage';
 import Meta from 'components/Meta';
+
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { Spinner } from '@/components/ui/spinner';
 
 import { createPasskey, removePasskey } from 'utils/auth/passkey';
 import { formatDate, fromNow } from 'utils/date';
@@ -108,89 +100,92 @@ export default function Security() {
   const { loading, error } = state;
 
   return (
-    <Stack>
+    <div className="flex flex-col gap-4">
       <Meta title="Security" />
       <Menu />
-      <div style={{ position: 'relative' }}>
-        <LoadingOverlay visible={loading} />
-        <Grid gutter="xl">
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <Stack>
-              <Fieldset legend="Passkey" variant="unstyled">
-                <Stack gap="xs">
-                  {user.authenticators
-                    .filter((authenticator) => authenticator.type === 'passkey')
-                    .map((passkey) => {
-                      const { id, name, createdAt, lastUsedAt } = passkey;
-                      return (
-                        <Group justify="space-between" align="center" key={id}>
-                          <Stack gap="0">
-                            <Text size="sm">{name}</Text>
-                            <Text size="sm">
-                              Added on {formatDate(createdAt)} | Last used{' '}
-                              {fromNow(lastUsedAt)}
-                            </Text>
-                          </Stack>
-                          <ActionIcon
-                            title="Delete"
-                            variant="transparent"
-                            loading={loading}
-                            disabled={loading}
-                            onClick={() => deletePasskey(passkey)}>
-                            <PiTrashBold />
-                          </ActionIcon>
-                        </Group>
-                      );
-                    })}
-                  <Group>
-                    <Button
-                      size="sm"
-                      variant="default"
-                      onClick={onCreatePasskeyClick}>
-                      Add Passkey
-                    </Button>
-                  </Group>
-                </Stack>
-              </Fieldset>
-              <Fieldset legend="Two-factor authentication" variant="unstyled">
-                <TwoFactorAuthentication />
-              </Fieldset>
-              <Fieldset legend="Sign-in with" variant="unstyled">
-                <ErrorMessage error={error} />
-
-                <Text size="sm" fw="bold">
-                  Google
-                </Text>
-                <div>
-                  {hasAuthenticator('google') ? (
-                    <GoogleDisableButton onDisabled={onGoogleDisabled} />
-                  ) : (
-                    <Text size="sm">Sign in with Google to enable.</Text>
-                  )}
+      <div className="relative">
+        {loading && (
+          <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/60">
+            <Spinner className="size-6" />
+          </div>
+        )}
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+          <div className="flex flex-col gap-4">
+            <fieldset>
+              <legend className="mb-2 text-sm font-medium">Passkey</legend>
+              <div className="flex flex-col gap-2">
+                {user.authenticators
+                  .filter((authenticator) => authenticator.type === 'passkey')
+                  .map((passkey) => {
+                    const { id, name, createdAt, lastUsedAt } = passkey;
+                    return (
+                      <div
+                        className="flex items-center justify-between"
+                        key={id}>
+                        <div className="flex flex-col gap-0">
+                          <span className="text-sm">{name}</span>
+                          <span className="text-sm">
+                            Added on {formatDate(createdAt)} | Last used{' '}
+                            {fromNow(lastUsedAt)}
+                          </span>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          title="Delete"
+                          disabled={loading}
+                          onClick={() => deletePasskey(passkey)}>
+                          <PiTrashBold />
+                        </Button>
+                      </div>
+                    );
+                  })}
+                <div className="flex">
+                  <Button variant="outline" onClick={onCreatePasskeyClick}>
+                    Add Passkey
+                  </Button>
                 </div>
+              </div>
+            </fieldset>
+            <fieldset>
+              <legend className="mb-2 text-sm font-medium">
+                Two-factor authentication
+              </legend>
+              <TwoFactorAuthentication />
+            </fieldset>
+            <fieldset>
+              <legend className="mb-2 text-sm font-medium">Sign-in with</legend>
+              <ErrorMessage error={error} />
 
-                <Divider my="md" />
+              <p className="text-sm font-bold">Google</p>
+              <div>
+                {hasAuthenticator('google') ? (
+                  <GoogleDisableButton onDisabled={onGoogleDisabled} />
+                ) : (
+                  <p className="text-sm">Sign in with Google to enable.</p>
+                )}
+              </div>
 
-                <Text size="sm" fw="bold">
-                  Apple
-                </Text>
-                <div>
-                  {hasAuthenticator('apple') ? (
-                    <AppleDisableButton onDisabled={onAppleDisabled} />
-                  ) : (
-                    <Text size="sm">Sign in with Apple to enable.</Text>
-                  )}
-                </div>
-              </Fieldset>
-            </Stack>
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <Fieldset mt="md" legend="Sessions" variant="unstyled">
+              <Separator className="my-4" />
+
+              <p className="text-sm font-bold">Apple</p>
+              <div>
+                {hasAuthenticator('apple') ? (
+                  <AppleDisableButton onDisabled={onAppleDisabled} />
+                ) : (
+                  <p className="text-sm">Sign in with Apple to enable.</p>
+                )}
+              </div>
+            </fieldset>
+          </div>
+          <div>
+            <fieldset className="mt-4">
+              <legend className="mb-2 text-sm font-medium">Sessions</legend>
               <Sessions />
-            </Fieldset>
-          </Grid.Col>
-        </Grid>
+            </fieldset>
+          </div>
+        </div>
       </div>
-    </Stack>
+    </div>
   );
 }

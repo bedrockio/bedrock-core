@@ -1,5 +1,4 @@
 import { Link } from '@bedrockio/router';
-import { ActionIcon, Button, Group, Menu, Text } from '@mantine/core';
 
 import {
   PiCode,
@@ -12,6 +11,14 @@ import Protected from 'components/Protected';
 import Confirm from 'modals/Confirm';
 import InspectObject from 'modals/InspectObject';
 
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+
 import { request } from 'utils/api';
 
 export default function ProductsActions({
@@ -23,31 +30,24 @@ export default function ProductsActions({
     if (displayMode === 'list') {
       return (
         <Protected endpoint="products" permission="update">
-          <ActionIcon
-            variant="default"
-            component={Link}
-            to={`/products/${product.id}/edit`}>
-            <PiPencilSimpleBold />
-          </ActionIcon>
+          <Button asChild variant="outline" size="icon">
+            <Link to={`/products/${product.id}/edit`}>
+              <PiPencilSimpleBold />
+            </Link>
+          </Button>
         </Protected>
       );
     } else if (displayMode === 'edit') {
       return (
-        <Button
-          variant="default"
-          component={Link}
-          to={`/products/${product.id}`}>
-          Back
+        <Button asChild variant="outline">
+          <Link to={`/products/${product.id}`}>Back</Link>
         </Button>
       );
     } else if (displayMode === 'show') {
       return (
         <Protected endpoint="users" permission="update">
-          <Button
-            variant="default"
-            component={Link}
-            to={`/products/${product.id}/edit`}>
-            Edit
+          <Button asChild variant="outline">
+            <Link to={`/products/${product.id}/edit`}>Edit</Link>
           </Button>
         </Protected>
       );
@@ -55,34 +55,34 @@ export default function ProductsActions({
   }
 
   return (
-    <Group gap="xs" justify="flex-end">
+    <div className="flex items-center justify-end gap-2">
       {renderButton()}
-      <Menu shadow="md" keepMounted>
-        <Menu.Target>
-          {displayMode !== 'list' ? (
-            <ActionIcon variant="default">
-              <PiDotsThreeOutlineVerticalBold />
-            </ActionIcon>
-          ) : (
-            <ActionIcon variant="default">
-              <PiDotsThreeOutlineVerticalBold />
-            </ActionIcon>
-          )}
-        </Menu.Target>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" size="icon">
+            <PiDotsThreeOutlineVerticalBold />
+          </Button>
+        </DropdownMenuTrigger>
 
-        <Menu.Dropdown>
+        <DropdownMenuContent>
           <InspectObject
             title={`Inspect ${product.name}`}
             object={product}
-            trigger={<Menu.Item leftSection={<PiCode />}>Inspect</Menu.Item>}
+            trigger={
+              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                <PiCode />
+                Inspect
+              </DropdownMenuItem>
+            }
           />
           <Protected endpoint="auditEntries" permission="read">
-            <Menu.Item
-              component={Link}
-              to={`/audit-log?object=${product.id}&filterLabel=${product.name}`}
-              leftSection={<PiListMagnifyingGlass />}>
-              Audit Logs
-            </Menu.Item>
+            <DropdownMenuItem asChild>
+              <Link
+                to={`/audit-log?object=${product.id}&filterLabel=${product.name}`}>
+                <PiListMagnifyingGlass />
+                Audit Logs
+              </Link>
+            </DropdownMenuItem>
           </Protected>
           <Protected endpoint="products" permission="delete">
             <Confirm
@@ -96,21 +96,24 @@ export default function ProductsActions({
                 reload();
               }}
               content={
-                <Text>
+                <p className="text-sm">
                   Are you sure you want to delete{' '}
                   <strong>{product.name}</strong>?
-                </Text>
+                </p>
               }
               confirmButton="Delete"
               trigger={
-                <Menu.Item color="red" leftSection={<PiListMagnifyingGlass />}>
+                <DropdownMenuItem
+                  variant="destructive"
+                  onSelect={(e) => e.preventDefault()}>
+                  <PiListMagnifyingGlass />
                   Delete
-                </Menu.Item>
+                </DropdownMenuItem>
               }
             />
           </Protected>
-        </Menu.Dropdown>
-      </Menu>
-    </Group>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 }

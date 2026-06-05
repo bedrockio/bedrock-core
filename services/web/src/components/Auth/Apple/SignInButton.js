@@ -1,8 +1,9 @@
 import { useNavigate } from '@bedrockio/router';
-import { ActionIcon, Button } from '@mantine/core';
 import { FaApple } from 'react-icons/fa';
 
 import { useSession } from 'stores/session';
+
+import { Button } from '@/components/ui/button';
 
 import { signInWithApple } from 'utils/auth/apple';
 
@@ -34,19 +35,20 @@ export default function AppleSignInButton({
 
   if (type === 'login') {
     return (
-      <ActionIcon
-        variant="default"
-        radius="xl"
-        size={42}
+      <Button
+        variant="outline"
+        size="icon"
+        className="size-[42px] rounded-full"
         title="Use Apple to sign in."
         onClick={onClick}>
         <FaApple />
-      </ActionIcon>
+      </Button>
     );
   }
 
   return (
-    <Button onClick={onClick} leftSection={<FaApple />} variant="default">
+    <Button variant="outline" className="w-full" onClick={onClick}>
+      <FaApple />
       Sign in with Apple
     </Button>
   );

@@ -1,107 +1,54 @@
 import { DateTime } from '@bedrockio/chrono';
-import { Group, Popover, Text } from '@mantine/core';
-import { DateInput, TimeGrid, TimeInput, getTimeRange } from '@mantine/dates';
-import React, { useMemo, useState } from 'react';
-import { PiCalendarBlankBold, PiClockBold } from 'react-icons/pi';
+import { useMemo } from 'react';
+
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 
 export default function DateTimeField(props) {
   const {
     name,
     value,
     label,
+    error,
+    // eslint-disable-next-line no-unused-vars
     startTime = '10:00',
+    // eslint-disable-next-line no-unused-vars
     endTime = '21:00',
+    // eslint-disable-next-line no-unused-vars
     interval = '00:30',
     ...rest
   } = props;
 
-  const [timeOpen, setTimeOpen] = useState(false);
-
   const dt = useMemo(() => {
-    return new DateTime(value);
+    return value ? new DateTime(value) : null;
   }, [value]);
 
-  function onDateChange(newDate) {
-    const next = new DateTime(newDate).setTime(dt.toTime());
-    props.onChange(name, next);
-  }
-
-  function onClockClick() {
-    setTimeOpen(true);
-  }
-
-  function onTimeClose() {
-    setTimeOpen(false);
-  }
-
-  function onTimeChange(arg) {
-    const newTime = typeof arg === 'string' ? arg : arg.target.value;
-    const next = dt.setTime(newTime);
-    props.onChange(name, next);
-    setTimeOpen(false);
-  }
-
-  function getTimeValue() {
-    if (value) {
-      return new DateTime(value).toTime();
-    } else {
+  function getValue() {
+    if (!dt) {
       return '';
     }
+    // datetime-local expects `YYYY-MM-DDTHH:mm`.
+    const date = dt.toISODate();
+    const time = dt.toTime().slice(0, 5);
+    return `${date}T${time}`;
   }
 
-  function render() {
-    return (
-      <React.Fragment>
-        <Text size="sm" fw="500">
-          {label}
-        </Text>
-        <Group>
-          <DateInput
-            {...rest}
-            value={value}
-            onChange={onDateChange}
-            rightSection={<PiCalendarBlankBold />}
-            rightSectionPointerEvents="none"
-          />
-          <TimeInput
-            {...rest}
-            value={getTimeValue()}
-            onChange={onTimeChange}
-            rightSection={renderTimePopup()}
-          />
-        </Group>
-      </React.Fragment>
-    );
+  function onChange(evt) {
+    const next = new DateTime(evt.target.value);
+    props.onChange(name, next);
   }
 
-  function renderTimePopup() {
-    return (
-      <Popover
-        closeOnClickOutside
-        onChange={onTimeClose}
-        opened={timeOpen}
-        onClose={onTimeClose}
-        offset={2}
-        withArrow>
-        <Popover.Target>
-          <PiClockBold onClick={onClockClick} />
-        </Popover.Target>
-        <Popover.Dropdown>
-          <TimeGrid
-            format="12h"
-            amPmLabels={{ am: 'am', pm: 'pm' }}
-            value={getTimeValue()}
-            data={getTimeRange({
-              startTime,
-              endTime,
-              interval,
-            })}
-            onChange={onTimeChange}
-          />
-        </Popover.Dropdown>
-      </Popover>
-    );
-  }
-
-  return render();
+  return (
+    <div className="flex flex-col gap-2">
+      {label && <Label>{label}</Label>}
+      <Input
+        {...rest}
+        type="datetime-local"
+        value={getValue()}
+        aria-invalid={error ? true : undefined}
+        onChange={onChange}
+      />
+      {error && <p className="text-destructive text-sm">{error.message}</p>}
+    </div>
+  );
 }

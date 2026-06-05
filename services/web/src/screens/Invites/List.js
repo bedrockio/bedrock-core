@@ -1,10 +1,18 @@
-import { Badge, Button, Group, Stack, Table, Text } from '@mantine/core';
-
 import ErrorMessage from 'components/ErrorMessage';
 import ModalWrapper from 'components/ModalWrapper';
 import PageHeader from 'components/PageHeader';
 import Search from 'components/Search';
 import SearchFilters from 'components/Search/Filters';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 
 import { request } from 'utils/api';
 import { formatDateTime } from 'utils/date';
@@ -22,109 +30,93 @@ export default function Invites() {
   }
 
   return (
-    <>
-      <Search.Provider onDataNeeded={onDataNeeded}>
-        {({ items, reload, error }) => {
-          return (
-            <Stack>
-              <PageHeader
-                title="Invites"
-                breadcrumbItems={[
-                  {
-                    href: '/',
-                    title: 'Home',
-                  },
-                  {
-                    title: 'Invites',
-                  },
-                ]}
-                rightSection={
-                  <ModalWrapper
-                    title="Invite Users"
-                    size="md"
-                    component={<InviteForm name="shop" onSuccess={reload} />}
-                    trigger={<Button variant="default">Invite User</Button>}
-                  />
-                }
-              />
+    <Search.Provider onDataNeeded={onDataNeeded}>
+      {({ items, reload, error }) => {
+        return (
+          <div className="flex flex-col gap-4">
+            <PageHeader
+              title="Invites"
+              breadcrumbItems={[
+                { href: '/', title: 'Home' },
+                { title: 'Invites' },
+              ]}
+              rightSection={
+                <ModalWrapper
+                  title="Invite Users"
+                  size="md"
+                  component={<InviteForm name="shop" onSuccess={reload} />}
+                  trigger={<Button>Invite User</Button>}
+                />
+              }
+            />
 
-              <Group justify="space-between">
-                <Group>
-                  <SearchFilters.Modal>
-                    <SearchFilters.Select
-                      name="status"
-                      label="Status"
-                      data={[
-                        {
-                          value: 'invited',
-                          label: 'Invited',
-                        },
-                        {
-                          value: 'accepted',
-                          label: 'Accepted',
-                        },
-                      ]}
-                    />
+            <div className="flex items-center justify-between gap-4">
+              <SearchFilters.Modal>
+                <SearchFilters.Select
+                  name="status"
+                  label="Status"
+                  data={[
+                    { value: 'invited', label: 'Invited' },
+                    { value: 'accepted', label: 'Accepted' },
+                  ]}
+                />
+                <SearchFilters.DateRange name="createdAt" label="Created At" />
+              </SearchFilters.Modal>
 
-                    <SearchFilters.DateRange
-                      name="createdAt"
-                      label="Created At"
-                    />
-                  </SearchFilters.Modal>
-                </Group>
+              <div className="flex items-center gap-4">
+                <Search.Status />
+                <SearchFilters.Keyword />
+              </div>
+            </div>
 
-                <Group>
-                  <Search.Status />
-                  <SearchFilters.Keyword />
-                </Group>
-              </Group>
+            <ErrorMessage error={error} />
 
-              <ErrorMessage error={error} />
-
-              <Table stickyHeader striped>
-                <Table.Thead>
-                  <Table.Tr>
-                    <Search.Header>Email</Search.Header>
-                    <Search.Header name="status">Status</Search.Header>
-                    <Search.Header name="createdAt" width={280}>
-                      Invited At
-                    </Search.Header>
-                    <Search.Header width={60}>Actions</Search.Header>
-                  </Table.Tr>
-                </Table.Thead>
-                <Table.Tbody>
-                  <Search.EmptyMessage>
-                    <Table.Tr>
-                      <Table.Td colSpan={5}>
-                        <Text p="md" fw="bold" ta="center">
-                          No invites found.
-                        </Text>
-                      </Table.Td>
-                    </Table.Tr>
-                  </Search.EmptyMessage>
-                  {items.map((item) => {
-                    return (
-                      <Table.Tr key={item.id}>
-                        <Table.Td>{item.email}</Table.Td>
-                        <Table.Td>
-                          <Badge radius="md" size="md" variant="default">
-                            {item.status}
-                          </Badge>
-                        </Table.Td>
-                        <Table.Td>{formatDateTime(item.createdAt)}</Table.Td>
-                        <Table.Td align="right">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <Search.Header>Email</Search.Header>
+                  <Search.Header name="status">Status</Search.Header>
+                  <Search.Header name="createdAt" width={280}>
+                    Invited At
+                  </Search.Header>
+                  <Search.Header width={60} className="text-center">
+                    Actions
+                  </Search.Header>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <Search.EmptyMessage>
+                  <TableRow>
+                    <TableCell colSpan={4}>
+                      <p className="py-4 text-center font-bold">
+                        No invites found.
+                      </p>
+                    </TableCell>
+                  </TableRow>
+                </Search.EmptyMessage>
+                {items.map((item) => {
+                  return (
+                    <TableRow key={item.id}>
+                      <TableCell>{item.email}</TableCell>
+                      <TableCell>
+                        <Badge variant="secondary">{item.status}</Badge>
+                      </TableCell>
+                      <TableCell>{formatDateTime(item.createdAt)}</TableCell>
+                      <TableCell>
+                        <div className="flex justify-center">
                           <Actions invite={item} reload={reload} />
-                        </Table.Td>
-                      </Table.Tr>
-                    );
-                  })}
-                </Table.Tbody>
-              </Table>
-              <Search.Pagination />
-            </Stack>
-          );
-        }}
-      </Search.Provider>
-    </>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+
+            <Search.Pagination />
+          </div>
+        );
+      }}
+    </Search.Provider>
   );
 }

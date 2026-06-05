@@ -1,0 +1,8 @@
+# Playwright visual-gate artifacts — all generated / per-platform, so not
+# committed. Baselines are platform-specific (font rendering differs), so the
+# canonical set is regenerated on the CI/linux image — see visual/README.md.
+visual/.auth/
+visual/.results/
+visual/.report/
+visual/test-results/
+visual/baselines/

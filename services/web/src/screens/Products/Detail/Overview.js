@@ -1,8 +1,12 @@
-import { Group, Image, Stack, Table, Text, Title } from '@mantine/core';
-
 import { usePage } from 'stores/page';
 
 import ArrayList from 'components/ArrayList';
+import Thumbnail from 'components/Thumbnail';
+
+import {
+  DefinitionItem,
+  DefinitionList,
+} from '@/components/ui/definition-list';
 
 import { formatCurrency } from 'utils/currency';
 import { formatDateTime } from 'utils/date';
@@ -16,48 +20,34 @@ export default function ShopOverview() {
     <>
       <Menu />
 
-      <Stack mt="md" spacing="md">
-        <Text fz="md" lh="md">
-          {product.description}
-        </Text>
-        <Title order={4}>Images</Title>
-        <Group>
+      <div className="mt-4 flex flex-col gap-4">
+        <p className="text-base leading-normal">{product.description}</p>
+        <h2 className="text-xl font-bold tracking-tight">Images</h2>
+        <div className="flex flex-wrap items-center gap-2">
           {product.images.map((image) => (
-            <Image
-              w={300}
-              fit="object-cover"
-              radius="xs"
+            <Thumbnail
               key={image}
               src={urlForUpload(image)}
+              className="h-[200px] w-[300px]"
             />
           ))}
-        </Group>
+        </div>
 
-        <Table mt="md" variant="vertical" layout="fixed" withTableBorder>
-          <Table.Tbody>
-            <Table.Tr>
-              <Table.Th w={160}>Price</Table.Th>
-              <Table.Td>
-                {formatCurrency(product.priceUsd || 0, 'USD')}
-              </Table.Td>
-            </Table.Tr>
-            <Table.Tr>
-              <Table.Th w={160}>Selling Points</Table.Th>
-              <Table.Td>
-                <ArrayList array={product.sellingPoints} />
-              </Table.Td>
-            </Table.Tr>
-            <Table.Tr>
-              <Table.Th>Created At</Table.Th>
-              <Table.Td>{formatDateTime(product.createdAt)}</Table.Td>
-            </Table.Tr>
-            <Table.Tr>
-              <Table.Th>Updated At</Table.Th>
-              <Table.Td>{formatDateTime(product.updatedAt)}</Table.Td>
-            </Table.Tr>
-          </Table.Tbody>
-        </Table>
-      </Stack>
+        <DefinitionList className="mt-4">
+          <DefinitionItem label="Price">
+            {formatCurrency(product.priceUsd || 0, 'USD')}
+          </DefinitionItem>
+          <DefinitionItem label="Selling Points">
+            <ArrayList array={product.sellingPoints} />
+          </DefinitionItem>
+          <DefinitionItem label="Created At">
+            {formatDateTime(product.createdAt)}
+          </DefinitionItem>
+          <DefinitionItem label="Updated At">
+            {formatDateTime(product.updatedAt)}
+          </DefinitionItem>
+        </DefinitionList>
+      </div>
     </>
   );
 }

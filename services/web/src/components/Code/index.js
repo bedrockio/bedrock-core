@@ -1,4 +1,3 @@
-import { Paper } from '@mantine/core';
 import { Highlight, themes } from 'prism-react-renderer';
 import PropTypes from 'prop-types';
 import { useMemo, useState } from 'react';
@@ -68,7 +67,7 @@ export default function Code({ code, language, scroll, action, ...rest }) {
   }, [language]);
 
   return (
-    <Paper className={className}>
+    <div className={className}>
       <CodeBlock code={code || rest.children} language={lang} />
       <div className={getElementClass('action')}>
         {action || (
@@ -82,7 +81,7 @@ export default function Code({ code, language, scroll, action, ...rest }) {
           </div>
         )}
       </div>
-    </Paper>
+    </div>
   );
 }
 

@@ -1,6 +1,7 @@
-import { ActionIcon } from '@mantine/core';
 import React from 'react';
 import { PiPlayBold } from 'react-icons/pi';
+
+import { Button } from '@/components/ui/button';
 
 import Code from 'components/Code';
 
@@ -15,9 +16,9 @@ export default class Route extends React.Component {
           <RequestBuilder
             route={route}
             trigger={
-              <ActionIcon variant="default">
+              <Button variant="outline" size="icon">
                 <PiPlayBold />
-              </ActionIcon>
+              </Button>
             }
           />
         }>

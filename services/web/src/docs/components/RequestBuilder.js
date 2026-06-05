@@ -1,21 +1,3 @@
-import {
-  ActionIcon,
-  Affix,
-  Divider,
-  Drawer,
-  Fieldset,
-  Group,
-  LoadingOverlay,
-  Paper,
-  SegmentedControl,
-  Stack,
-  Switch,
-  Tabs,
-  Text,
-  TextInput,
-} from '@mantine/core';
-
-import { useDisclosure } from '@mantine/hooks';
 import { get, set } from 'lodash';
 import React, { useState } from 'react';
 
@@ -26,6 +8,26 @@ import {
   PiRecordBold,
   PiTrashBold,
 } from 'react-icons/pi';
+
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet';
+import { Spinner } from '@/components/ui/spinner';
+import { Switch } from '@/components/ui/switch';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui/tabs';
+import { cn } from '@/lib/utils';
 
 import Code from 'components/Code';
 import ErrorMessage from 'components/ErrorMessage';
@@ -56,7 +58,15 @@ const TYPE_RANK = {
 };
 
 export default function RequestBuilder(props) {
-  const [opened, { open, close }] = useDisclosure(false);
+  const [opened, setOpened] = useState(false);
+
+  function open() {
+    setOpened(true);
+  }
+
+  function close() {
+    setOpened(false);
+  }
 
   const { route, trigger } = props;
 
@@ -153,13 +163,13 @@ export default function RequestBuilder(props) {
   function renderRequestPane() {
     return (
       <form autoComplete="off" autoCorrect="off">
-        <Stack>
+        <div className="flex flex-col gap-4">
           {renderParameters()}
           {renderQuery()}
           {renderBody()}
-          <Divider />
+          <Separator />
           {renderOutput()}
-        </Stack>
+        </div>
       </form>
     );
   }
@@ -207,9 +217,7 @@ export default function RequestBuilder(props) {
     if (schema?.properties) {
       return (
         <>
-          <Text size="sm" fw="bold">
-            Body
-          </Text>
+          <p className="text-sm font-bold">Body</p>
           {renderSchema(schema, ['body'])}
         </>
       );
@@ -275,9 +283,9 @@ export default function RequestBuilder(props) {
                   <React.Fragment>
                     <label style={{ marginBottom: '1em' }}>
                       {key}{' '}
-                      <ActionIcon variant="default" onClick={toggle}>
+                      <Button variant="outline" size="icon" onClick={toggle}>
                         {open ? <PiMinus /> : <PiPlus />}
-                      </ActionIcon>
+                      </Button>
                     </label>
                     {open && (
                       <div className="indent lined">
@@ -292,8 +300,9 @@ export default function RequestBuilder(props) {
             <React.Fragment>
               <label style={{ marginBottom: '1em' }}>
                 {key}{' '}
-                <ActionIcon
-                  variant="default"
+                <Button
+                  variant="outline"
+                  size="icon"
                   onClick={() => {
                     const p = [...path, key];
                     const values = get(req, p, []);
@@ -301,7 +310,7 @@ export default function RequestBuilder(props) {
                     setReq({ ...req });
                   }}>
                   <PiPlus />
-                </ActionIcon>
+                </Button>
               </label>
               {renderSchema(schema, [...path, key])}
             </React.Fragment>
@@ -323,12 +332,13 @@ export default function RequestBuilder(props) {
       <React.Fragment>
         {values.map((value, i) => {
           return (
-            <Fieldset variant="unstyled" key={i}>
+            <div key={i}>
               {renderSchema(items, [...path, i], {
                 ...options,
                 icon: (
-                  <ActionIcon
-                    variant="default"
+                  <Button
+                    variant="outline"
+                    size="icon"
                     onClick={() => {
                       const updated = values.filter((value, j) => {
                         return j !== i;
@@ -337,10 +347,10 @@ export default function RequestBuilder(props) {
                       setReq({ ...req });
                     }}>
                     <PiTrashBold />
-                  </ActionIcon>
+                  </Button>
                 ),
               })}
-            </Fieldset>
+            </div>
           );
         })}
       </React.Fragment>
@@ -372,34 +382,42 @@ export default function RequestBuilder(props) {
     return renderCheckbox(path, options);
   }
 
-  function renderInput(path, options) {
+  function renderInput(path, options = {}) {
+    const { label, icon, ...rest } = options;
     const value = get(req, path);
     return (
-      <TextInput
-        {...options}
-        path={path}
-        value={value || ''}
-        onChange={(e) => {
-          setField(event, { value: e.target.value, path, ...options });
-        }}
-        autoComplete="chrome-off"
-        spellCheck="false"
-      />
+      <div className="flex flex-col gap-1" key={path.join('.')}>
+        {label && <Label>{label}</Label>}
+        <div className="flex items-center gap-2">
+          <Input
+            {...rest}
+            value={value || ''}
+            onChange={(e) => {
+              setField(e, { value: e.target.value, path, ...options });
+            }}
+            autoComplete="chrome-off"
+            spellCheck="false"
+          />
+          {icon}
+        </div>
+      </div>
     );
   }
 
-  function renderCheckbox(path, options) {
+  function renderCheckbox(path, options = {}) {
+    const { label, icon } = options;
     const value = get(req, path);
     return (
-      <Switch
-        toggle
-        path={path}
-        checked={value || false}
-        onChange={(e) => {
-          setField(event, { value: e.target.checked, path, ...options });
-        }}
-        {...options}
-      />
+      <div className="flex items-center gap-2" key={path.join('.')}>
+        <Switch
+          checked={value || false}
+          onCheckedChange={(checked) => {
+            setField(null, { checked, type: 'checkbox', path, ...options });
+          }}
+        />
+        {label && <Label>{label}</Label>}
+        {icon}
+      </div>
     );
   }
 
@@ -419,15 +437,11 @@ export default function RequestBuilder(props) {
   function renderResponsePane() {
     if (res || error) {
       return (
-        <Stack>
+        <div className="flex flex-col gap-4">
           <ErrorMessage error={error} />
           {res && <Code language="json">{JSON.stringify(res, null, 2)}</Code>}
-          {recorded && (
-            <Text size="sm" fw="bold">
-              Response Recorded
-            </Text>
-          )}
-        </Stack>
+          {recorded && <p className="text-sm font-bold">Response Recorded</p>}
+        </div>
       );
     }
   }
@@ -437,49 +451,60 @@ export default function RequestBuilder(props) {
       {React.cloneElement(trigger, {
         onClick: open,
       })}
-      <Drawer position="right" opened={opened} onClose={close} title={route}>
-        <Stack>
-          <LoadingOverlay visible={loading} overlayBlur={2} />
+      <Sheet
+        open={opened}
+        onOpenChange={(value) => (value ? open() : close())}>
+        <SheetContent side="right" className="overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>{route}</SheetTitle>
+          </SheetHeader>
+          <div className="relative flex flex-col gap-4 p-4">
+            {loading && (
+              <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/60">
+                <Spinner />
+              </div>
+            )}
 
-          <Tabs
-            value={activeTab === 0 ? 'request' : 'response'}
-            onChange={(value) => setActiveTab(value === 'request' ? 0 : 1)}>
-            <Tabs.List>
-              <Tabs.Tab value="request">Request</Tabs.Tab>
-              <Tabs.Tab value="response">Response</Tabs.Tab>
-            </Tabs.List>
+            <Tabs
+              value={activeTab === 0 ? 'request' : 'response'}
+              onValueChange={(value) =>
+                setActiveTab(value === 'request' ? 0 : 1)
+              }>
+              <TabsList>
+                <TabsTrigger value="request">Request</TabsTrigger>
+                <TabsTrigger value="response">Response</TabsTrigger>
+              </TabsList>
 
-            <Tabs.Panel mt={'md'} value="request">
-              {renderRequestPane()}
-            </Tabs.Panel>
+              <TabsContent value="request" className="mt-4">
+                {renderRequestPane()}
+              </TabsContent>
 
-            <Tabs.Panel mt={'md'} value="response">
-              {renderResponsePane()}
-            </Tabs.Panel>
-          </Tabs>
-        </Stack>
-        <Affix position={{ bottom: 0, right: 0 }}>
-          <Paper p="xs">
-            <Group justify="flex-end" gap="md">
-              {canEditDocs() && (
-                <ActionIcon
-                  variant="default"
-                  title="Perform request and record as example"
-                  onClick={onRecordClick}>
-                  <PiRecordBold />
-                </ActionIcon>
-              )}
-              <ActionIcon
-                variant="default"
-                disabled={loading}
-                onClick={onPlayClick}
-                title="Perform request">
-                <PiPlayBold />
-              </ActionIcon>
-            </Group>
-          </Paper>
-        </Affix>
-      </Drawer>
+              <TabsContent value="response" className="mt-4">
+                {renderResponsePane()}
+              </TabsContent>
+            </Tabs>
+          </div>
+          <div className="absolute right-0 bottom-0 flex justify-end gap-4 p-2">
+            {canEditDocs() && (
+              <Button
+                variant="outline"
+                size="icon"
+                title="Perform request and record as example"
+                onClick={onRecordClick}>
+                <PiRecordBold />
+              </Button>
+            )}
+            <Button
+              variant="outline"
+              size="icon"
+              disabled={loading}
+              onClick={onPlayClick}
+              title="Perform request">
+              <PiPlayBold />
+            </Button>
+          </div>
+        </SheetContent>
+      </Sheet>
     </React.Fragment>
   );
 }
@@ -509,24 +534,34 @@ function AnyOfSchema(props) {
 
   const [selected, setSelected] = useState(0);
 
+  const items = anyOf
+    .map((schema, i) => {
+      return {
+        label: schema.type || '',
+        value: i,
+      };
+    })
+    .filter((item) => {
+      return item.label;
+    });
+
   return (
     <React.Fragment>
-      <SegmentedControl
-        value={selected}
-        data={anyOf
-          .map((schema, i) => {
-            return {
-              label: schema.type || '',
-              value: i,
-            };
-          })
-          .filter((item) => {
-            return item.label;
-          })}
-        onChange={(value) => {
-          setSelected(value);
-        }}
-      />
+      <div className="inline-flex gap-1 rounded-md border p-1">
+        {items.map((item) => {
+          return (
+            <Button
+              key={item.value}
+              type="button"
+              size="sm"
+              variant={selected === item.value ? 'default' : 'ghost'}
+              className={cn(selected !== item.value && 'text-muted-foreground')}
+              onClick={() => setSelected(item.value)}>
+              {item.label}
+            </Button>
+          );
+        })}
+      </div>
       {renderSchema(anyOf[selected])}
     </React.Fragment>
   );

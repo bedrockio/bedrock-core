@@ -1,6 +1,9 @@
-import { Stack, Table, Text } from '@mantine/core';
-
 import { usePage } from 'stores/page';
+
+import {
+  DefinitionItem,
+  DefinitionList,
+} from '@/components/ui/definition-list';
 
 import { formatDateTime } from 'utils/date';
 
@@ -12,23 +15,17 @@ export default function ShopOverview() {
     <>
       <Menu />
 
-      <Stack mt="md" spacing="md">
-        <Text fz="md" lh="md">
-          {organization.name}
-        </Text>
-        <Table mt="md" variant="vertical" layout="fixed" withTableBorder>
-          <Table.Tbody>
-            <Table.Tr>
-              <Table.Th>Created At</Table.Th>
-              <Table.Td>{formatDateTime(organization.createdAt)}</Table.Td>
-            </Table.Tr>
-            <Table.Tr>
-              <Table.Th>Updated At</Table.Th>
-              <Table.Td>{formatDateTime(organization.updatedAt)}</Table.Td>
-            </Table.Tr>
-          </Table.Tbody>
-        </Table>
-      </Stack>
+      <div className="mt-4 flex flex-col gap-4">
+        <p className="text-base">{organization.name}</p>
+        <DefinitionList className="mt-4">
+          <DefinitionItem label="Created At">
+            {formatDateTime(organization.createdAt)}
+          </DefinitionItem>
+          <DefinitionItem label="Updated At">
+            {formatDateTime(organization.updatedAt)}
+          </DefinitionItem>
+        </DefinitionList>
+      </div>
     </>
   );
 }

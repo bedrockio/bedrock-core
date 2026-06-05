@@ -1,9 +1,17 @@
 import { Link } from '@bedrockio/router';
-import { Button, Code, Stack, Table } from '@mantine/core';
 
 import Meta from 'components/Meta';
 import PageHeader from 'components/PageHeader';
 import Search from 'components/Search';
+
+import { Button } from '@/components/ui/button';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 
 import { request } from 'utils/api';
 import { fromNow } from 'utils/date';
@@ -25,74 +33,63 @@ export default function Applications() {
       <Search.Provider onDataNeeded={onDataNeeded}>
         {({ items, reload }) => {
           return (
-            <Stack>
+            <div className="flex flex-col gap-4">
               <PageHeader
                 title="Applications"
                 breadcrumbItems={[
-                  {
-                    href: '/',
-                    title: 'Home',
-                  },
-                  {
-                    title: 'Applications',
-                  },
+                  { href: '/', title: 'Home' },
+                  { title: 'Applications' },
                 ]}
-                description="Manage your applications"
-                icon={<i className="fa fa-cubes" />}
                 rightSection={
-                  <Button
-                    variant="default"
-                    component={Link}
-                    to="/applications/new">
-                    New Application
+                  <Button asChild>
+                    <Link to="/applications/new">New Application</Link>
                   </Button>
                 }
               />
 
-              <Table striped highlightOnHover>
-                <Table.Thead>
-                  <Table.Tr>
+              <Table>
+                <TableHeader>
+                  <TableRow>
                     <Search.Header name="name">Name</Search.Header>
-                    <Search.Header style={{ width: '25%' }}>
-                      Description
-                    </Search.Header>
+                    <Search.Header className="w-1/4">Description</Search.Header>
                     <Search.Header>APIKey</Search.Header>
                     <Search.Header>Last Used</Search.Header>
-                    <Search.Header
-                      style={{
-                        textAlign: 'right',
-                      }}
-                      width={100}>
+                    <Search.Header width={100} className="text-center">
                       Actions
                     </Search.Header>
-                  </Table.Tr>
-                </Table.Thead>
-                <Table.Tbody>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
                   {items.map((item) => {
                     return (
-                      <Table.Tr key={item.id}>
-                        <Table.Td>{item.name}</Table.Td>
-                        <Table.Td>{item.description}</Table.Td>
-                        <Table.Td>
-                          <Code>{item.apiKey}</Code>
-                        </Table.Td>
-                        <Table.Td>
+                      <TableRow key={item.id}>
+                        <TableCell>{item.name}</TableCell>
+                        <TableCell>{item.description}</TableCell>
+                        <TableCell>
+                          <code className="bg-muted rounded px-1.5 py-0.5 font-mono text-xs">
+                            {item.apiKey}
+                          </code>
+                        </TableCell>
+                        <TableCell>
                           {item.lastUsedAt ? fromNow(item.lastUsedAt) : 'N / A'}
-                        </Table.Td>
-                        <Table.Td align="right">
-                          <Actions
-                            displayMode="list"
-                            application={item}
-                            reload={reload}
-                          />
-                        </Table.Td>
-                      </Table.Tr>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex justify-center">
+                            <Actions
+                              displayMode="list"
+                              application={item}
+                              reload={reload}
+                            />
+                          </div>
+                        </TableCell>
+                      </TableRow>
                     );
                   })}
-                </Table.Tbody>
+                </TableBody>
               </Table>
+
               <Search.Pagination />
-            </Stack>
+            </div>
           );
         }}
       </Search.Provider>

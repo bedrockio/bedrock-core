@@ -1,5 +1,6 @@
-import { Divider } from '@mantine/core';
 import React from 'react';
+
+import { Separator } from '@/components/ui/separator';
 
 import { expandRef } from 'docs/utils';
 
@@ -25,7 +26,7 @@ export default class VisitedSchemas extends React.Component {
             const { name, path } = expandRef(ref);
             return (
               <React.Fragment key={name}>
-                {i > 0 && <Divider my="sm" />}
+                {i > 0 && <Separator className="my-2" />}
 
                 <div id={name}>
                   <h3>{name}</h3>

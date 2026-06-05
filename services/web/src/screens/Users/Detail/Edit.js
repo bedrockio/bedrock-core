@@ -1,5 +1,4 @@
 import { useNavigate } from '@bedrockio/router';
-import { Paper } from '@mantine/core';
 import React from 'react';
 
 import { usePage } from 'stores/page';
@@ -14,7 +13,7 @@ export default function EditUser() {
   return (
     <React.Fragment>
       <Menu displayMode="edit" />
-      <Paper p="md" withBorder>
+      <div className="mt-4">
         <Form
           user={user}
           onSuccess={() => {
@@ -22,7 +21,7 @@ export default function EditUser() {
             navigate.back();
           }}
         />
-      </Paper>
+      </div>
     </React.Fragment>
   );
 }

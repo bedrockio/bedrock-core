@@ -1,9 +1,11 @@
-import { Button } from '@mantine/core';
 import { noop } from 'lodash';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 
 import { useSession } from 'stores/session';
+
+import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 
 import { disable } from 'utils/auth/google';
 
@@ -12,7 +14,7 @@ import { disable } from 'utils/auth/google';
  * @param {object} props - Component props.
  * @param {Function} [props.onError=noop] - Callback function for errors.
  * @param {Function} [props.onDisabled=noop] - Callback function after successful disabling.
- * @param {object} rest - Remaining props to pass to the Mantine Button.
+ * @param {object} rest - Remaining props to pass to the Button.
  * @returns {JSX.Element}
  */
 export default function DisableButton({
@@ -42,12 +44,13 @@ export default function DisableButton({
 
   return (
     <Button
-      color="red"
+      variant="destructive"
       size="sm"
-      loading={loading}
+      disabled={loading}
       onClick={handleClick}
       {...rest} // Spread remaining props
     >
+      {loading && <Spinner />}
       Disable
     </Button>
   );

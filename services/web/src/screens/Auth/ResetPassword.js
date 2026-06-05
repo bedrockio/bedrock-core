@@ -1,155 +1,150 @@
 import { Link, useNavigate } from '@bedrockio/router';
-
-import {
-  Anchor,
-  Button,
-  PasswordInput,
-  Stack,
-  Text,
-  Title,
-} from '@mantine/core';
-
-import { useForm } from '@mantine/form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader2 } from 'lucide-react';
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 import { useSession } from 'stores/session';
 
 import ErrorMessage from 'components/ErrorMessage';
 import Meta from 'components/Meta';
 
+import { Button } from '@/components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { PasswordInput } from '@/components/ui/password-input';
+
 import { request } from 'utils/api';
 import { getUrlToken } from 'utils/token';
+
+const schema = z
+  .object({
+    password: z.string().min(1, 'Password is required'),
+    repeat: z.string().min(1, 'Please repeat your password'),
+  })
+  .refine((d) => d.password === d.repeat, {
+    message: 'Passwords do not match.',
+    path: ['repeat'],
+  });
 
 export default function ResetPassword() {
   const navigate = useNavigate();
   const { authenticate } = useSession();
   const { token, payload } = getUrlToken();
 
-  const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
 
   const form = useForm({
-    initialValues: {
-      password: '',
-      repeat: '',
-    },
-    validate: {
-      repeat: (value, values) =>
-        value !== values.password ? 'Passwords do not match.' : null,
-    },
+    resolver: zodResolver(schema),
+    defaultValues: { password: '', repeat: '' },
   });
+  const loading = form.formState.isSubmitting;
 
   async function onSubmit(values) {
     try {
-      setLoading(true);
       setError(null);
-
       const { data } = await request({
         method: 'POST',
         path: '/1/auth/password/update',
         token,
-        body: {
-          password: values.password,
-        },
+        body: { password: values.password },
       });
-
       setSuccess(true);
-      setLoading(false);
       navigate(await authenticate(data.token));
     } catch (err) {
       setError(err);
-      setLoading(false);
     }
   }
 
-  function render() {
+  if (!payload) {
     return (
       <React.Fragment>
         <Meta title="Reset Password" />
-        {renderSwitch()}
-      </React.Fragment>
-    );
-  }
-
-  function renderSwitch() {
-    if (!payload) {
-      return renderTokenMissing();
-    } else if (success) {
-      return renderSuccessMessage();
-    } else {
-      return renderForm();
-    }
-  }
-
-  function renderTokenMissing() {
-    return (
-      <React.Fragment>
-        <Title order={3} color="red">
+        <h1 className="text-destructive mb-2 text-2xl font-bold tracking-tight">
           No valid token found
-        </Title>
-        <Text>
+        </h1>
+        <p className="text-muted-foreground text-sm">
           Please ensure you either click the email link in the email or copy
           paste the link in full.
-        </Text>
+        </p>
       </React.Fragment>
     );
   }
 
-  function renderSuccessMessage() {
+  if (success) {
     return (
       <React.Fragment>
-        <Title order={3} c="blue">
+        <Meta title="Reset Password" />
+        <h1 className="text-info mb-2 text-2xl font-bold tracking-tight">
           Your password has been changed!
-        </Title>
-        <Text>
+        </h1>
+        <p className="text-muted-foreground text-sm">
           Click here to open the{' '}
-          <Anchor component={Link} to="/">
+          <Link className="text-foreground no-underline hover:underline" to="/">
             Dashboard
-          </Anchor>
-        </Text>
+          </Link>
+        </p>
       </React.Fragment>
     );
   }
 
-  function renderForm() {
-    return (
-      <React.Fragment>
-        <Title order={3} mb="md">
-          Reset Password
-        </Title>
-        <ErrorMessage error={error} />
-        <form onSubmit={form.onSubmit(onSubmit)}>
-          <Stack gap="md">
-            <PasswordInput
-              required
-              label="New Password"
-              placeholder="New Password"
-              autoComplete="new-password"
-              {...form.getInputProps('password')}
-            />
-
-            <PasswordInput
-              required
-              label="Repeat Password"
-              placeholder="Repeat Password"
-              autoComplete="new-password"
-              {...form.getInputProps('repeat')}
-            />
-
-            <Button
-              fullWidth
-              variant="filled"
-              loading={loading}
-              disabled={loading}
-              type="submit">
-              Reset Password
-            </Button>
-          </Stack>
+  return (
+    <React.Fragment>
+      <Meta title="Reset Password" />
+      <h1 className="mb-4 text-2xl font-bold tracking-tight">Reset Password</h1>
+      <ErrorMessage error={error} />
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex flex-col gap-4">
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>New Password</FormLabel>
+                <FormControl>
+                  <PasswordInput
+                    placeholder="New Password"
+                    autoComplete="new-password"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="repeat"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Repeat Password</FormLabel>
+                <FormControl>
+                  <PasswordInput
+                    placeholder="Repeat Password"
+                    autoComplete="new-password"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button className="w-full" type="submit" disabled={loading}>
+            {loading && <Loader2 className="size-4 animate-spin" />}
+            Reset Password
+          </Button>
         </form>
-      </React.Fragment>
-    );
-  }
-
-  return render();
+      </Form>
+    </React.Fragment>
+  );
 }

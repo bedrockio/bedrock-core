@@ -1,15 +1,38 @@
-import { Button, Group, Select, Stack, Text } from '@mantine/core';
-import { notifications } from '@mantine/notifications';
+import { useState } from 'react';
 
 import { useSession } from 'stores/session';
 
 import Authenticator from 'components/Authenticator';
-import ModalWrapper from 'components/ModalWrapper';
+
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 import { useRequest } from 'utils/api';
+import { notify } from 'utils/notify';
+
+const METHODS = [
+  { label: 'None', value: 'none' },
+  { label: 'SMS', value: 'sms' },
+  { label: 'Email', value: 'email' },
+  { label: 'Authenticator', value: 'totp' },
+];
 
 export default function Sessions() {
   const { user, updateUser } = useSession();
+
+  const [authenticatorOpen, setAuthenticatorOpen] = useState(false);
 
   const mfaRequest = useRequest({
     method: 'PATCH',
@@ -20,7 +43,7 @@ export default function Sessions() {
         authenticators: data.authenticators,
       });
 
-      notifications.show({
+      notify({
         position: 'top-right',
         title: 'Success',
         message:
@@ -31,7 +54,7 @@ export default function Sessions() {
       });
     },
     onError: (error) => {
-      notifications.show({
+      notify({
         position: 'top-right',
         title: 'Error',
         message: error.message,
@@ -50,7 +73,7 @@ export default function Sessions() {
       });
     },
     onError: (error) => {
-      notifications.show({
+      notify({
         position: 'top-right',
         title: 'Error',
         message: error.message,
@@ -61,23 +84,7 @@ export default function Sessions() {
 
   function onMfaMethodChange(value) {
     if (value === 'totp' && !hasTotp) {
-      return (
-        <ModalWrapper
-          title="Enable Authenticator"
-          component={
-            <Authenticator
-              onSuccess={() => {
-                notifications.show({
-                  position: 'top-right',
-                  title: 'Success',
-                  message: 'Two-factor authentication enabled.',
-                  color: 'green',
-                });
-              }}
-            />
-          }
-        />
-      );
+      setAuthenticatorOpen(true);
     } else {
       mfaRequest.request({
         body: {
@@ -92,35 +99,55 @@ export default function Sessions() {
   );
 
   return (
-    <Stack gap="xs">
-      <Text size="sm">Select how you want to verify your identity</Text>
+    <div className="flex flex-col gap-2">
+      <p className="text-sm">Select how you want to verify your identity</p>
       <Select
         value={user.mfaMethod}
         disabled={mfaRequest.loading}
-        onChange={onMfaMethodChange}
-        data={[
-          { label: 'None', value: 'none' },
-          { label: 'SMS', value: 'sms' },
-          { label: 'Email', value: 'email' },
-          { label: 'Authenticator', value: 'totp' },
-        ]}
-      />
+        onValueChange={onMfaMethodChange}>
+        <SelectTrigger>
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {METHODS.map((method) => (
+            <SelectItem key={method.value} value={method.value}>
+              {method.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
 
       {hasTotp && user.mfaMethod === 'totp' && (
-        <Group>
+        <div className="flex">
           <Button
-            size="sm"
-            variant="default"
+            variant="destructive"
             onClick={() => {
               removeTotpRequest.request();
             }}
-            loading={removeTotpRequest.loading}
-            disabled={removeTotpRequest.loading}
-            color="red">
+            disabled={removeTotpRequest.loading}>
             Reset Authenticator Configuration
           </Button>
-        </Group>
+        </div>
       )}
-    </Stack>
+
+      <Dialog open={authenticatorOpen} onOpenChange={setAuthenticatorOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Enable Authenticator</DialogTitle>
+          </DialogHeader>
+          <Authenticator
+            onClose={() => setAuthenticatorOpen(false)}
+            onSuccess={() => {
+              notify({
+                position: 'top-right',
+                title: 'Success',
+                message: 'Two-factor authentication enabled.',
+                color: 'green',
+              });
+            }}
+          />
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 }

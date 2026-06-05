@@ -1,33 +1,57 @@
 import { Link, useNavigate } from '@bedrockio/router';
-
-import {
-  Anchor,
-  Button,
-  PasswordInput,
-  Stack,
-  Text,
-  TextInput,
-  Title,
-} from '@mantine/core';
-
-import { isEmail, useForm } from '@mantine/form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader2 } from 'lucide-react';
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 import { useSession } from 'stores/session';
 
 import Federated from 'components/Auth/Federated';
 import ErrorMessage from 'components/ErrorMessage';
 import Meta from 'components/Meta';
-import PhoneField from 'components/form-fields/Phone';
+
+import { Button } from '@/components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { PasswordInput } from '@/components/ui/password-input';
 
 import { useRequest } from 'utils/api';
 import { AUTH_CHANNEL, AUTH_TYPE } from 'utils/env';
+import { COUNTRIES, formatPhone } from 'utils/phone';
+
+// Normalise a typed phone number to a prefixed value (ported from
+// components/form-fields/Phone.js — that shared field migrates in Phase 4).
+function normalizePhone(value, country = 'us') {
+  let v = value
+    .trim()
+    .replace(/[ ()@.+-]/g, '')
+    .replace(/^[01](\d)/, '$1')
+    .replace(/[a-z]/gi, '');
+  return v ? `${COUNTRIES[country].prefix}${v}` : '';
+}
+
+const schema = z.object({
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+  email: z.string().min(1, 'Email is required').email('Invalid email'),
+  phone: z.string().optional(),
+  password:
+    AUTH_TYPE === 'password'
+      ? z.string().min(1, 'Password is required')
+      : z.string().optional(),
+});
 
 export default function SignupPassword() {
   const navigate = useNavigate();
   const { authenticate } = useSession();
-
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const signupRequest = useRequest({
@@ -45,123 +69,164 @@ export default function SignupPassword() {
     },
     onError: (err) => {
       setError(err);
-      setLoading(false);
     },
   });
 
   const form = useForm({
-    initialValues: {
+    resolver: zodResolver(schema),
+    defaultValues: {
       firstName: '',
       lastName: '',
       phone: '',
       password: '',
       email: '',
     },
-    validate: {
-      email: isEmail('Invalid email'),
-    },
   });
-
-  function onAuthStart() {
-    setLoading(true);
-  }
-
-  function onAuthStop() {
-    setLoading(false);
-  }
+  const loading = form.formState.isSubmitting || signupRequest.loading;
 
   function onAuthError(error) {
     setError(error);
-    setLoading(false);
+  }
+
+  async function onSubmit(values) {
+    setError(null);
+    await signupRequest.request({
+      body: {
+        ...values,
+        type: AUTH_TYPE,
+        channel: AUTH_CHANNEL,
+      },
+    });
   }
 
   return (
     <React.Fragment>
       <Meta title="Signup" />
-      <Title order={3} mb="md">
-        Signup
-      </Title>
-      <form
-        onSubmit={form.onSubmit((formValues) => {
-          signupRequest.request({
-            body: {
-              ...formValues,
-              type: AUTH_TYPE,
-              channel: AUTH_CHANNEL,
-            },
-          });
-        })}>
-        <Stack gap="xs">
-          {signupRequest.error?.type !== 'validation' && (
-            <ErrorMessage error={error} />
-          )}
-
-          <TextInput
-            label="First Name"
-            placeholder="First Name"
-            autoComplete="given-name"
-            error={error?.hasField?.('firstName')}
-            {...form.getInputProps('firstName')}
+      <h1 className="mb-4 text-2xl font-bold tracking-tight">Signup</h1>
+      {signupRequest.error?.type !== 'validation' && (
+        <ErrorMessage error={signupRequest.error || error} />
+      )}
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex flex-col gap-3">
+          <FormField
+            control={form.control}
+            name="firstName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>First Name</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="First Name"
+                    autoComplete="given-name"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-          <TextInput
-            label="Last Name"
+          <FormField
+            control={form.control}
             name="lastName"
-            placeholder="Last Name"
-            autoComplete="family-name"
-            error={error?.hasField?.('lastName')}
-            {...form.getInputProps('lastName')}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Last Name</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Last Name"
+                    autoComplete="family-name"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-          <TextInput
-            label="Email"
-            type="email"
-            placeholder="Email"
-            autoComplete="email"
+          <FormField
+            control={form.control}
             name="email"
-            error={error}
-            {...form.getInputProps('email')}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    type="email"
+                    placeholder="Email"
+                    autoComplete="email"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-
-          <PhoneField
-            label="Phone"
-            placeholder="Phone"
-            error={error}
-            {...form.getInputProps('phone')}
+          <FormField
+            control={form.control}
+            name="phone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Phone</FormLabel>
+                <FormControl>
+                  <Input
+                    type="tel"
+                    placeholder="Phone"
+                    autoComplete="tel"
+                    value={formatPhone(field.value || '', 'us')}
+                    onChange={(e) =>
+                      field.onChange(normalizePhone(e.target.value))
+                    }
+                    onBlur={field.onBlur}
+                    name={field.name}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-
           {AUTH_TYPE === 'password' && (
-            <PasswordInput
-              required
-              label="Password"
-              type="password"
-              placeholder="Password"
-              autoComplete="new-password"
-              {...form.getInputProps('password')}
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <PasswordInput
+                      placeholder="Password"
+                      autoComplete="new-password"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
           )}
 
-          <Button
-            fullWidth
-            loading={loading || signupRequest.loading}
-            variant="filled"
-            type="submit">
+          <Button className="w-full" type="submit" disabled={loading}>
+            {loading && <Loader2 className="size-4 animate-spin" />}
             Signup
           </Button>
 
-          <Text size="xs" c="dimmed">
+          <p className="text-muted-foreground text-xs">
             Already have an account?{' '}
-            <Anchor component={Link} to="/login">
+            <Link
+              className="text-foreground font-medium no-underline hover:underline"
+              to="/login">
               Login
-            </Anchor>
-          </Text>
+            </Link>
+          </p>
 
           <Federated
             type="signup"
-            onAuthStop={onAuthStop}
-            onAuthStart={onAuthStart}
+            onAuthStop={() => {}}
+            onAuthStart={() => {}}
             onError={onAuthError}
           />
-        </Stack>
-      </form>
+        </form>
+      </Form>
     </React.Fragment>
   );
 }

@@ -1,5 +1,4 @@
 import { Link } from '@bedrockio/router';
-import { ActionIcon, Menu, Text } from '@mantine/core';
 
 import {
   PiDotsThreeOutlineVerticalBold,
@@ -9,24 +8,32 @@ import {
 
 import Confirm from 'modals/Confirm';
 
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+
 import { request } from 'utils/api';
 
 export default function ApplicationActions({ application, reload }) {
   return (
-    <Menu shadow="md" keepMounted>
-      <Menu.Target>
-        <ActionIcon variant="default">
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="icon">
           <PiDotsThreeOutlineVerticalBold />
-        </ActionIcon>
-      </Menu.Target>
+        </Button>
+      </DropdownMenuTrigger>
 
-      <Menu.Dropdown>
-        <Menu.Item
-          component={Link}
-          to={`/applications/${application.id}/edit`}
-          leftSection={<PiPencilSimpleBold />}>
-          Edit
-        </Menu.Item>
+      <DropdownMenuContent>
+        <DropdownMenuItem asChild>
+          <Link to={`/applications/${application.id}/edit`}>
+            <PiPencilSimpleBold />
+            Edit
+          </Link>
+        </DropdownMenuItem>
         <Confirm
           title="Delete Application"
           negative
@@ -39,18 +46,21 @@ export default function ApplicationActions({ application, reload }) {
           }}
           confirmButton="Delete"
           content={
-            <Text>
+            <p className="text-sm">
               Are you sure you want to delete{' '}
               <strong>{application.name}</strong>?
-            </Text>
+            </p>
           }
           trigger={
-            <Menu.Item color="red" leftSection={<PiTrashBold />}>
+            <DropdownMenuItem
+              variant="destructive"
+              onSelect={(e) => e.preventDefault()}>
+              <PiTrashBold />
               Delete
-            </Menu.Item>
+            </DropdownMenuItem>
           }
         />
-      </Menu.Dropdown>
-    </Menu>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

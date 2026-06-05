@@ -1,11 +1,16 @@
-import { Button, NativeSelect, Textarea } from '@mantine/core';
 import { useState } from 'react';
 
 import ErrorMessage from 'components/ErrorMessage';
 import { useModalContext } from 'components/ModalWrapper';
 import Actions from 'components/form-fields/Actions';
+import NativeSelect from 'components/form-fields/NativeSelect';
 import { useFields } from 'hooks/forms';
 import { useRequest } from 'hooks/request';
+
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Spinner } from '@/components/ui/spinner';
+import { Textarea } from '@/components/ui/textarea';
 
 import { request } from 'utils/api';
 
@@ -41,19 +46,22 @@ export default function InviteForm(props) {
   }
 
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={onSubmit} className="flex flex-col gap-4">
       <ErrorMessage error={error} />
 
-      <Textarea
-        rows="5"
-        label="Emails"
-        value={input}
-        onChange={(evt) => {
-          setInput(evt.target.value);
-        }}
-        onBlur={onEmailsBlur}
-        placeholder="Enter email addresses separated by comma or new line."
-      />
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="emails">Emails</Label>
+        <Textarea
+          id="emails"
+          rows="5"
+          value={input}
+          onChange={(evt) => {
+            setInput(evt.target.value);
+          }}
+          onBlur={onEmailsBlur}
+          placeholder="Enter email addresses separated by comma or new line."
+        />
+      </div>
 
       <NativeSelect
         name="role"
@@ -61,7 +69,7 @@ export default function InviteForm(props) {
         placeholder="Choose Role"
         onChange={setField}
         value={fields.role || ''}
-        data={[
+        options={[
           {
             label: 'Viewer',
             value: 'viewer',
@@ -77,7 +85,8 @@ export default function InviteForm(props) {
         ]}
       />
       <Actions>
-        <Button type="submit" loading={loading}>
+        <Button type="submit" disabled={loading}>
+          {loading && <Spinner />}
           Invite Members
         </Button>
       </Actions>

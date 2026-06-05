@@ -1,0 +1,85 @@
+name: visual
+
+# Chrome-based visual + conformance gate for the Mantine → shadcn migration.
+# See change-ui-framework-to-shadcn.html §7.3.
+
+on:
+  pull_request:
+    paths:
+      - 'services/web/**'
+      - '.github/workflows/visual.yml'
+
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    services:
+      mongo:
+        image: mongo:8.0.9
+        ports:
+          - 27017:27017
+
+    env:
+      MONGO_URI: mongodb://localhost/bedrock_test
+      API_URL: http://localhost:2300
+      PLAYWRIGHT_BASE_URL: http://localhost:2200
+      # Seeded admin fixture used to capture the authenticated session.
+      E2E_EMAIL: ${{ vars.E2E_EMAIL }}
+      E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # --- API: install, seed deterministic fixtures, boot on :2300 ---
+      - name: API deps
+        working-directory: services/api
+        run: yarn install --frozen-lockfile
+
+      - name: Seed fixtures
+        working-directory: services/api
+        run: yarn fixtures:load
+
+      - name: Start API
+        working-directory: services/api
+        run: yarn start &
+
+      # --- Web: install, build, serve the production bundle on :2200 ---
+      - name: Web deps
+        working-directory: services/web
+        run: yarn install --frozen-lockfile
+
+      - name: Build web
+        working-directory: services/web
+        run: yarn build
+
+      - name: Serve web
+        working-directory: services/web
+        run: yarn static &
+
+      - name: Wait for servers
+        run: |
+          npx --yes wait-on http://localhost:2300/1/status/check http://localhost:2200 --timeout 120000
+
+      # --- Playwright visual + conformance gate ---
+      - name: Install Chromium
+        working-directory: services/web
+        run: yarn playwright install --with-deps chromium
+
+      - name: Run visual gate
+        working-directory: services/web
+        run: yarn test:visual
+
+      - name: Upload diffs + report
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-diffs
+          path: |
+            services/web/visual/.results/
+            services/web/visual/.report/
+          retention-days: 14

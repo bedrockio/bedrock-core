@@ -1,7 +1,8 @@
 import { Link, useNavigate } from '@bedrockio/router';
-import { Button, Stack } from '@mantine/core';
 
 import PageHeader from 'components/PageHeader';
+
+import { Button } from '@/components/ui/button';
 
 import Form from './Form';
 
@@ -9,7 +10,7 @@ export default function NewOrganization() {
   const navigate = useNavigate();
 
   return (
-    <Stack>
+    <div className="flex flex-col gap-4">
       <PageHeader
         title="New Organization"
         breadcrumbItems={[
@@ -18,8 +19,8 @@ export default function NewOrganization() {
           { title: 'Organization Shop' },
         ]}
         rightSection={
-          <Button component={Link} to="/organizations" variant="default">
-            Back
+          <Button asChild variant="outline">
+            <Link to="/organizations">Back</Link>
           </Button>
         }
       />
@@ -28,6 +29,6 @@ export default function NewOrganization() {
           navigate(`/organizations`);
         }}
       />
-    </Stack>
+    </div>
   );
 }

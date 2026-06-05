@@ -1,47 +1,28 @@
-import { Group, Switch, Text, useMantineColorScheme } from '@mantine/core';
-import { PiMoonBold, PiSunBold } from 'react-icons/pi';
-
 import Logo from 'components/Logo';
 
+import { useTheme } from '@/components/ThemeProvider';
+import { Switch } from '@/components/ui/switch';
+
 export default function Footer() {
-  const { setColorScheme, colorScheme } = useMantineColorScheme();
+  const { resolvedTheme, setTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
+
+  function onToggle(checked) {
+    setTheme(checked ? 'dark' : 'light');
+  }
+
   return (
-    <footer>
-      <Group p="md" gap="md" justify="flex-end" align="center">
-        <Group gap="xs">
-          <Text fw="bold" size="xs" color="dimmed">
-            Theme
-          </Text>
-          <Switch
-            checked={colorScheme === 'dark'}
-            onChange={() =>
-              setColorScheme(colorScheme === 'dark' ? 'light' : 'dark')
-            }
-            size="md"
-            color="dark.4"
-            onLabel={
-              <PiSunBold
-                color="var(--mantine-color-yellow-4)"
-                style={{ fontSize: '2em' }}
-              />
-            }
-            offLabel={
-              <PiMoonBold
-                color="var(--mantine-color-blue-6)"
-                style={{ fontSize: '2em' }}
-              />
-            }
-          />
-        </Group>
-        <Group gap="xs">
-          <Text fw="bold" size="xs" color="dimmed">
-            Built with
-          </Text>
-          <div>
-            <Logo width="120" height="18" />
-          </div>
-        </Group>
-      </Group>
+    <footer className="mt-4 flex items-center justify-end gap-6 py-2">
+      <div className="flex items-center gap-2">
+        <span className="text-muted-foreground text-xs font-bold">Theme</span>
+        <Switch checked={isDark} onCheckedChange={onToggle} />
+      </div>
+      <div className="flex items-center gap-2">
+        <span className="text-muted-foreground text-xs font-bold">
+          Built with
+        </span>
+        <Logo width="120" height="18" />
+      </div>
     </footer>
   );
 }

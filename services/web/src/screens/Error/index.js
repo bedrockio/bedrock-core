@@ -1,10 +1,12 @@
-import { Alert, Button } from '@mantine/core';
 import PropTypes from 'prop-types';
 
 import BasicLayout from 'layouts/Basic';
 import { useSession } from 'stores/session';
 
 import Meta from 'components/Meta';
+
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
 
 import { ENV_NAME } from 'utils/env';
 
@@ -49,11 +51,12 @@ function ErrorScreen({ title = 'Something went wrong', error }) {
   return (
     <BasicLayout>
       <Meta title={title || 'Error'} />
-      <Alert color="red" title={title}>
-        {renderErrorBody()}
+      <Alert variant="destructive">
+        <AlertTitle>{title}</AlertTitle>
+        <AlertDescription>{renderErrorBody()}</AlertDescription>
       </Alert>
-      <div>
-        <Button size="xs" onClick={handleLogoutClick}>
+      <div className="mt-4">
+        <Button size="sm" onClick={handleLogoutClick}>
           Logout
         </Button>
       </div>

@@ -1,9 +1,10 @@
 import { Link, useNavigate } from '@bedrockio/router';
-import { Button, Stack } from '@mantine/core';
 
 import { usePage } from 'stores/page';
 
 import PageHeader from 'components/PageHeader';
+
+import { Button } from '@/components/ui/button';
 
 import Form from '../Form';
 
@@ -12,7 +13,7 @@ export default function EditApplication() {
   const navigate = useNavigate();
 
   return (
-    <Stack gap="md">
+    <div className="flex flex-col gap-4">
       <PageHeader
         title={`Edit ${application.name}`}
         breadcrumbItems={[
@@ -21,8 +22,8 @@ export default function EditApplication() {
           { title: application.name },
         ]}
         rightSection={
-          <Button component={Link} to={`/applications`} variant="default">
-            Show
+          <Button asChild variant="outline">
+            <Link to={`/applications`}>Show</Link>
           </Button>
         }
       />
@@ -33,6 +34,6 @@ export default function EditApplication() {
           navigate(`/applications`);
         }}
       />
-    </Stack>
+    </div>
   );
 }

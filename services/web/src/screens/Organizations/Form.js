@@ -1,10 +1,33 @@
-import { Box, Button, Fieldset, Grid, Stack, TextInput } from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { showNotification } from '@mantine/notifications';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 import ErrorMessage from 'components/ErrorMessage';
 
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Spinner } from '@/components/ui/spinner';
+
 import { useRequest } from 'utils/api';
+import { notify } from 'utils/notify';
+
+const schema = z.object({
+  name: z.string().min(1, 'Name is required'),
+});
 
 /**
  * Organization form component for creating or updating an organization
@@ -18,7 +41,8 @@ function OrganizationForm({ organization, onSuccess = () => {} }) {
   const isUpdate = !!organization;
 
   const form = useForm({
-    initialValues: organization || {
+    resolver: zodResolver(schema),
+    defaultValues: organization || {
       name: '',
     },
   });
@@ -34,48 +58,54 @@ function OrganizationForm({ organization, onSuccess = () => {} }) {
           path: '/1/organizations',
         }),
     onSuccess: ({ data }) => {
-      showNotification({
+      notify({
         title: isUpdate
-          ? `${form.values.name} was successfully updated.`
-          : `${form.values.name} was successfully created.`,
+          ? `${form.getValues('name')} was successfully updated.`
+          : `${form.getValues('name')} was successfully created.`,
         color: 'green',
       });
       onSuccess(data);
     },
   });
 
+  function onSubmit(values) {
+    return editRequest.request({ body: values });
+  }
+
   return (
-    <>
-      <form
-        onSubmit={form.onSubmit((values) =>
-          editRequest.request({ body: values }),
-        )}>
-        <Grid gutter="xl">
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <Stack gap="md">
-              <Fieldset variant="unstyled" legend="Organization Details">
-                <Stack gap="xs">
-                  <TextInput
-                    required
-                    label="Name"
-                    {...form.getInputProps('name')}
-                  />
-                </Stack>
-              </Fieldset>
-            </Stack>
-          </Grid.Col>
-        </Grid>
-        <Box mt="md" gap="md">
-          <ErrorMessage mb="md" error={editRequest.error} />
-          <Button
-            type="submit"
-            loading={editRequest.loading}
-            disabled={editRequest.loading}>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>Organization Details</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-2">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+          </Card>
+        </div>
+        <div className="mt-4 flex flex-col gap-4">
+          <ErrorMessage error={editRequest.error} />
+          <Button type="submit" disabled={editRequest.loading}>
+            {editRequest.loading && <Spinner />}
             {isUpdate ? 'Update' : 'Create'} Organization
           </Button>
-        </Box>
+        </div>
       </form>
-    </>
+    </Form>
   );
 }
 

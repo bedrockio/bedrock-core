@@ -1,5 +1,6 @@
 import { useLocation, useParams } from '@bedrockio/router';
-import { Loader } from '@mantine/core';
+
+import { Spinner } from '@/components/ui/spinner';
 import {
   createContext,
   useCallback,
@@ -78,7 +79,13 @@ function useLoader(names, params, fn) {
     (props) => {
       const { fallback, notFound } = props;
       if (loading) {
-        return fallback || <Loader />;
+        return (
+          fallback || (
+            <div className="flex justify-center p-8">
+              <Spinner className="size-6" />
+            </div>
+          )
+        );
       } else if (error) {
         if (error.status === 404 && notFound) {
           return notFound;
