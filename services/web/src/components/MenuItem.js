@@ -30,6 +30,10 @@ export default function MenuItem(props) {
     );
   const routeOpen = (url && pathname.startsWith(url)) || childActive;
 
+  // A parent shouldn't highlight when one of its own child items is the actual
+  // match (e.g. on /users/invites, "Invites" is active — not "Users").
+  const isActive = active && !childActive;
+
   const [open, setOpen] = useState(routeOpen);
   useEffect(() => {
     if (routeOpen) setOpen(true);
@@ -38,7 +42,7 @@ export default function MenuItem(props) {
   const itemClass = cn(
     'flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm font-medium no-underline transition-colors',
     'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
-    active && 'bg-sidebar-accent text-sidebar-accent-foreground',
+    isActive && 'bg-sidebar-accent text-sidebar-accent-foreground',
     level > 1 && 'pl-9',
   );
 

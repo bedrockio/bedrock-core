@@ -79,7 +79,7 @@ export default function DashboardLayout({ children }) {
         <NavLink
           to="/"
           className="flex items-center justify-center py-2 no-underline">
-          <Logo h="50px" p="4px" />
+          <Logo style={{ width: '100%', padding: '0.4em 0.8em' }} />
         </NavLink>
         {userCanSwitchOrganizations(user) && (
           <React.Fragment>

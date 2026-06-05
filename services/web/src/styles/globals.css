@@ -151,8 +151,10 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, Helvetica, 'Segoe UI',
-    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+  --font-sans: 'Geist Variable', system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Helvetica, Arial, sans-serif;
+  --font-mono: 'Geist Mono Variable', ui-monospace, SFMono-Regular, Menlo,
+    Consolas, monospace;
 }
 
 /*

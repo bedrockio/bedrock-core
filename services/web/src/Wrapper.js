@@ -16,6 +16,8 @@ import Unsubscribe from 'screens/Unsubscribe';
 import 'utils/sentry';
 import { hasAccess } from 'utils/user';
 
+import '@fontsource-variable/geist';
+import '@fontsource-variable/geist-mono';
 import './styles/globals.css';
 
 dayjs.extend(customParseFormat);
