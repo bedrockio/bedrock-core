@@ -47,19 +47,13 @@ Each service's `pnpm-workspace.yaml` enables a few pnpm
 Worktrees work out of the box — pnpm shares the global content-addressable store across all
 worktrees via hardlinks, so each worktree's `pnpm install` is fast and disk-cheap.
 
-If you run **many** parallel worktrees and want to also share the *virtual* store (the
-`.pnpm` symlink farm), you can opt in to pnpm's
-[global virtual store](https://pnpm.io/git-worktrees) — but enable it in **your own global
-pnpm config**, not in the committed `pnpm-workspace.yaml`:
-
-```bash
-pnpm config set --global enableGlobalVirtualStore true
-```
-
-It is deliberately kept out of the committed config: it turns `node_modules` into symlinks
-into an external store, which is great for local worktrees but breaks self-contained Docker
-images and the cross-stage copies in the production builds. CI and Docker therefore always
-use the committed `nodeLinker: hoisted` (self-contained) layout.
+pnpm also has a [global virtual store](https://pnpm.io/git-worktrees) that would additionally
+share the `.pnpm` symlink farm across worktrees. It is **not enabled** here: it requires the
+isolated (symlinked) `node_modules` layout, which conflicts with the `nodeLinker: hoisted` we
+commit for self-contained Docker/CI builds (hoisted has no virtual store to share). Because
+the committed `hoisted` wins over global pnpm config, turning the virtual store on would mean
+dropping `hoisted` from `pnpm-workspace.yaml` — so we leave it off and rely on the shared
+content store above, which already makes worktree installs fast and cheap.
 
 ### API Documentation
 
