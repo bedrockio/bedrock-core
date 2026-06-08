@@ -22,7 +22,7 @@ WORKDIR /service
 
 # Install dependencies and store pnpm cache
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-RUN --mount=type=cache,target=/root/.local/share/pnpm/store pnpm install --prod --frozen-lockfile
+RUN --mount=type=cache,target=/root/.local/share/pnpm/store --mount=type=cache,target=/root/.cache/pnpm pnpm install --prod --frozen-lockfile
 
 # Copy app source
 COPY . .
