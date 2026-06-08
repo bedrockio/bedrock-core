@@ -1,10 +1,8 @@
 FROM node:26.3.0-alpine
 
-# Production builds omit devDependencies via --prod on the install below (pnpm
-# ignores NODE_ENV for this). docker-compose overrides this ARG to "development"
-# to install them. NODE_ENV is also exported for the running app.
+# Install production dependencies only; devDependencies (jest, eslint, etc.) are
+# run on the host, not in the image.
 ARG NODE_ENV=production
-ENV NODE_ENV=${NODE_ENV}
 
 # Note layers should be ordered from less to more likely to change.
 
@@ -22,7 +20,7 @@ WORKDIR /service
 
 # Install dependencies and store pnpm cache
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-RUN --mount=type=cache,target=/root/.local/share/pnpm/store pnpm install --frozen-lockfile $([ "$NODE_ENV" = production ] && echo --prod)
+RUN --mount=type=cache,target=/root/.local/share/pnpm/store pnpm install --prod --frozen-lockfile
 
 # Copy app source
 COPY . .
