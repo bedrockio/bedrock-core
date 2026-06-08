@@ -1,18 +1,17 @@
-# Base layer has core package deps
+# Base layer: runtime essentials shared by the build and production stages.
+# pnpm is intentionally NOT installed here so it stays out of the production image.
 FROM node:26.3.0-alpine AS base
 
 RUN apk add --update bash curl
 
-# Install pnpm (Node 26 no longer bundles corepack)
-RUN npm install -g pnpm@11.5.2
-
 WORKDIR /service
 
-# Build layer runs root pnpm install and builds the app.
-# Note that layers are immutable so node_modules will
-# persist in the image even if removed. This is why the
-# production stage copies only the files it needs.
+# Build layer installs pnpm + dependencies and builds the app. node_modules and
+# pnpm live only in this stage; the production stage copies just the built output.
 FROM base AS build
+
+# Install pnpm (Node 26 no longer bundles corepack)
+RUN npm install -g pnpm@11.5.2
 
 ARG NODE_ENV=production
 
@@ -28,15 +27,15 @@ COPY . .
 
 RUN pnpm build
 
-# Dev target exposed here for docker compose
+# Dev target for docker compose (has pnpm + full deps for the Vite dev server).
 FROM build AS dev
 
 EXPOSE 2200
 
 CMD ["pnpm", "start"]
 
-# Production (default) build copies over files
-# without node_modules to keep the image small.
+# Production (default) build copies over only the built assets and the static
+# server, without pnpm/npm or the app's build-time node_modules.
 FROM base
 
 EXPOSE 2200
