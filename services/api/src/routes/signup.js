@@ -7,6 +7,7 @@ const { createAuthToken } = require('../utils/tokens');
 const { validateBody } = require('../utils/middleware/validate');
 
 const { User, AuditEntry } = require('../models');
+const { signupsCounter } = require('../otel/metrics');
 
 const router = new Router();
 
@@ -58,6 +59,8 @@ router.post(
       ...rest,
       password,
     });
+
+    signupsCounter.add(1);
 
     await AuditEntry.append('Signed Up', {
       ctx,

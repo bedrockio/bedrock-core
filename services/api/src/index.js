@@ -1,3 +1,5 @@
+require('./otel');
+
 const logger = require('@bedrockio/logger');
 const config = require('@bedrockio/config');
 
