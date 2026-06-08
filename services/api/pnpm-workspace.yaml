@@ -1,0 +1,7 @@
+nodeLinker: hoisted
+minimumReleaseAge: 10080
+blockExoticSubdeps: true
+allowBuilds:
+  mongodb-memory-server: true
+  protobufjs: true
+  unrs-resolver: true

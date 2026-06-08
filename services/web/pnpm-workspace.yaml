@@ -1,0 +1,7 @@
+nodeLinker: hoisted
+minimumReleaseAge: 10080
+blockExoticSubdeps: true
+allowBuilds:
+  esbuild: true
+  protobufjs: true
+  unrs-resolver: true

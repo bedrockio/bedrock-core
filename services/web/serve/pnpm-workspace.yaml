@@ -1,0 +1,5 @@
+nodeLinker: hoisted
+minimumReleaseAge: 10080
+blockExoticSubdeps: true
+allowBuilds:
+  protobufjs: true

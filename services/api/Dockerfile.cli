@@ -1,9 +1,10 @@
-FROM node:24.13.0-alpine
+FROM node:26.3.0-alpine
 
-# Yarn will not install any package listed in devDependencies if the NODE_ENV
-# environment variable is set to production. Use this flag to instruct Yarn to
-# ignore NODE_ENV and take its production-or-not status from this flag instead.
+# Production builds omit devDependencies via --prod on the install below (pnpm
+# ignores NODE_ENV for this). docker-compose overrides this ARG to "development"
+# to install them. NODE_ENV is also exported for the running app.
 ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
 
 RUN apk add mongodb-tools;
 
@@ -12,15 +13,18 @@ RUN apk add mongodb-tools;
 # Update & install required packages
 RUN apk add --update bash curl;
 
+# Install pnpm (Node 26 no longer bundles corepack)
+RUN npm install -g pnpm@11.5.2
+
 # Needed for Gcloud Storage resumable file uploads
 RUN mkdir -p /root/.config
 
 # Set work directory
 WORKDIR /service
 
-# Install dependencies and store yarn cache
-COPY package.json yarn.lock ./
-RUN --mount=type=cache,target=/root/.yarn YARN_CACHE_FOLDER=/root/.yarn yarn install --frozen-lockfile
+# Install dependencies and store pnpm cache
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN --mount=type=cache,target=/root/.local/share/pnpm/store pnpm install --frozen-lockfile $([ "$NODE_ENV" = production ] && echo --prod)
 
 # Copy app source
 COPY . .
