@@ -1,5 +1,4 @@
 import { useNavigate } from '@bedrockio/router';
-import { Space } from '@mantine/core';
 
 import BackLink from 'components/BackLink';
 
@@ -11,7 +10,7 @@ export default function NewTemplate() {
   return (
     <>
       <BackLink />
-      <Space m="md" />
+      <div className="mt-4" />
       <Form
         onSuccess={(template) => {
           navigate(`/templates/${template.id}`);

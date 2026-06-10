@@ -1,4 +1,3 @@
-import { Badge, Group, Image, Input, Loader, Paper, Text } from '@mantine/core';
 import { uniq } from 'lodash';
 import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
@@ -15,7 +14,13 @@ import {
 
 import PrivateAudio from 'components/PrivateAudio';
 import PrivateImage from 'components/PrivateImage';
+import Thumbnail from 'components/Thumbnail';
 import { useRequest } from 'hooks/request';
+
+import { Badge } from '@/components/ui/badge';
+import { Label } from '@/components/ui/label';
+import { Spinner } from '@/components/ui/spinner';
+import { cn } from '@/lib/utils';
 
 import { request } from 'utils/api';
 import { urlForUpload } from 'utils/uploads';
@@ -200,33 +205,33 @@ export default function UploadsField(props) {
   function render() {
     const { required, label } = props;
     return (
-      <Input.Wrapper label={label} required={required}>
+      <div className="flex flex-col gap-2">
+        {label && (
+          <Label>
+            {label}
+            {required && <span className="text-destructive">*</span>}
+          </Label>
+        )}
         {renderUploads()}
         <Dropzone
           accept={getMimeTypes()}
           maxSize={5 * 1024 * 1024}
           onDrop={onDrop}>
           {({ getRootProps, getInputProps, isDragActive }) => {
-            const background = isDragActive
-              ? 'rgb(248 229 52 / 9%)'
-              : 'rgb(0 0 0 / 2%)';
             return (
-              <Paper
+              <div
                 {...getRootProps()}
-                p="md"
-                withBorder
-                style={{
-                  background,
-                  borderColor: 'rgb(0 0 0 / 15%)',
-                  cursor: 'pointer',
-                }}>
+                className={cn(
+                  'border-input cursor-pointer rounded-md border bg-black/[0.02] p-4',
+                  isDragActive && 'bg-primary/5',
+                )}>
                 <input {...getInputProps()} />
                 {renderMessage(isDragActive)}
-              </Paper>
+              </div>
             );
           }}
         </Dropzone>
-      </Input.Wrapper>
+      </div>
     );
   }
 
@@ -246,12 +251,11 @@ export default function UploadsField(props) {
 
   function renderUploadMedia(uploads) {
     return (
-      <Group mb="0.4em" gap="xs">
+      <div className="mb-[0.4em] flex flex-wrap items-center gap-2">
         {uploads.map((upload) => (
-          <Paper
-            withBorder
+          <div
             key={getUploadId(upload)}
-            style={{ position: 'relative' }}>
+            className="border-input relative overflow-hidden rounded-md border">
             {renderUpload(upload)}
             <PiTrashSimpleBold
               style={{
@@ -267,8 +271,8 @@ export default function UploadsField(props) {
               onClick={() => remove(upload)}
             />
             {upload.filename && (
-              <Text
-                size="xs"
+              <span
+                className="text-xs"
                 style={{
                   position: 'absolute',
                   inset: 'auto 0 0 0',
@@ -278,41 +282,40 @@ export default function UploadsField(props) {
                   overflow: 'ellipsis',
                 }}>
                 {upload.filename}
-              </Text>
+              </span>
             )}
-          </Paper>
+          </div>
         ))}
-      </Group>
+      </div>
     );
   }
 
   function renderUploadFilenames(uploads) {
     return (
-      <Group mt="md" gap="xs">
+      <div className="mt-4 flex flex-wrap items-center gap-2">
         {uploads.map((upload) => (
           <Badge
             key={getUploadId(upload)}
-            variant="default"
-            rightSection={
-              <PiTrashSimpleBold
-                style={{ cursor: 'pointer' }}
-                onClick={(evt) => remove(evt, upload)}
-              />
-            }>
+            variant="secondary"
+            className="gap-1">
             {upload.filename || 'File'}
+            <PiTrashSimpleBold
+              style={{ cursor: 'pointer' }}
+              onClick={(evt) => remove(evt, upload)}
+            />
           </Badge>
         ))}
-      </Group>
+      </div>
     );
   }
 
   function renderMessage(isDragActive) {
     if (loading) {
       return (
-        <Group gap="xs">
-          <Loader />
+        <div className="flex items-center gap-2">
+          <Spinner />
           Uploading...
-        </Group>
+        </div>
       );
     } else if (isDragActive) {
       return 'Drop files here...';
@@ -321,12 +324,12 @@ export default function UploadsField(props) {
         ? 'Try dropping some files here, or select files to upload.'
         : 'Try dropping a file here, or select a file to upload.';
       return (
-        <Group gap="xs">
-          <Text size="28px" lh="1">
+        <div className="flex items-center gap-2">
+          <span className="text-[28px] leading-none">
             {renderIconForType()}
-          </Text>
+          </span>
           {text}
-        </Group>
+        </div>
       );
     }
   }
@@ -338,7 +341,7 @@ export default function UploadsField(props) {
       if (isPrivate) {
         return <PrivateImage upload={upload} style={getMediaStyles()} />;
       } else {
-        return <Image src={src} style={getMediaStyles()} />;
+        return <Thumbnail src={src} className="h-full max-h-[100px] w-full" />;
       }
     } else if (type === 'video') {
       return <video src={src} style={getMediaStyles()} controls />;

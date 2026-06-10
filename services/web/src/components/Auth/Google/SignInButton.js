@@ -1,9 +1,10 @@
 import { useNavigate } from '@bedrockio/router';
-import { ActionIcon, Button } from '@mantine/core';
 
 import { useSession } from 'stores/session';
 
 import logo from 'assets/google-logo.svg';
+
+import { Button } from '@/components/ui/button';
 
 import { signInWithGoogle } from 'utils/auth/google';
 
@@ -35,22 +36,20 @@ export default function GoogleSignInButton({
 
   if (type === 'login') {
     return (
-      <ActionIcon
-        variant="default"
-        radius="xl"
-        size={42}
+      <Button
+        variant="outline"
+        size="icon"
+        className="size-[42px] rounded-full"
         title="Use Apple to sign in."
         onClick={onClick}>
         <img src={logo} alt="Google" height={16} />
-      </ActionIcon>
+      </Button>
     );
   }
 
   return (
-    <Button
-      onClick={onClick}
-      leftSection={<img src={logo} alt="Google" height={13} />}
-      variant="default">
+    <Button variant="outline" className="w-full" onClick={onClick}>
+      <img src={logo} alt="Google" height={13} />
       Sign in with Google
     </Button>
   );

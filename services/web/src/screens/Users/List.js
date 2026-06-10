@@ -1,20 +1,19 @@
 import { Link } from '@bedrockio/router';
 
-import {
-  Anchor,
-  Badge,
-  Button,
-  Group,
-  Loader,
-  Stack,
-  Table,
-  Text,
-} from '@mantine/core';
-
 import ErrorMessage from 'components/ErrorMessage';
 import PageHeader from 'components/PageHeader';
 import Search from 'components/Search';
 import SearchFilters from 'components/Search/Filters';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 
 import { request } from 'utils/api';
 import { formatDateTime } from 'utils/date';
@@ -47,135 +46,116 @@ export default function UserList() {
   }
 
   return (
-    <>
-      <Search.Provider onDataNeeded={onDataNeeded}>
-        {({ items: users, reload, error, loading }) => {
-          return (
-            <Stack>
-              <PageHeader
-                title="Users"
-                breadcrumbItems={[
-                  {
-                    href: '/',
-                    title: 'Home',
-                  },
-                  {
-                    title: 'Users',
-                  },
-                ]}
-                rightSection={
-                  <>
-                    <Search.Export />
-                    <Button variant="primary" component={Link} to="/users/new">
-                      New User
-                    </Button>
-                  </>
-                }
-              />
+    <Search.Provider onDataNeeded={onDataNeeded}>
+      {({ items: users, reload, error }) => {
+        return (
+          <div className="flex flex-col gap-4">
+            <PageHeader
+              title="Users"
+              breadcrumbItems={[
+                { href: '/', title: 'Home' },
+                { title: 'Users' },
+              ]}
+              rightSection={
+                <>
+                  <Search.Export />
+                  <Button asChild>
+                    <Link to="/users/new">New User</Link>
+                  </Button>
+                </>
+              }
+            />
 
-              <Group justify="space-between">
-                <Group>
-                  <SearchFilters.Modal>
-                    <SearchFilters.Select
-                      onDataNeeded={fetchRoles}
-                      name="roles"
-                      label="Roles"
-                      multiple
-                    />
-                    <SearchFilters.DateRange
-                      label="Created At"
-                      name="createdAt"
-                    />
-                  </SearchFilters.Modal>
-                  {loading && <Loader size={'sm'} />}
-                </Group>
+            <div className="flex items-center justify-between gap-4">
+              <SearchFilters.Modal>
+                <SearchFilters.Select
+                  onDataNeeded={fetchRoles}
+                  name="roles"
+                  label="Roles"
+                  multiple
+                />
+                <SearchFilters.DateRange label="Created At" name="createdAt" />
+              </SearchFilters.Modal>
 
-                <Group>
-                  <Search.Status />
-                  <SearchFilters.Keyword />
-                </Group>
-              </Group>
+              <div className="flex items-center gap-4">
+                <Search.Status />
+                <SearchFilters.Keyword />
+              </div>
+            </div>
 
-              <ErrorMessage error={error} />
+            <ErrorMessage error={error} />
 
-              <Table.ScrollContainer>
-                <Table stickyHeader striped>
-                  <Table.Thead>
-                    <Table.Tr>
-                      <Search.Header name="firstName" width={200}>
-                        Name
-                      </Search.Header>
-                      <Search.Header name="email">Email</Search.Header>
-                      <Search.Header name="phone">Phone</Search.Header>
-                      <Search.Header name="roles">Role</Search.Header>
-                      <Search.Header name="createdAt" width={280}>
-                        Created
-                      </Search.Header>
-                      <Search.Header
-                        style={{
-                          textAlign: 'right',
-                        }}
-                        width={100}>
-                        Actions
-                      </Search.Header>
-                    </Table.Tr>
-                  </Table.Thead>
-                  <Table.Tbody>
-                    <Search.EmptyMessage>
-                      <Table.Tr>
-                        <Table.Td colSpan={5}>
-                          <Text p="md" fw="bold" ta="center">
-                            No users found.
-                          </Text>
-                        </Table.Td>
-                      </Table.Tr>
-                    </Search.EmptyMessage>
-                    {users.map((user) => {
-                      return (
-                        <Table.Tr key={user.id}>
-                          <Table.Td>
-                            <Anchor
-                              size="sm"
-                              component={Link}
-                              to={`/users/${user.id}`}>
-                              {user.name}
-                            </Anchor>
-                          </Table.Td>
-                          <Table.Td>{user.email}</Table.Td>
-                          <Table.Td>{formatPhone(user.phone)}</Table.Td>
-                          <Table.Td>
-                            {formatRoles(user.roles).map((label) => {
-                              return (
-                                <Badge
-                                  variant="default"
-                                  size="md"
-                                  radius="md"
-                                  leftSection={<label.icon size={14} />}
-                                  key={label.key}>
-                                  {label.content}
-                                </Badge>
-                              );
-                            })}
-                          </Table.Td>
-                          <Table.Td>{formatDateTime(user.createdAt)}</Table.Td>
-                          <Table.Td align="right">
-                            <Actions
-                              displayMode="list"
-                              user={user}
-                              reload={reload}
-                            />
-                          </Table.Td>
-                        </Table.Tr>
-                      );
-                    })}
-                  </Table.Tbody>
-                </Table>
-                <Search.Pagination />
-              </Table.ScrollContainer>
-            </Stack>
-          );
-        }}
-      </Search.Provider>
-    </>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <Search.Header name="firstName" width={200}>
+                    Name
+                  </Search.Header>
+                  <Search.Header name="email">Email</Search.Header>
+                  <Search.Header name="phone">Phone</Search.Header>
+                  <Search.Header name="roles">Role</Search.Header>
+                  <Search.Header name="createdAt" width={280}>
+                    Created
+                  </Search.Header>
+                  <Search.Header width={100} className="text-center">
+                    Actions
+                  </Search.Header>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <Search.EmptyMessage>
+                  <TableRow>
+                    <TableCell colSpan={6}>
+                      <p className="py-4 text-center font-bold">
+                        No users found.
+                      </p>
+                    </TableCell>
+                  </TableRow>
+                </Search.EmptyMessage>
+                {users.map((user) => {
+                  return (
+                    <TableRow key={user.id}>
+                      <TableCell>
+                        <Link
+                          className="text-foreground no-underline hover:underline"
+                          to={`/users/${user.id}`}>
+                          {user.name}
+                        </Link>
+                      </TableCell>
+                      <TableCell>{user.email}</TableCell>
+                      <TableCell>{formatPhone(user.phone)}</TableCell>
+                      <TableCell>
+                        <div className="flex flex-wrap gap-1">
+                          {formatRoles(user.roles).map((label) => {
+                            return (
+                              <Badge variant="secondary" key={label.key}>
+                                <label.icon size={12} />
+                                {label.content}
+                              </Badge>
+                            );
+                          })}
+                        </div>
+                      </TableCell>
+                      <TableCell>{formatDateTime(user.createdAt)}</TableCell>
+                      <TableCell>
+                        <div className="flex justify-center">
+                          <Actions
+                            displayMode="list"
+                            user={user}
+                            reload={reload}
+                          />
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+
+            <Search.Pagination />
+          </div>
+        );
+      }}
+    </Search.Provider>
   );
 }

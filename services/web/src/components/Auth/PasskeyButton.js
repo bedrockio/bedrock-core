@@ -1,9 +1,10 @@
 import { useNavigate } from '@bedrockio/router';
-import { ActionIcon } from '@mantine/core';
 import { noop } from 'lodash';
 import { PiFingerprintBold } from 'react-icons/pi';
 
 import { useSession } from 'stores/session';
+
+import { Button } from '@/components/ui/button';
 
 import { login } from 'utils/auth/passkey';
 
@@ -31,13 +32,13 @@ export default function PasskeyButton(props) {
   }
 
   return (
-    <ActionIcon
-      variant="default"
-      radius="xl"
-      size={42}
+    <Button
+      variant="outline"
+      size="icon"
+      className="size-[42px] rounded-full"
       title="Use passkey to sign in."
       onClick={onClick}>
       <PiFingerprintBold />
-    </ActionIcon>
+    </Button>
   );
 }

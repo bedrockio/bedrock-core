@@ -1,7 +1,10 @@
 import { Redirect } from '@bedrockio/router';
-import { Button, Paper, Stack, TextInput } from '@mantine/core';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { pick, startCase } from 'lodash';
+import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 import { useSession } from 'stores/session';
 
@@ -9,6 +12,17 @@ import ErrorMessage from 'components/ErrorMessage';
 import Logo from 'components/Logo';
 import Meta from 'components/Meta';
 import PhoneField from 'components/form-fields/Phone';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 
 import { request } from 'utils/api';
 
@@ -19,18 +33,24 @@ const FIELDS = [
   },
 ];
 
+const schema = z.object({
+  email: z.string().optional(),
+  phone: z.string().min(1, `${startCase('phone')} is required.`),
+});
+
 export default function OnboardScreen() {
   const { user, updateUser } = useSession();
 
-  const [body, setBody] = useState(() => {
-    return pick(
+  const form = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: pick(
       user,
       FIELDS.map((f) => f.name),
-    );
+    ),
   });
 
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const loading = form.formState.isSubmitting;
 
   function validateFields(user) {
     for (let field of FIELDS) {
@@ -49,17 +69,9 @@ export default function OnboardScreen() {
     }
   }
 
-  function setField(evt, { name, value }) {
-    setBody({
-      ...body,
-      [name]: value,
-    });
-  }
-
-  async function onSubmit() {
+  async function onSubmit(body) {
     try {
       setError(null);
-      setLoading(true);
 
       validateFields(body);
 
@@ -72,7 +84,6 @@ export default function OnboardScreen() {
       updateUser(data);
     } catch (error) {
       setError(error);
-      setLoading(false);
     }
   }
 
@@ -81,47 +92,58 @@ export default function OnboardScreen() {
   }
 
   return (
-    <Stack>
+    <div className="flex flex-col gap-4">
       <Meta title="Tell Us More" />
       <Logo />
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          onSubmit();
-        }}
-        noValidate>
-        <Paper shadow="xs" p="md" withBorder>
-          <Stack>
-            {error?.type !== 'validation' && <ErrorMessage error={error} />}
-            {!user.email && (
-              <TextInput
-                name="email"
-                type="email"
-                value={body.email || ''}
-                onChange={setField}
-                error={error}
-              />
-            )}
-            {!user.phone && (
-              <PhoneField
-                name="phone"
-                value={body.phone || ''}
-                onChange={setField}
-                error={error}
-              />
-            )}
-            <Button
-              fullWidth
-              type="submit"
-              color="blue"
-              size="lg"
-              loading={loading}
-              disabled={loading}>
-              Continue
-            </Button>
-          </Stack>
-        </Paper>
-      </form>
-    </Stack>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} noValidate>
+          <Card className="p-4 shadow-sm">
+            <CardContent className="flex flex-col gap-4 p-0">
+              {error?.type !== 'validation' && <ErrorMessage error={error} />}
+              {!user.email && (
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input type="email" {...field} value={field.value || ''} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+              {!user.phone && (
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <PhoneField
+                          name="phone"
+                          value={field.value || ''}
+                          onChange={(name, value) => field.onChange(value)}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+              <Button
+                className="w-full"
+                type="submit"
+                size="lg"
+                disabled={loading}>
+                {loading && <Loader2 className="size-4 animate-spin" />}
+                Continue
+              </Button>
+            </CardContent>
+          </Card>
+        </form>
+      </Form>
+    </div>
   );
 }

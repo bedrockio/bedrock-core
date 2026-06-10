@@ -1,4 +1,3 @@
-import { Text } from '@mantine/core';
 import { get, startCase } from 'lodash';
 import PropTypes from 'prop-types';
 import { useContext } from 'react';
@@ -40,19 +39,6 @@ export default function DocsEditableField(props) {
     return [mode === 'edit' ? 'editable' : null, value ? 'filled' : 'empty'];
   }
 
-  function renderModalContent({ close }) {
-    return (
-      <EditFieldModal
-        {...props}
-        docs={docs}
-        updatePath={context.updatePath}
-        value={getValue()}
-        label={`Edit ${startCase(type)}`}
-        close={close}
-      />
-    );
-  }
-
   function render() {
     if (mode === 'edit') {
       return (
@@ -60,9 +46,19 @@ export default function DocsEditableField(props) {
           title={[
             `Edit ${startCase(type)}`,
             props.markdown && ' - Supports Markdown',
-          ].filter(Boolean)}
-          component={renderModalContent}
-          trigger={<Text className={className}>{renderValue()}</Text>}
+          ]
+            .filter(Boolean)
+            .join('')}
+          component={
+            <EditFieldModal
+              {...props}
+              docs={docs}
+              updatePath={context.updatePath}
+              value={getValue()}
+              label={`Edit ${startCase(type)}`}
+            />
+          }
+          trigger={<span className={className}>{renderValue()}</span>}
         />
       );
     } else {

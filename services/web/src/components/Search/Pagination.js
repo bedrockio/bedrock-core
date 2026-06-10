@@ -1,5 +1,6 @@
-import { Divider, Pagination } from '@mantine/core';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
+
+import { Pagination } from '@/components/ui/pagination';
 
 import { useSearch } from './Context';
 
@@ -27,16 +28,14 @@ export default function SearchPagination() {
   const totalPages = Math.ceil(meta.total / meta.limit);
 
   return (
-    <React.Fragment>
-      <Divider mb="md" />
+    <div>
+      <div className="border-border mb-4 border-t" />
       <Pagination
-        boundaries={2}
-        siblings={2}
-        value={page}
+        page={page}
+        total={totalPages}
         disabled={loading}
         onChange={onPageChange}
-        total={totalPages}
       />
-    </React.Fragment>
+    </div>
   );
 }

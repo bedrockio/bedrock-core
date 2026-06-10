@@ -1,10 +1,5 @@
-import { showNotification } from '@mantine/notifications';
-import { PiCheckBold } from 'react-icons/pi';
+import { notifySuccess } from 'utils/notify';
 
 export function showSuccessNotification(params) {
-  showNotification({
-    ...params,
-    color: 'green',
-    icon: <PiCheckBold />,
-  });
+  notifySuccess(params);
 }

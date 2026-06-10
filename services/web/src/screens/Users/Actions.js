@@ -1,5 +1,4 @@
 import { Link, useNavigate } from '@bedrockio/router';
-import { ActionIcon, Button, Group, Menu, Text } from '@mantine/core';
 
 import {
   PiCode,
@@ -17,6 +16,14 @@ import Protected from 'components/Protected';
 import Confirm from 'modals/Confirm';
 import InspectObject from 'modals/InspectObject';
 import LoginAsUser from 'modals/LoginAsUser';
+
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 import { request } from 'utils/api';
 
@@ -40,28 +47,24 @@ export default function UserActions(props) {
     if (displayMode === 'list') {
       return (
         <Protected endpoint="users" permission="update">
-          <ActionIcon
-            variant="default"
-            component={Link}
-            to={`/users/${user.id}/edit`}>
-            <PiPencilSimpleBold />
-          </ActionIcon>
+          <Button asChild variant="outline" size="icon">
+            <Link to={`/users/${user.id}/edit`}>
+              <PiPencilSimpleBold />
+            </Link>
+          </Button>
         </Protected>
       );
     } else if (displayMode === 'edit') {
       return (
-        <Button variant="default" component={Link} to={`/users/${user.id}`}>
-          Back
+        <Button asChild variant="outline">
+          <Link to={`/users/${user.id}`}>Back</Link>
         </Button>
       );
     } else if (displayMode === 'show') {
       return (
         <Protected endpoint="users" permission="update">
-          <Button
-            variant="default"
-            component={Link}
-            to={`/users/${user.id}/edit`}>
-            Edit
+          <Button asChild variant="outline">
+            <Link to={`/users/${user.id}/edit`}>Edit</Link>
           </Button>
         </Protected>
       );
@@ -69,49 +72,49 @@ export default function UserActions(props) {
   }
 
   return (
-    <Group gap="xs" justify="flex-end">
+    <div className="flex items-center justify-end gap-2">
       <Protected endpoint="users" permission="update">
         {renderButton()}
       </Protected>
-      <Menu shadow="md" keepMounted>
-        <Menu.Target>
-          {displayMode !== 'list' ? (
-            <ActionIcon variant="default">
-              <PiDotsThreeOutlineVerticalBold />
-            </ActionIcon>
-          ) : (
-            <ActionIcon variant="default">
-              <PiDotsThreeOutlineVerticalBold />
-            </ActionIcon>
-          )}
-        </Menu.Target>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" size="icon">
+            <PiDotsThreeOutlineVerticalBold />
+          </Button>
+        </DropdownMenuTrigger>
 
-        <Menu.Dropdown>
+        <DropdownMenuContent>
           <LoginAsUser
             title={`Login as ${user.name}`}
             user={user}
             trigger={
-              <Menu.Item
+              <DropdownMenuItem
                 disabled={!canAuthenticate}
-                leftSection={<PiKeyBold />}>
+                onSelect={(e) => e.preventDefault()}>
+                <PiKeyBold />
                 Login as User
-              </Menu.Item>
+              </DropdownMenuItem>
             }
           />
 
           <Protected endpoint="auditEntries" permission="read">
-            <Menu.Item
-              component={Link}
-              to={`/audit-log?user=${user.id}&filterLabel=${user.name}`}
-              leftSection={<PiRowsBold />}>
-              Audit Logs
-            </Menu.Item>
+            <DropdownMenuItem asChild>
+              <Link to={`/audit-log?user=${user.id}&filterLabel=${user.name}`}>
+                <PiRowsBold />
+                Audit Logs
+              </Link>
+            </DropdownMenuItem>
           </Protected>
 
           <InspectObject
             title={`Inspect ${user.name}`}
             object={user}
-            trigger={<Menu.Item leftSection={<PiCode />}>Inspect</Menu.Item>}
+            trigger={
+              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                <PiCode />
+                Inspect
+              </DropdownMenuItem>
+            }
           />
           <Protected endpoint="users" permission="delete">
             <Confirm
@@ -133,20 +136,22 @@ export default function UserActions(props) {
                 });
               }}
               content={
-                <Text>
-                  Are you sure you want to delete {user.name} ({user.email}
-                  )?
-                </Text>
+                <p className="text-sm">
+                  Are you sure you want to delete {user.name} ({user.email})?
+                </p>
               }
               trigger={
-                <Menu.Item color="red" leftSection={<PiTrashBold />}>
+                <DropdownMenuItem
+                  variant="destructive"
+                  onSelect={(e) => e.preventDefault()}>
+                  <PiTrashBold />
                   Delete
-                </Menu.Item>
+                </DropdownMenuItem>
               }
             />
           </Protected>
-        </Menu.Dropdown>
-      </Menu>
-    </Group>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 }

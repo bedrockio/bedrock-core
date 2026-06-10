@@ -1,5 +1,7 @@
-import { Chip, Stack, Text } from '@mantine/core';
-import { PiCheckBold, PiXBold } from 'react-icons/pi';
+import { Check, X } from 'lucide-react';
+
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 
 import { useSearch } from '../Context';
 
@@ -28,21 +30,13 @@ export default function BooleanFilter(props) {
 
   function getIcon() {
     if (checked === true) {
-      return <PiCheckBold />;
+      return <Check className="size-4 text-green-600" />;
     } else if (checked === false) {
-      return <PiXBold />;
+      return <X className="text-destructive size-4" />;
     }
   }
 
-  function getColor() {
-    if (checked === true) {
-      return 'green';
-    } else if (checked === false) {
-      return 'red';
-    }
-  }
-
-  function getLabel() {
+  function getStateLabel() {
     if (checked === true) {
       return 'Yes';
     } else if (checked === false) {
@@ -53,19 +47,18 @@ export default function BooleanFilter(props) {
   }
 
   return (
-    <Stack gap="0.3em">
-      <Text size="sm" fw="500">
-        {label}
-      </Text>
-      <Chip
-        id={name}
-        name={name}
-        icon={getIcon()}
-        color={getColor()}
-        checked={checked != null}
-        onChange={onChange}>
-        {getLabel()}
-      </Chip>
-    </Stack>
+    <div className="flex flex-col gap-2">
+      <Label htmlFor={name}>{label}</Label>
+      <div className="flex items-center gap-2">
+        <Switch
+          id={name}
+          name={name}
+          checked={checked != null}
+          onCheckedChange={onChange}
+        />
+        {getIcon()}
+        <span className="text-sm">{getStateLabel()}</span>
+      </div>
+    </div>
   );
 }

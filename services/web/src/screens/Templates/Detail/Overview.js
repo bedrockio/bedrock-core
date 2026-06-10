@@ -1,6 +1,11 @@
-import { Badge, Group, Stack, Table } from '@mantine/core';
-
 import { usePage } from 'stores/page';
+
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
+import {
+  DefinitionItem,
+  DefinitionList,
+} from '@/components/ui/definition-list';
 
 import { formatDateTime } from 'utils/date';
 
@@ -11,30 +16,31 @@ export default function Overview() {
   return (
     <>
       <Menu />
-      <Stack mt="md" spacing="md">
-        <Table mt="md" variant="vertical" layout="fixed" withTableBorder>
-          <Table.Tbody>
-            <Table.Tr>
-              <Table.Th w={160}>Channels</Table.Th>
-              <Table.Td>
-                <Group gap="xs">
+      <div className="mt-4 flex flex-col gap-4">
+        <Card>
+          <CardContent>
+            <DefinitionList>
+              <DefinitionItem label="Channels">
+                <div className="flex flex-wrap items-center gap-2">
                   {template.channels.map((channel) => {
-                    return <Badge key={channel}>{channel}</Badge>;
+                    return (
+                      <Badge key={channel} variant="secondary">
+                        {channel}
+                      </Badge>
+                    );
                   })}
-                </Group>
-              </Table.Td>
-            </Table.Tr>
-            <Table.Tr>
-              <Table.Th>Created At</Table.Th>
-              <Table.Td>{formatDateTime(template.createdAt)}</Table.Td>
-            </Table.Tr>
-            <Table.Tr>
-              <Table.Th>Updated At</Table.Th>
-              <Table.Td>{formatDateTime(template.updatedAt)}</Table.Td>
-            </Table.Tr>
-          </Table.Tbody>
-        </Table>
-      </Stack>
+                </div>
+              </DefinitionItem>
+              <DefinitionItem label="Created At">
+                {formatDateTime(template.createdAt)}
+              </DefinitionItem>
+              <DefinitionItem label="Updated At">
+                {formatDateTime(template.updatedAt)}
+              </DefinitionItem>
+            </DefinitionList>
+          </CardContent>
+        </Card>
+      </div>
     </>
   );
 }

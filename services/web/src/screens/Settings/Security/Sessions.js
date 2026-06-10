@@ -1,22 +1,23 @@
-import {
-  ActionIcon,
-  Badge,
-  Button,
-  Divider,
-  Group,
-  Stack,
-  Table,
-  Text,
-} from '@mantine/core';
-
-import { notifications } from '@mantine/notifications';
 import { PiTrash } from 'react-icons/pi';
 
 import { useSession } from 'stores/session';
 
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+
 import { getToken, useRequest } from 'utils/api';
 import countries from 'utils/countries';
 import { fromNow } from 'utils/date';
+import { notify } from 'utils/notify';
 import { parseToken } from 'utils/token';
 import { parseUserAgent } from 'utils/user-agent';
 
@@ -32,7 +33,7 @@ export default function Sessions() {
       bootstrap();
     },
     onError: () => {
-      notifications.show({
+      notify({
         position: 'top-right',
         title: 'Error',
         message: 'Failed to logout session(s)',
@@ -42,17 +43,17 @@ export default function Sessions() {
   });
 
   return (
-    <Stack>
-      <Table striped highlightOnHover>
-        <Table.Thead>
-          <Table.Tr>
-            <Table.Th>Device/Browser</Table.Th>
-            <Table.Th>Country</Table.Th>
-            <Table.Th>Last Used</Table.Th>
-            <Table.Th></Table.Th>
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>
+    <div className="flex flex-col gap-4">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Device/Browser</TableHead>
+            <TableHead>Country</TableHead>
+            <TableHead>Last Used</TableHead>
+            <TableHead></TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {user.authTokens.map((token) => {
             const country = countries.find(
               (country) => country.countryCode === token.country,
@@ -61,54 +62,50 @@ export default function Sessions() {
             const { device, os, browser } = parseUserAgent(token.userAgent);
 
             return (
-              <Table.Tr key={token.jti}>
-                <Table.Td>
-                  <Group>
-                    <Text
+              <TableRow key={token.jti}>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <span
                       title={`Device: ${device}\nOS: ${os}\nBrowser: ${browser}`}
-                      variant="default"
-                      size="sm">
+                      className="text-sm">
                       {[os, browser].join(' - ')}
-                    </Text>
+                    </span>
 
                     {token.jti === jti && (
-                      <Badge size="sm" variant="outline">
-                        Current
-                      </Badge>
+                      <Badge variant="outline">Current</Badge>
                     )}
-                  </Group>
-                </Table.Td>
-                <Table.Td title={`IP: ${token.ip}`}>
+                  </div>
+                </TableCell>
+                <TableCell title={`IP: ${token.ip}`}>
                   {country?.nameEn || 'N/A'}
-                </Table.Td>
-                <Table.Td>{fromNow(token.lastUsedAt)}</Table.Td>
-                <Table.Td>
-                  <ActionIcon
+                </TableCell>
+                <TableCell>{fromNow(token.lastUsedAt)}</TableCell>
+                <TableCell>
+                  <Button
+                    variant="ghost"
+                    size="icon"
                     title="Logout"
-                    variant="transparent"
-                    loading={logoutRequest.loading}
                     disabled={logoutRequest.loading}
                     onClick={() =>
                       logoutRequest.request({ body: { jti: token.jti } })
                     }>
-                    <PiTrash color="red" />
-                  </ActionIcon>
-                </Table.Td>
-              </Table.Tr>
+                    <PiTrash className="text-destructive" />
+                  </Button>
+                </TableCell>
+              </TableRow>
             );
           })}
-        </Table.Tbody>
+        </TableBody>
       </Table>
-      <Divider />
-      <Group>
+      <Separator />
+      <div className="flex">
         <Button
-          color="red"
-          loading={logoutRequest.loading}
+          variant="destructive"
           disabled={logoutRequest.loading}
           onClick={() => logoutRequest.request({ body: { all: true } })}>
           Logout All Sessions
         </Button>
-      </Group>
-    </Stack>
+      </div>
+    </div>
   );
 }

@@ -1,10 +1,12 @@
 import { Link, useNavigate } from '@bedrockio/router';
-import { Button, Center, Group, Paper, Stack, Text } from '@mantine/core';
 import { useEffect } from 'react';
 
 import { useSession } from 'stores/session';
 
 import Meta from 'components/Meta';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 
 function Lockout() {
   const navigate = useNavigate();
@@ -17,23 +19,23 @@ function Lockout() {
   }, [isLoggedIn, navigate]);
 
   return (
-    <Center style={{ height: '100vh' }}>
+    <div className="flex h-screen items-center justify-center">
       <Meta title="Lockout" />
-      <Paper>
-        <Stack gap="md">
-          <Text>
+      <Card>
+        <CardContent className="flex flex-col gap-4">
+          <p>
             Your account is pending approval. Please wait for an administrator
             to assign the necessary permissions/roles before you can access the
             dashboard.
-          </Text>
-          <Group position="right">
-            <Button component={Link} to="/logout">
-              Logout
+          </p>
+          <div className="flex justify-end">
+            <Button asChild>
+              <Link to="/logout">Logout</Link>
             </Button>
-          </Group>
-        </Stack>
-      </Paper>
-    </Center>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
 

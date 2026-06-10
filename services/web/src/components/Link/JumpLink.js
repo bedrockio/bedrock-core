@@ -1,4 +1,3 @@
-import { Anchor } from '@mantine/core';
 import React from 'react';
 
 import ScrollWaypoint from '../ScrollWaypoint';
@@ -39,14 +38,7 @@ class JumpLink extends React.Component {
     const { to, className = '', ...rest } = this.props;
     const classes = className.split(' ');
     classes.push('jump-link');
-    return (
-      <Anchor
-        component="a"
-        href={`#${to}`}
-        className={classes.join(' ')}
-        {...rest}
-      />
-    );
+    return <a href={`#${to}`} className={classes.join(' ')} {...rest} />;
   }
 }
 

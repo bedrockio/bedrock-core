@@ -1,5 +1,4 @@
 import { useNavigate } from '@bedrockio/router';
-import { Stack } from '@mantine/core';
 import { useContext } from 'react';
 
 import { PageContext } from 'stores/page';
@@ -12,7 +11,7 @@ export default function OrganizationOverview() {
   const navigate = useNavigate();
 
   return (
-    <Stack>
+    <div className="flex flex-col gap-4">
       <Menu displayMode="edit" />
       <Form
         organization={organization}
@@ -21,6 +20,6 @@ export default function OrganizationOverview() {
           navigate(`/organizations/${organization.id}`);
         }}
       />
-    </Stack>
+    </div>
   );
 }

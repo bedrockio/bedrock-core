@@ -1,5 +1,6 @@
-import { Button } from '@mantine/core';
 import { PiPaperPlaneTiltBold } from 'react-icons/pi';
+
+import { Button } from '@/components/ui/button';
 
 import SendPreviewModal from './SendPreviewModal';
 
@@ -8,7 +9,8 @@ export default function SendPreviewButton(props) {
     <SendPreviewModal
       {...props}
       trigger={
-        <Button variant="default" leftSection={<PiPaperPlaneTiltBold />}>
+        <Button variant="outline">
+          <PiPaperPlaneTiltBold />
           Test
         </Button>
       }

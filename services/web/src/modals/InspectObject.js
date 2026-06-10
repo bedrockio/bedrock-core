@@ -1,16 +1,9 @@
-import {
-  ActionIcon,
-  Checkbox,
-  CopyButton,
-  Group,
-  Stack,
-  Tooltip,
-} from '@mantine/core';
-
 import JsonView from '@uiw/react-json-view';
 import { darkTheme } from '@uiw/react-json-view/dark';
 import { useState } from 'react';
 import { PiCheck, PiCopy } from 'react-icons/pi';
+
+import { Button } from '@/components/ui/button';
 
 import ModalWrapper from 'components/ModalWrapper';
 
@@ -23,45 +16,53 @@ import ModalWrapper from 'components/ModalWrapper';
  */
 function InspectObject({ object }) {
   const [expandAll, setExpandAll] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  function onCopy() {
+    navigator.clipboard.writeText(JSON.stringify(object, null, 2));
+    setCopied(true);
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
+  }
 
   return (
-    <Stack>
-      <Group justify="space-between">
-        <Checkbox
-          label="Expand all"
-          onChange={() => {
-            setExpandAll(!expandAll);
-          }}
-        />
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={expandAll}
+            onChange={() => {
+              setExpandAll(!expandAll);
+            }}
+          />
+          Expand all
+        </label>
 
-        <CopyButton value={JSON.stringify(object, null, 2)} timeout={2000}>
-          {({ copied, copy }) => (
-            <Tooltip
-              label={copied ? 'Copied' : 'Copy'}
-              withArrow
-              position="bottom">
-              <ActionIcon variant="default" onClick={copy}>
-                {copied ? <PiCheck size={16} /> : <PiCopy size={16} />}
-              </ActionIcon>
-            </Tooltip>
-          )}
-        </CopyButton>
-      </Group>
-      <JsonView
-        style={{
-          ...darkTheme,
-          '--w-rjv-background-color':
-            'light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-8))',
-          borderRadius: 'var(--mantine-radius-sm)',
-          padding: 'var(--mantine-spacing-sm)',
-        }}
-        value={object || {}}
-        displayObjectSize={false}
-        displayDataTypes={false}
-        enableClipboard={false}
-        collapsed={expandAll ? false : 3}
-      />
-    </Stack>
+        <Button
+          variant="outline"
+          size="icon"
+          title={copied ? 'Copied' : 'Copy'}
+          onClick={onCopy}>
+          {copied ? <PiCheck size={16} /> : <PiCopy size={16} />}
+        </Button>
+      </div>
+      <div className="max-h-[60vh] overflow-auto">
+        <JsonView
+          style={{
+            ...darkTheme,
+            borderRadius: 'var(--radius-sm)',
+            padding: '0.75rem',
+          }}
+          value={object || {}}
+          displayObjectSize={false}
+          displayDataTypes={false}
+          enableClipboard={false}
+          collapsed={expandAll ? false : 3}
+        />
+      </div>
+    </div>
   );
 }
 

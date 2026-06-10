@@ -1,14 +1,15 @@
 import { Link, useLocation, useNavigate } from '@bedrockio/router';
+import React from 'react';
 
 import {
-  Anchor,
-  Breadcrumbs,
-  Group,
-  Stack,
-  Tabs,
-  Text,
-  Title,
-} from '@mantine/core';
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import Meta from './Meta';
 
@@ -24,49 +25,48 @@ const PageHeader = ({
   return (
     <>
       <Meta title={title} />
-      <Stack>
-        <Group justify="space-between">
-          <Breadcrumbs separatorMargin="xs">
-            {breadcrumbItems.map((item, index) =>
-              item?.href ? (
-                <Anchor component={Link} to={item.href} key={index}>
-                  {item.title}
-                </Anchor>
-              ) : (
-                item.title
-              ),
-            )}
-          </Breadcrumbs>
-        </Group>
+      <div className="flex flex-col gap-4">
+        {breadcrumbItems.length > 0 && (
+          <Breadcrumb>
+            <BreadcrumbList>
+              {breadcrumbItems.map((item, index) => (
+                <React.Fragment key={index}>
+                  <BreadcrumbItem>
+                    {item?.href ? (
+                      <BreadcrumbLink asChild>
+                        <Link to={item.href}>{item.title}</Link>
+                      </BreadcrumbLink>
+                    ) : (
+                      <BreadcrumbPage>{item.title}</BreadcrumbPage>
+                    )}
+                  </BreadcrumbItem>
+                  {index < breadcrumbItems.length - 1 && (
+                    <BreadcrumbSeparator>/</BreadcrumbSeparator>
+                  )}
+                </React.Fragment>
+              ))}
+            </BreadcrumbList>
+          </Breadcrumb>
+        )}
 
-        <Group justify="space-between" wrap="nowrap">
-          <Title mt={0} order={2}>
-            {title}
-          </Title>
-          <Group flex="none">{rightSection}</Group>
-        </Group>
+        <div className="flex flex-nowrap items-center justify-between gap-4">
+          <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
+          <div className="flex flex-none items-center gap-2">{rightSection}</div>
+        </div>
 
         {tabs.length > 0 && (
-          <Tabs
-            variant="default"
-            value={location.pathname}
-            onChange={(value) => navigate(value)}>
-            <Tabs.List>
+          <Tabs value={location.pathname} onValueChange={(value) => navigate(value)}>
+            <TabsList>
               {tabs.map((tab, index) => (
-                <Tabs.Tab
-                  leftSection={tab.icon}
-                  key={index}
-                  value={tab.href}
-                  color="primary">
-                  <Text size="sm" fw="bold">
-                    {tab.title}
-                  </Text>
-                </Tabs.Tab>
+                <TabsTrigger key={index} value={tab.href}>
+                  {tab.icon}
+                  {tab.title}
+                </TabsTrigger>
               ))}
-            </Tabs.List>
+            </TabsList>
           </Tabs>
         )}
-      </Stack>
+      </div>
     </>
   );
 };

@@ -1,10 +1,12 @@
-import { Group, Table } from '@mantine/core';
-import { FaChevronDown, FaChevronUp } from 'react-icons/fa6';
+import { ChevronDown, ChevronUp } from 'lucide-react';
+
+import { TableHead } from '@/components/ui/table';
+import { cn } from '@/lib/utils';
 
 import { useSearch } from './Context';
 
 export default function SortableHeader(props) {
-  const { name, children, ...rest } = props;
+  const { name, children, className, ...rest } = props;
 
   const { sort, setSort } = useSearch();
 
@@ -12,7 +14,6 @@ export default function SortableHeader(props) {
     let { field, order } = sort || {};
 
     // Note that _id is a default that serves as a proxy for createdAt.
-    // The reasoning for that is here:
     // https://github.com/bedrockio/model?tab=readme-ov-file#default-sort-order
     if (field === '_id') {
       field = 'createdAt';
@@ -32,25 +33,21 @@ export default function SortableHeader(props) {
     });
   }
 
-  function render() {
-    return (
-      <Table.Th {...rest} onClick={onClick} style={{ cursor: 'pointer' }}>
-        <Group justify="space-between" wrap="no-wrap">
-          {children}
-          {renderIcon()}
-        </Group>
-      </Table.Th>
-    );
-  }
+  const sorted = getSorted();
 
-  function renderIcon() {
-    const sorted = getSorted();
-    if (sorted === 'asc') {
-      return <FaChevronUp />;
-    } else if (sorted === 'desc') {
-      return <FaChevronDown />;
-    }
-  }
-
-  return render();
+  return (
+    <TableHead
+      {...rest}
+      onClick={onClick}
+      className={cn('cursor-pointer select-none', className)}>
+      <div className="flex items-center justify-between gap-2">
+        {children}
+        {sorted === 'asc' ? (
+          <ChevronUp className="size-3.5" />
+        ) : sorted === 'desc' ? (
+          <ChevronDown className="size-3.5" />
+        ) : null}
+      </div>
+    </TableHead>
+  );
 }

@@ -1,7 +1,9 @@
-import { Button, Group, Paper, Stack, Text, Title } from '@mantine/core';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { PiArrowClockwiseBold } from 'react-icons/pi';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -24,17 +26,16 @@ class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <Paper p="xl" shadow="sm" withBorder my="xl" mx="md">
-          <Stack spacing="md">
-            <Title order={3}>Something went wrong</Title>
-            <Text color="dimmed">
+        <Card className="mx-4 my-12 p-8">
+          <CardContent className="flex flex-col gap-4 p-0">
+            <h3 className="text-xl font-bold">Something went wrong</h3>
+            <p className="text-muted-foreground">
               An error occurred while rendering this component. You can try to
               reload the page or continue using other parts of the application.
-            </Text>
-            <Group>
-              <Button
-                onClick={this.handleReset}
-                leftSection={<PiArrowClockwiseBold />}>
+            </p>
+            <div className="flex gap-3">
+              <Button onClick={this.handleReset}>
+                <PiArrowClockwiseBold />
                 Try Again
               </Button>
               <Button
@@ -42,9 +43,9 @@ class ErrorBoundary extends React.Component {
                 onClick={() => window.location.reload()}>
                 Reload Page
               </Button>
-            </Group>
-          </Stack>
-        </Paper>
+            </div>
+          </CardContent>
+        </Card>
       );
     }
     return this.props.children;

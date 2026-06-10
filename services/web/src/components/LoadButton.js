@@ -1,6 +1,13 @@
-import { Alert, Button, Popover } from '@mantine/core';
 import { useEffect, useRef, useState } from 'react';
 import { PiWarningCircleBold } from 'react-icons/pi';
+
+import { Button } from '@/components/ui/button';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { Spinner } from '@/components/ui/spinner';
 
 /**
  * A button that displays a loading indicator during an async onClick operation
@@ -9,7 +16,7 @@ import { PiWarningCircleBold } from 'react-icons/pi';
  * @param {object} props - Component props.
  * @param {Function} props.onClick - The asynchronous function to call when the button is clicked.
  * @param {React.ReactNode} props.children - The content of the button.
- * @param {object} otherProps - Other props to pass down to the Mantine Button component.
+ * @param {object} otherProps - Other props to pass down to the Button component.
  * @returns {React.ReactElement} The LoadButton component.
  */
 export default function LoadButton({ onClick, children, ...otherProps }) {
@@ -52,36 +59,39 @@ export default function LoadButton({ onClick, children, ...otherProps }) {
 
   return (
     <Popover
-      opened={popoverOpened && !!error}
-      onClose={handlePopoverClose}
-      position="bottom"
-      withArrow
-      shadow="md"
-      trapFocus={false} // Allow interaction outside the popover
-      withinPortal // Render popover in portal
-    >
-      <Popover.Target>
+      open={popoverOpened && !!error}
+      onOpenChange={(open) => {
+        if (!open) {
+          handlePopoverClose();
+        }
+      }}>
+      <PopoverTrigger asChild>
         <Button
-          loading={loading}
+          disabled={loading}
           onClick={handleClick}
-          color={error ? 'red' : otherProps.color}
+          variant={error ? 'destructive' : otherProps.variant}
           {...otherProps}>
+          {loading && <Spinner className="text-current" />}
           {children}
         </Button>
-      </Popover.Target>
-      <Popover.Dropdown sx={{ pointerEvents: 'none' }}>
+      </PopoverTrigger>
+      <PopoverContent
+        className="w-auto p-0"
+        onOpenAutoFocus={(evt) => evt.preventDefault()}>
         {error && (
-          <Alert
-            icon={<PiWarningCircleBold />}
-            title="Error"
-            color="red"
-            withCloseButton={false} // Popover handles closing
-            onClick={handlePopoverClose} // Allow clicking alert to close
-            sx={{ cursor: 'pointer' }}>
-            {error.message || 'An unexpected error occurred.'}
-          </Alert>
+          <div
+            onClick={handlePopoverClose}
+            className="border-destructive/30 bg-destructive/5 flex cursor-pointer items-start gap-2 rounded-md border px-4 py-3 text-sm">
+            <PiWarningCircleBold className="text-destructive mt-0.5 size-4 shrink-0" />
+            <div>
+              <div className="font-medium">Error</div>
+              <div className="text-muted-foreground">
+                {error.message || 'An unexpected error occurred.'}
+              </div>
+            </div>
+          </div>
         )}
-      </Popover.Dropdown>
+      </PopoverContent>
     </Popover>
   );
 }

@@ -1,102 +1,118 @@
 import { Link } from '@bedrockio/router';
-
-import {
-  Alert,
-  Anchor,
-  Button,
-  Group,
-  Stack,
-  TextInput,
-  Title,
-} from '@mantine/core';
-
-import { useForm } from '@mantine/form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader2 } from 'lucide-react';
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 import Meta from 'components/Meta';
 
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+
 import { request } from 'utils/api';
+
+const schema = z.object({
+  email: z.string().min(1, 'Email is required').email('Invalid email'),
+});
 
 export default function ForgotPassword() {
   const [success, setSuccess] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState('');
   const [error, setError] = useState(null);
 
   const form = useForm({
-    initialValues: {
-      email: '',
-    },
-    validate: {
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
-    },
+    resolver: zodResolver(schema),
+    defaultValues: { email: '' },
   });
+  const loading = form.formState.isSubmitting;
 
-  const handleSubmit = async (values) => {
+  async function onSubmit(values) {
     setError(null);
-    setLoading(true);
-
     try {
       await request({
         method: 'POST',
         path: '/1/auth/password/request',
         body: values,
       });
-
+      setEmail(values.email);
       setSuccess(true);
-      setLoading(false);
     } catch (err) {
       setError(err);
-      setLoading(false);
     }
-  };
-
-  const renderMessage = () => {
-    return (
-      <Alert title="Mail sent!" variant="light">
-        Please follow the instructions in the email we sent to{' '}
-        <b>{form.values.email}</b>
-      </Alert>
-    );
-  };
-
-  const renderForm = () => {
-    return (
-      <form onSubmit={form.onSubmit(handleSubmit)}>
-        {error && (
-          <Alert color="red" title="Error" mb="md">
-            {error.message || 'Something went wrong'}
-          </Alert>
-        )}
-
-        <TextInput
-          required
-          label="Email"
-          placeholder="Your email"
-          {...form.getInputProps('email')}
-          mb="md"
-        />
-
-        <Button fullWidth type="submit" loading={loading} disabled={loading}>
-          Reset password
-        </Button>
-      </form>
-    );
-  };
+  }
 
   return (
     <React.Fragment>
       <Meta title="Forgot Password" />
-      <Title order={3}>Forgot Password</Title>
-      <Stack mt="md">{success ? renderMessage() : renderForm()}</Stack>
+      <h1 className="mb-4 text-2xl font-bold tracking-tight">Forgot Password</h1>
 
-      <Group mt="md" justify="space-between">
-        <Anchor size="xs" component={Link} to="/login">
+      {success ? (
+        <Alert variant="success">
+          <AlertTitle>Mail sent!</AlertTitle>
+          <AlertDescription>
+            Please follow the instructions in the email we sent to{' '}
+            <b>{email}</b>
+          </AlertDescription>
+        </Alert>
+      ) : (
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col gap-3">
+            {error && (
+              <Alert variant="destructive">
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>
+                  {error.message || 'Something went wrong'}
+                </AlertDescription>
+              </Alert>
+            )}
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="email"
+                      placeholder="Your email"
+                      autoComplete="email"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button className="w-full" type="submit" disabled={loading}>
+              {loading && <Loader2 className="size-4 animate-spin" />}
+              Reset Password
+            </Button>
+          </form>
+        </Form>
+      )}
+
+      <div className="text-muted-foreground mt-4 flex justify-between text-xs">
+        <Link className="text-foreground no-underline hover:underline" to="/login">
           Back to login
-        </Anchor>
-        <Anchor size="xs" component={Link} to="/signup">
-          Don't have an account
-        </Anchor>
-      </Group>
+        </Link>
+        <Link
+          className="text-foreground no-underline hover:underline"
+          to="/signup">
+          Don&apos;t have an account
+        </Link>
+      </div>
     </React.Fragment>
   );
 }

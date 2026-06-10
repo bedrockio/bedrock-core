@@ -1,22 +1,26 @@
 import { Link } from '@bedrockio/router';
-
-import {
-  ActionIcon,
-  Anchor,
-  Drawer,
-  Group,
-  Stack,
-  Table,
-  Text,
-} from '@mantine/core';
-
+import { Search as SearchIcon } from 'lucide-react';
 import { useState } from 'react';
-import { PiMagnifyingGlass } from 'react-icons/pi';
 
 import Meta from 'components/Meta';
 import PageHeader from 'components/PageHeader';
 import Search from 'components/Search';
 import SearchFilters from 'components/Search/Filters';
+
+import { Button } from '@/components/ui/button';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 
 import { request } from 'utils/api';
 import { formatDateTime } from 'utils/date';
@@ -96,71 +100,67 @@ export default function AuditLogList() {
   return (
     <>
       <Meta title="Audit Log" />
-      <Drawer
-        position="right"
-        opened={!!selectedItem}
-        onClose={() => setSelectedItem(null)}
-        title={`Audit Entry: ${selectedItem?.activity}`}>
-        <Overview auditEntry={selectedItem} />
-      </Drawer>
+      <Sheet
+        open={!!selectedItem}
+        onOpenChange={(open) => {
+          if (!open) setSelectedItem(null);
+        }}>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>Audit Entry: {selectedItem?.activity}</SheetTitle>
+          </SheetHeader>
+          <div className="overflow-y-auto px-4 pb-4">
+            {selectedItem && <Overview auditEntry={selectedItem} />}
+          </div>
+        </SheetContent>
+      </Sheet>
+
       <Search.UrlProvider onDataNeeded={onDataNeeded}>
         {({ items }) => (
-          <Stack>
+          <div className="flex flex-col gap-4">
             <PageHeader
               title="Audit Log"
               breadcrumbItems={[
-                {
-                  href: '/',
-                  title: 'Home',
-                },
-                {
-                  title: 'Audit Log',
-                },
+                { href: '/', title: 'Home' },
+                { title: 'Audit Log' },
               ]}
             />
-            <Group justify="space-between">
-              <Group>
-                <SearchFilters.Modal>
-                  <SearchFilters.Search
-                    onDataNeeded={fetchUsers}
-                    name="actor"
-                    label="Actor"
-                  />
-                  <SearchFilters.Search
-                    onDataNeeded={fetchUsers}
-                    name="ownerId"
-                    label="Owner"
-                  />
-                  <SearchFilters.Search
-                    onDataNeeded={() =>
-                      fetchSearchOptions({ field: 'activity' })
-                    }
-                    name="activity"
-                    label="Activity"
-                  />
-                  <SearchFilters.Search
-                    name="objectType"
-                    label="Object Type"
-                    onDataNeeded={() =>
-                      fetchSearchOptions({ field: 'objectType' })
-                    }
-                  />
-                  <SearchFilters.Input name="sessionId" label="Session Id" />
-                  <SearchFilters.Input name="object" label="Object Id" />
-                  <SearchFilters.DateRange
-                    label="Created At"
-                    name="createdAt"
-                  />
-                </SearchFilters.Modal>
-                <Search.Status />
-              </Group>
-              <Group>
-                <Search.Status />
-              </Group>
-            </Group>
-            <Table striped highlightOnHover>
-              <Table.Thead>
-                <Table.Tr>
+
+            <div className="flex items-center justify-between gap-4">
+              <SearchFilters.Modal>
+                <SearchFilters.Search
+                  onDataNeeded={fetchUsers}
+                  name="actor"
+                  label="Actor"
+                />
+                <SearchFilters.Search
+                  onDataNeeded={fetchUsers}
+                  name="ownerId"
+                  label="Owner"
+                />
+                <SearchFilters.Search
+                  onDataNeeded={() => fetchSearchOptions({ field: 'activity' })}
+                  name="activity"
+                  label="Activity"
+                />
+                <SearchFilters.Search
+                  name="objectType"
+                  label="Object Type"
+                  onDataNeeded={() =>
+                    fetchSearchOptions({ field: 'objectType' })
+                  }
+                />
+                <SearchFilters.Input name="sessionId" label="Session Id" />
+                <SearchFilters.Input name="object" label="Object Id" />
+                <SearchFilters.DateRange label="Created At" name="createdAt" />
+              </SearchFilters.Modal>
+
+              <Search.Status />
+            </div>
+
+            <Table>
+              <TableHeader>
+                <TableRow>
                   <Search.Header name="actor">Actor</Search.Header>
                   <Search.Header name="activity">Activity</Search.Header>
                   <Search.Header>Object Owner</Search.Header>
@@ -168,71 +168,72 @@ export default function AuditLogList() {
                   <Search.Header name="createdAt" width={170}>
                     Date
                   </Search.Header>
-                  <Search.Header style={{ textAlign: 'right' }}>
-                    Actions
-                  </Search.Header>
-                </Table.Tr>
-              </Table.Thead>
-              <Table.Tbody>
+                  <Search.Header className="text-center">Actions</Search.Header>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 <Search.EmptyMessage>
-                  <Table.Tr>
-                    <Table.Td colSpan={6}>
-                      <Text p="md" fw="bold" ta="center">
+                  <TableRow>
+                    <TableCell colSpan={6}>
+                      <p className="py-4 text-center font-bold">
                         No entries found.
-                      </Text>
-                    </Table.Td>
-                  </Table.Tr>
+                      </p>
+                    </TableCell>
+                  </TableRow>
                 </Search.EmptyMessage>
                 {items.map((item) => {
                   const name = item.object?.name || item.actor?.name || '';
                   return (
-                    <Table.Tr
+                    <TableRow
                       key={item.id}
+                      className="cursor-pointer"
                       onClick={() => setSelectedItem(item)}>
-                      <Table.Td>
+                      <TableCell>
                         {item.actor && (
-                          <Anchor
-                            size="sm"
-                            component={Link}
+                          <Link
+                            className="text-foreground no-underline hover:underline"
                             title={item.actor.email}
-                            to={`/users/${item.actor.id}`}>
+                            to={`/users/${item.actor.id}`}
+                            onClick={(e) => e.stopPropagation()}>
                             {item.actor.firstName} {item.actor.lastName}
-                          </Anchor>
+                          </Link>
                         )}
-                      </Table.Td>
-                      <Table.Td>{item.activity}</Table.Td>
-
-                      <Table.Td>
+                      </TableCell>
+                      <TableCell>{item.activity}</TableCell>
+                      <TableCell>
                         {item.owner && (
-                          <Anchor
-                            size="sm"
-                            component={Link}
+                          <Link
+                            className="text-foreground no-underline hover:underline"
                             title={item.owner.email}
-                            to={`/users/${item.owner.id}`}>
+                            to={`/users/${item.owner.id}`}
+                            onClick={(e) => e.stopPropagation()}>
                             {item.owner.name}
-                          </Anchor>
+                          </Link>
                         )}
-                      </Table.Td>
-                      <Table.Td>{name}</Table.Td>
-                      <Table.Td>{formatDateTime(item.createdAt)}</Table.Td>
-
-                      <Table.Td style={{ textAlign: 'right' }}>
-                        <ActionIcon
-                          variant="default"
-                          onClick={(evt) => {
-                            evt.stopPropagation();
-                            setSelectedItem(item);
-                          }}>
-                          <PiMagnifyingGlass />
-                        </ActionIcon>
-                      </Table.Td>
-                    </Table.Tr>
+                      </TableCell>
+                      <TableCell>{name}</TableCell>
+                      <TableCell>{formatDateTime(item.createdAt)}</TableCell>
+                      <TableCell>
+                        <div className="flex justify-center">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={(evt) => {
+                              evt.stopPropagation();
+                              setSelectedItem(item);
+                            }}>
+                            <SearchIcon className="size-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
                   );
                 })}
-              </Table.Tbody>
+              </TableBody>
             </Table>
+
             <Search.Pagination />
-          </Stack>
+          </div>
         )}
       </Search.UrlProvider>
     </>

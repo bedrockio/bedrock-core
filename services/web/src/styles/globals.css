@@ -1,0 +1,174 @@
+/*
+ * shadcn/ui + Tailwind v4 design tokens.
+ *
+ * NOTE: Tailwind's preflight (global base reset) is intentionally NOT imported
+ * while Mantine is still mounted — it would reset Mantine's base element styles
+ * and break unconverted screens (see change-ui-framework-to-shadcn.html §6.3).
+ * We import theme + utilities + the shadcn component layer only. Once Mantine is
+ * removed in the teardown phase, switch the two imports below back to a single
+ * `@import "tailwindcss";` to re-enable preflight.
+ */
+/* Mantine is gone — full Tailwind (incl. preflight) is back in its normal layers. */
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Theme = the literal shadcn/ui default (neutral base, oklch).
+ * See restyle-to-shadcn-default.html.
+ *
+ * ┌──────────────────────────────────────────────────────────────────────────┐
+ * │  TO BRAND THE APP — change the primary colour                              │
+ * │                                                                            │
+ * │  The default primary is the shadcn neutral (near-black in light, near-     │
+ * │  white in dark). To give the app a brand colour, set --primary to that     │
+ * │  colour and --primary-foreground to a contrasting text colour, in BOTH     │
+ * │  :root (light) and .dark below. They are tagged `BRAND PRIMARY` inline.    │
+ * │                                                                            │
+ * │  Example — Bedrock green:                                                  │
+ * │      :root  { --primary: oklch(0.55 0.12 152);  --primary-foreground: oklch(0.985 0 0); }
+ * │      .dark  { --primary: oklch(0.62 0.13 152);  --primary-foreground: oklch(0.205 0 0); }
+ * │                                                                            │
+ * │  Optionally also brand --ring (focus) and --sidebar-primary to match.      │
+ * │  Nothing else needs to change — every primary button, focus ring and       │
+ * │  active state reads from these tokens.                                     │
+ * └──────────────────────────────────────────────────────────────────────────┘
+ */
+:root {
+  --radius: 0.625rem;
+
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+
+  --primary: oklch(0.205 0 0); /* BRAND PRIMARY (light) — see header */
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0 0);
+
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+
+  /* semantic (Alert info/success/warning) — meaning-only colours (§5.6) */
+  --info: oklch(0.6 0.118 248);
+  --success: oklch(0.6 0.13 150);
+  --warning: oklch(0.68 0.15 65);
+
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+
+  --primary: oklch(0.922 0 0); /* BRAND PRIMARY (dark) — see header */
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(0.985 0 0);
+
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+
+  --info: oklch(0.68 0.13 248);
+  --success: oklch(0.68 0.14 150);
+  --warning: oklch(0.75 0.15 65);
+
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.922 0 0);
+  --sidebar-primary-foreground: oklch(0.205 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-info: var(--info);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --font-sans: 'Geist Variable', system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Helvetica, Arial, sans-serif;
+  --font-mono: 'Geist Mono Variable', ui-monospace, SFMono-Regular, Menlo,
+    Consolas, monospace;
+}
+
+/*
+ * Canonical shadcn base layer. Without this:
+ *  - bare `border`/`border-b` (table rows, Cards, definition lists) default to
+ *    currentColor (dark) instead of the subtle `--border` token → heavy lines;
+ *  - elements with no explicit text colour (outline/ghost buttons) fall back to
+ *    UA black, which is invisible/wrong in dark mode.
+ */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

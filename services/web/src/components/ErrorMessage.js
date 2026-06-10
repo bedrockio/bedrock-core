@@ -2,15 +2,17 @@
 // also captures and logs error stack for production
 // debugging.
 
-import { Alert } from '@mantine/core';
 import { useEffect } from 'react';
+
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { cn } from '@/lib/utils';
 
 import { ApiError } from 'utils/api';
 import { CustomError } from 'utils/error';
 import { captureError } from 'utils/sentry';
 
 export default function ErrorMessage(props) {
-  const { error, ...rest } = props;
+  const { error, className } = props;
 
   useEffect(() => {
     if (canLogError(error)) {
@@ -35,8 +37,8 @@ export default function ErrorMessage(props) {
   }
 
   return (
-    <Alert color="error" size="small" {...rest}>
-      {error.message || 'An error occurred'}
+    <Alert variant="destructive" className={cn('mb-4', className)}>
+      <AlertDescription>{error.message || 'An error occurred'}</AlertDescription>
     </Alert>
   );
 }

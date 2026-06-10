@@ -80,8 +80,10 @@ object `window.__env_conf`.
 
 ## Frameworks Used
 
-- [Mantine](https://mantine.dev/)
-- [React Icons](https://react-icons.github.io/react-icons/)
+- [shadcn/ui](https://ui.shadcn.com/) — UI components (owned source, copied into `src/components/ui`)
+- [Radix UI](https://www.radix-ui.com/) — accessible primitives behind shadcn/ui
+- [Tailwind CSS v4](https://tailwindcss.com/) — styling
+- [Lucide](https://lucide.dev/) / [React Icons](https://react-icons.github.io/react-icons/)
 - [Vite](https://vite.dev/)
 - [React](https://facebook.github.io/react/)
 - [Bedrock Router](https://github.com/bedrockio/router)
@@ -92,7 +94,7 @@ object `window.__env_conf`.
 ## Other Features
 
 - Full login/signup flow with separate dashboard and homepage router
-- Uses Mantine as a rich UI element base
+- Uses shadcn/ui (Radix UI + Tailwind CSS v4) as the UI component base
 - Uses ES6 style React components
 - Code hotswapping
 - Static server
@@ -129,6 +131,44 @@ Markdown:
 callParams({ method: 'POST', path: '/1/auth/login' });
 ```
 
-## Updating Styles
+## Theming
 
-see [Mantine's Theming](https://mantine.dev/theming/theme-object)
+The UI is built on [shadcn/ui](https://ui.shadcn.com/) + Tailwind CSS v4. All
+design tokens live in **`src/styles/globals.css`** as CSS variables, defaulting
+to the neutral shadcn palette in both light (`:root`) and dark (`.dark`).
+
+### Brand colour
+
+The primary colour is a single knob. To brand the app, change `--primary` and
+`--primary-foreground` in **both** `:root` and `.dark` (they are tagged
+`BRAND PRIMARY` inline). This drives every primary button, the active tab
+indicator and (optionally) the focus ring — nothing else needs to change.
+
+```css
+/* src/styles/globals.css — example: a green brand */
+:root  { --primary: oklch(0.55 0.12 152); --primary-foreground: oklch(0.985 0 0); }
+.dark  { --primary: oklch(0.62 0.13 152); --primary-foreground: oklch(0.205 0 0); }
+```
+
+### Font
+
+The app ships [Geist](https://vercel.com/font) (bundled via
+`@fontsource-variable/geist`, so it's stable across platforms). It's wired in
+two places — swap both to use a different font:
+
+- the imports in `src/Wrapper.js` (`@fontsource-variable/geist*`)
+- the `--font-sans` / `--font-mono` tokens in `src/styles/globals.css`
+
+### Dark mode
+
+`ThemeProvider` (`src/components/ThemeProvider.jsx`) toggles a `.dark` class on
+`<html>`; the footer switch flips it. Defaults to light.
+
+### Adding components
+
+shadcn components live in `src/components/ui`. Add more with the CLI (config in
+`components.json`):
+
+```bash
+npx shadcn@latest add <component>
+```
