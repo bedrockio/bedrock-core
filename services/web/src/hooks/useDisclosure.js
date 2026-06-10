@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 
 /**
- * Local replacement for the Mantine useDisclosure.
+ * Boolean open/close state helper for menus, drawers and modals.
  * Returns [opened, { open, close, toggle }].
  */
 export function useDisclosure(initial = false) {

@@ -1,10 +1,9 @@
 import { toast } from 'sonner';
 
 /**
- * Notification shim backed by sonner, with a Mantine-compatible signature so
- * migrated call sites can swap `notifications.show(...)` / `showNotification(...)`
- * for `notify(...)` with minimal churn. `<Notifications/>` (Mantine) stays
- * mounted until every call site is migrated (plan §6.1, teardown in §6).
+ * Thin wrapper around sonner's `toast`. Accepts a `{ title, message, color }`
+ * shape so call sites can fire a notification with a single `notify(...)` call,
+ * mapping a colour keyword to the matching toast variant.
  *
  *   notify({ title, message, color })   // color: red|green|orange|blue|…
  */
