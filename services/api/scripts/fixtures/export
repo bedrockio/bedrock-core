@@ -17,7 +17,7 @@ require('../../src/models');
     logger.info(`
 -------------------------------------------------------------------
 
-  Usage: yarn fixtures:export [flags]
+  Usage: pnpm fixtures:export [flags]
 
   Options:
 

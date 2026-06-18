@@ -6,7 +6,7 @@ services:
       context: ./services/api
       args:
         NODE_ENV: development
-    command: yarn start
+    command: scripts/start-dev
     volumes:
       - ./services/api/src:/service/src
       - ./services/api/emails:/service/emails

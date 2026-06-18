@@ -4,16 +4,17 @@
   "license": "MIT",
   "type": "module",
   "engines": {
-    "node": ">=20"
+    "node": ">=26"
   },
+  "packageManager": "pnpm@11.5.2",
   "scripts": {
     "build": "vite build",
     "start": "scripts/start",
     "static": "node ./serve/static",
     "lint": "eslint",
     "test": "vitest",
-    "generate": "cd ../../generator && yarn install && yarn generate",
-    "postinstall": "cd serve && yarn install"
+    "generate": "cd ../../generator && pnpm install && pnpm generate",
+    "postinstall": "cd serve && pnpm install"
   },
   "dependencies": {
     "@bedrockio/chrono": "^0.9.1",
@@ -63,8 +64,7 @@
     "typescript": "^6.0.3"
   },
   "volta": {
-    "node": "24.12.0",
-    "yarn": "1.22.22"
+    "node": "26.3.0"
   },
   "prettier": "@bedrockio/prettier-config"
 }

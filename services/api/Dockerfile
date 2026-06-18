@@ -1,9 +1,20 @@
-FROM node:24.13.0-alpine
+# Build stage: install production dependencies with pnpm.
+FROM node:26.3.0-alpine AS deps
 
-# Yarn will not install any package listed in devDependencies if the NODE_ENV
-# environment variable is set to production. Use this flag to instruct Yarn to
-# ignore NODE_ENV and take its production-or-not status from this flag instead.
+# devDependencies (jest, eslint, etc.) are run on the host, not in the image.
 ARG NODE_ENV=production
+
+# Install pnpm (Node 26 no longer bundles corepack)
+RUN npm install -g pnpm@11.5.2
+
+WORKDIR /service
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN --mount=type=cache,target=/root/.local/share/pnpm/store --mount=type=cache,target=/root/.cache/pnpm pnpm install --prod --frozen-lockfile
+
+# Runtime stage: node + production node_modules + source only. No pnpm or npm
+# caches, so the image stays small.
+FROM node:26.3.0-alpine
 
 # Note layers should be ordered from less to more likely to change.
 
@@ -16,11 +27,7 @@ RUN mkdir -p /root/.config
 # Set work directory
 WORKDIR /service
 
-# Install dependencies and store yarn cache
-COPY package.json yarn.lock ./
-RUN --mount=type=cache,target=/root/.yarn YARN_CACHE_FOLDER=/root/.yarn yarn install --frozen-lockfile
-
-# Copy app source
+COPY --from=deps /service/node_modules ./node_modules
 COPY . .
 
 # Set your port
@@ -30,4 +37,4 @@ ENV PORT=2300
 EXPOSE 2300
 
 # Start production server
-CMD ["yarn", "-s", "start:production"]
+CMD ["node", "src/index.js"]
