@@ -11,6 +11,7 @@
     "start": "scripts/start-dev",
     "debug": "MONGO_DEBUG=true pnpm start",
     "start:production": "node src/index",
+    "start:jobs": "node scripts/entrypoints/jobs.js",
     "lint": "eslint",
     "test": "jest",
     "test:watch": "jest --watch -i",
@@ -20,6 +21,7 @@
     "docs:generate": "./scripts/docs/generate"
   },
   "dependencies": {
+    "@agendajs/mongo-backend": "^4.0.3",
     "@bedrockio/chrono": "^0.8.0",
     "@bedrockio/config": "^3.0.0",
     "@bedrockio/fixtures": "^1.4.5",
@@ -32,6 +34,7 @@
     "@koa/router": "^15.2.0",
     "@sentry/node": "^7.56.0",
     "@simplewebauthn/server": "^13.1.0",
+    "agenda": "^6.2.6",
     "bcryptjs": "^3.0.3",
     "commander": "^12.1.0",
     "fast-csv": "^5.0.1",

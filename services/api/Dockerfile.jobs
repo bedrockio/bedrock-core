@@ -6,27 +6,8 @@ ARG NODE_ENV=production
 
 # Note layers should be ordered from less to more likely to change.
 
-# Enable community & install Python + pipx + yq
-RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.21/community" \
-      >> /etc/apk/repositories && \
-    apk add --no-cache \
-      bash \
-      curl \
-      gcc \
-      jq \
-      musl-dev \
-      python3 \
-      py3-pip \
-      pipx
-
-RUN pip install --break-system-packages yacron
-
-# Download Mike Farah’s yq
-ARG YQ_VERSION=v4.44.5
-ARG YQ_BINARY=yq_linux_amd64
-RUN wget -qO /usr/local/bin/yq \
-      https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/${YQ_BINARY} \
-    && chmod +x /usr/local/bin/yq
+# Update & install required packages
+RUN apk add --update bash curl;
 
 # Needed for Gcloud Storage resumable file uploads
 RUN mkdir -p /root/.config
@@ -44,4 +25,6 @@ RUN --mount=type=cache,target=/root/.local/share/pnpm/store --mount=type=cache,t
 # Copy app source
 COPY . .
 
-CMD ["python3", "./scripts/entrypoints/jobs.py", "jobs/default.yml"]
+# Process background jobs (Agenda). No HTTP server: this pod pulls and runs
+# queued jobs, while the api pods only enqueue them.
+CMD ["yarn", "-s", "start:jobs"]

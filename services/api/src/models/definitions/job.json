@@ -1,0 +1,14 @@
+{
+  "attributes": {
+    "name": "String",
+    "data": "Object",
+    "nextRunAt": "Date",
+    "lockedAt": "Date",
+    "lastRunAt": "Date",
+    "lastFinishedAt": "Date",
+    "failedAt": "Date",
+    "failCount": "Number",
+    "failReason": "String",
+    "progress": "Number"
+  }
+}

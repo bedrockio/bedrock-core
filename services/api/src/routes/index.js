@@ -3,6 +3,7 @@ const Router = require('@koa/router');
 const meta = require('./meta');
 const docs = require('./docs');
 const auth = require('./auth');
+const jobs = require('./jobs');
 const users = require('./users');
 const products = require('./products');
 const shops = require('./shops');
@@ -24,6 +25,7 @@ const router = new Router({
 router.use('/meta', meta.routes());
 router.use('/docs', docs.routes());
 router.use('/auth', auth.routes());
+router.use('/jobs', jobs.routes());
 router.use('/users', users.routes());
 router.use('/products', products.routes());
 router.use('/shops', shops.routes());

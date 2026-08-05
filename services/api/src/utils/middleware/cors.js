@@ -12,12 +12,7 @@ const logger = require('@bedrockio/logger');
 // header to be overridden it is still possible to spoof.
 
 const DEFAULTS = {
-  exposeHeaders: [
-    'content-length',
-    'content-disposition',
-    'accept-ranges',
-    'content-range',
-  ],
+  exposeHeaders: ['content-length', 'content-disposition', 'accept-ranges', 'content-range', 'location'],
   maxAge: 600,
 };
 
