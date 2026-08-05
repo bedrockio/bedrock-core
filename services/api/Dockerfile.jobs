@@ -27,4 +27,4 @@ COPY . .
 
 # Process background jobs (Agenda). No HTTP server: this pod pulls and runs
 # queued jobs, while the api pods only enqueue them.
-CMD ["yarn", "-s", "start:jobs"]
+CMD ["pnpm", "-s", "start:jobs"]

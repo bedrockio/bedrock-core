@@ -4,21 +4,5 @@
   "tool_version": "unknown",
   "author_email": "plummer.andrew@gmail.com",
   "author_name": "Andrew Plummer",
-  "last_prompt_id": "373eb1d2-0cc5-4cd1-9038-7b741fa92edd",
-  "pending": {
-    "id": "aed50962-3d48-4780-b331-0378d3f42818",
-    "prompt": "Ah yes you're right - we need to move over send-notifications to the new system. Follow the patterns in vetspire-standalone",
-    "submitted_at": "2026-08-05T15:36:50.726057Z",
-    "git_branch": "jobs",
-    "git_head_commit": "0e96e6c2c7b90eb7b1f1376cfbd8dd8ec753b022",
-    "git_dirty": true,
-    "stop_seen": false,
-    "files_touched": [
-      "/Users/andrew/Bedrock/core/services/api/src/utils/jobs.js",
-      "/Users/andrew/Bedrock/core/services/api/src/jobs/send-notifications.js",
-      "/Users/andrew/Bedrock/core/services/api/src/jobs/index.js",
-      "/Users/andrew/Bedrock/core/services/api/__mocks__/agenda.js"
-    ],
-    "tool_errored": true
-  }
+  "last_prompt_id": "e7b83c26-8cad-4b38-8a36-03517c75032c"
 }
