@@ -12,6 +12,10 @@ const DURATIONS = {
   mail: '30d',
 };
 
+// Long enough for a browser to load the file it was minted for, short enough
+// that a URL leaking through history, a referrer, or a proxy log is stale.
+const UPLOAD_TOKEN_DURATION = '5m';
+
 function createAuthToken(ctx, user, options = {}) {
   // Auth tokens are typically created for oneself except
   // in cases where admin are impersonating other users.
@@ -73,6 +77,25 @@ function createAccessToken(user, options) {
   );
 }
 
+// Grants read access to a single private upload for a short window, so an
+// <img>/<audio> tag can fetch it without sending an Authorization header.
+// Deliberately carries no `sub`: the permission check happens before the URL is
+// minted (see validateAccess), and access is granted on the upload id alone, so
+// naming a user would give the token no authority it needs — and would make a
+// leaked URL usable as that user's credential. Its own `kid` keeps it that way:
+// validateToken rejects any token whose kid doesn't match what the route asks
+// for, and no route authenticates with type 'upload'.
+function createUploadToken(upload) {
+  return signToken(
+    {
+      kid: 'upload',
+      jti: generateTokenId(),
+      upload: upload.id,
+    },
+    UPLOAD_TOKEN_DURATION,
+  );
+}
+
 function createPasskeyToken(payload) {
   return signToken({
     kid: 'passkey',
@@ -120,6 +143,7 @@ module.exports = {
   removeAuthToken,
   getAuthPayload,
   createInviteToken,
+  createUploadToken,
   createPasskeyToken,
   removeExpiredTokens,
   createImpersonateAuthToken,

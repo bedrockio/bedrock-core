@@ -1,14 +1,14 @@
 const os = require('os');
 const path = require('path');
 const fs = require('fs');
-const { copyFile, stat, writeFile } = require('fs/promises');
+const { copyFile, rm, stat, writeFile } = require('fs/promises');
 
 const config = require('@bedrockio/config');
 const logger = require('@bedrockio/logger');
 const mime = require('mime-types');
 const { Storage } = require('@google-cloud/storage');
 const { Upload } = require('../models');
-const { createAccessToken, verifyToken } = require('./tokens');
+const { createUploadToken, verifyToken } = require('./tokens');
 const { userHasAccess } = require('./permissions');
 
 const API_URL = config.get('API_URL');
@@ -114,18 +114,15 @@ async function uploadGcs(file, upload) {
 const SIGNED_URL_TTL = 6 * 60 * 60 * 1000;
 
 // Browser-usable URL for the upload.
-// For local storage, private uploads get a short-lived access token appended
-// so `<audio>`/`<img>` tags can authenticate without sending headers.
-async function getUploadUrl(upload, options = {}) {
+// For local storage, private uploads get a short-lived token appended so
+// `<audio>`/`<img>` tags can authenticate without sending headers. The token is
+// scoped to this upload and names no user, so callers need only prove access
+// before asking for the URL — there is nothing to attribute it to.
+async function getUploadUrl(upload) {
   if (upload.storageType === 'local') {
     let url = `${API_URL}/1/uploads/${upload.id}/raw`;
     if (upload.private) {
-      const { user } = options;
-      const token = createAccessToken(user, {
-        duration: '5m',
-        upload: upload.id,
-      });
-      url += `?token=${token}`;
+      url += `?token=${createUploadToken(upload)}`;
     }
     return url;
   } else {
@@ -176,6 +173,37 @@ async function createResumableUpload(attributes) {
   };
 }
 
+// Replaces the stored bytes of an upload with the file at `filepath`. The
+// storage destination and content type follow the upload's current metadata,
+// so if `mimeType` was changed first (e.g. transcoding WebM audio to M4A)
+// the file lands at the new destination — the caller is responsible for
+// cleaning up the old one (see deleteUploadFile).
+async function replaceUploadFile(upload, filepath) {
+  const file = {
+    filepath,
+    filename: upload.filename,
+  };
+  if (upload.storageType === 'gcs') {
+    await uploadGcs(file, upload);
+  } else {
+    await uploadLocal(file, upload);
+  }
+}
+
+// Deletes the stored file for an upload-like object ({ id, mimeType,
+// storageType } is enough). The Upload document itself is untouched.
+async function deleteUploadFile(upload) {
+  if (upload.storageType === 'gcs') {
+    await getGcsFile(upload).delete({
+      ignoreNotFound: true,
+    });
+  } else {
+    await rm(getUploadLocalPath(upload), {
+      force: true,
+    });
+  }
+}
+
 function getUploadLocalPath(upload) {
   return path.join(os.tmpdir(), getUploadFilename(upload));
 }
@@ -202,7 +230,7 @@ function validateAccess(ctx, upload) {
   if (token) {
     try {
       const decoded = verifyToken(token);
-      if (decoded.kid === 'access' && decoded.upload === upload.id) {
+      if (decoded.kid === 'upload' && decoded.upload === upload.id) {
         return;
       }
     } catch {
@@ -210,18 +238,17 @@ function validateAccess(ctx, upload) {
     }
   }
 
-  const { authUser } = ctx.state;
+  // A private upload is readable by its owner, by anyone with upload access
+  // within their organization, and by global ("super admin") users.
+  const { authUser, organization } = ctx.state;
   let allowed;
   if (!authUser) {
     allowed = false;
   } else if (authUser.equals(upload.owner)) {
     allowed = true;
   } else {
-    allowed = userHasAccess(authUser, {
-      endpoint: 'uploads',
-      permission: 'read',
-      scope: 'global',
-    });
+    allowed = userHasOrganizationAccess(authUser, organization);
+    allowed ||= userHasGlobalAccess(authUser);
   }
 
   if (!allowed) {
@@ -229,8 +256,30 @@ function validateAccess(ctx, upload) {
   }
 }
 
+function userHasOrganizationAccess(user, organization) {
+  if (!organization) {
+    return;
+  }
+  return userHasAccess(user, {
+    endpoint: 'uploads',
+    permission: 'read',
+    scope: 'organization',
+    scopeRef: organization.id,
+  });
+}
+
+function userHasGlobalAccess(user) {
+  return userHasAccess(user, {
+    endpoint: 'uploads',
+    permission: 'read',
+    scope: 'global',
+  });
+}
+
 function getUploadFilename(upload) {
-  return upload.id;
+  const { id, mimeType } = upload;
+  const ext = mime.extension(mimeType);
+  return `${id}.${ext}`;
 }
 
 function getGcsFile(upload) {
@@ -309,10 +358,13 @@ module.exports = {
   createUploads,
   createUpload,
   getUploadUrl,
+  getUploadFilename,
   getUploadLocalPath,
   getUploadReadStream,
   validateAccess,
   parseRange,
   createUploadFromUrl,
   createResumableUpload,
+  replaceUploadFile,
+  deleteUploadFile,
 };
