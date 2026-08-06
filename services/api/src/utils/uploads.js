@@ -218,6 +218,17 @@ function getUploadReadStream(upload) {
   throw new Error(`Unsupported upload storage type: ${upload.storageType}`);
 }
 
+// Reads the stored file into a base64 string, for platforms that require a
+// file to be inlined in the request rather than fetched from a URL. The whole
+// file is held in memory, so this is only suitable for documents and images.
+async function getUploadBase64(upload) {
+  const chunks = [];
+  for await (const chunk of getUploadReadStream(upload)) {
+    chunks.push(chunk);
+  }
+  return Buffer.concat(chunks).toString('base64');
+}
+
 function validateAccess(ctx, upload) {
   if (!upload) {
     ctx.throw(404);
@@ -361,6 +372,7 @@ module.exports = {
   getUploadFilename,
   getUploadLocalPath,
   getUploadReadStream,
+  getUploadBase64,
   validateAccess,
   parseRange,
   createUploadFromUrl,
