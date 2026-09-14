@@ -30,7 +30,7 @@ curl -sSLf https://get.volta.sh | bash
 Install dependencies: (will install correct Node.js version)
 
 ```
-yarn install
+pnpm install
 ```
 
 ## Run
@@ -39,7 +39,7 @@ The following command serves all HTML/JS/CSS and watches all changes to
 `src/*.js`
 
 ```bash
-yarn start
+pnpm start
 ```
 
 UI is running at [http://localhost:2200/](http://localhost:2200/)
@@ -56,7 +56,7 @@ Tests are written using Vitest. Tests MUST follow these guidelines:
 Run tests with:
 
 ```
-yarn test
+pnpm test
 ```
 
 ## Configuration

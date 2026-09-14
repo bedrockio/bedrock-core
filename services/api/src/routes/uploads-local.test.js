@@ -1,8 +1,10 @@
+process.env.UPLOADS_STORE = 'local';
+
 const fs = require('fs');
 const os = require('os');
 const { request, createUpload, createUser, createAdmin } = require('../utils/testing');
 const { mockTime, unmockTime, advanceTime } = require('../utils/testing/time');
-const { createAccessToken } = require('../utils/tokens');
+const { createUploadToken } = require('../utils/tokens');
 const { Upload } = require('../models');
 const { Blob } = require('node:buffer');
 
@@ -75,9 +77,7 @@ describe('/1/uploads', () => {
       });
       const response = await request('GET', `/1/uploads/${upload.id}/url`, {}, { user });
       expect(response).toHaveStatus(200);
-      expect(response.body.data).toMatch(
-        new RegExp(`/1/uploads/${upload.id}/raw$`),
-      );
+      expect(response.body.data).toMatch(new RegExp(`/1/uploads/${upload.id}/raw$`));
       expect(response.body.data).not.toContain('token=');
     });
 
@@ -91,9 +91,7 @@ describe('/1/uploads', () => {
       const response = await request('GET', `/1/uploads/${upload.id}/url`, {}, { user });
 
       expect(response).toHaveStatus(200);
-      expect(response.body.data).toMatch(
-        new RegExp(`/1/uploads/${upload.id}/raw\\?token=`),
-      );
+      expect(response.body.data).toMatch(new RegExp(`/1/uploads/${upload.id}/raw\\?token=`));
     });
 
     it('should allow access as admin', async () => {
@@ -145,17 +143,9 @@ describe('/1/uploads', () => {
         private: true,
         owner: user,
       });
-      const token = createAccessToken(user, {
-        duration: '5m',
-        upload: upload.id,
-      });
+      const token = createUploadToken(upload);
 
-      const response = await request(
-        'GET',
-        `/1/uploads/${upload.id}/raw`,
-        { token },
-        {},
-      );
+      const response = await request('GET', `/1/uploads/${upload.id}/raw`, { token }, {});
 
       expect(response).toHaveStatus(200);
       unmockReadStream();
@@ -171,17 +161,9 @@ describe('/1/uploads', () => {
         private: true,
         owner: user,
       });
-      const token = createAccessToken(user, {
-        duration: '5m',
-        upload: otherUpload.id,
-      });
+      const token = createUploadToken(otherUpload);
 
-      const response = await request(
-        'GET',
-        `/1/uploads/${upload.id}/raw`,
-        { token },
-        {},
-      );
+      const response = await request('GET', `/1/uploads/${upload.id}/raw`, { token }, {});
 
       expect(response).toHaveStatus(401);
     });
@@ -191,12 +173,7 @@ describe('/1/uploads', () => {
         private: true,
       });
 
-      const response = await request(
-        'GET',
-        `/1/uploads/${upload.id}/raw`,
-        { token: 'not-a-real-jwt' },
-        {},
-      );
+      const response = await request('GET', `/1/uploads/${upload.id}/raw`, { token: 'not-a-real-jwt' }, {});
 
       expect(response).toHaveStatus(401);
     });
@@ -211,12 +188,7 @@ describe('/1/uploads', () => {
       const { signToken, getAuthPayload } = require('../utils/tokens');
       const token = signToken({ ...getAuthPayload(user), upload: upload.id });
 
-      const response = await request(
-        'GET',
-        `/1/uploads/${upload.id}/raw`,
-        { token },
-        {},
-      );
+      const response = await request('GET', `/1/uploads/${upload.id}/raw`, { token }, {});
 
       expect(response).toHaveStatus(401);
     });
@@ -228,19 +200,11 @@ describe('/1/uploads', () => {
         private: true,
         owner: user,
       });
-      const token = createAccessToken(user, {
-        duration: '5m',
-        upload: upload.id,
-      });
+      const token = createUploadToken(upload);
 
       advanceTime(10 * 60 * 1000);
 
-      const response = await request(
-        'GET',
-        `/1/uploads/${upload.id}/raw`,
-        { token },
-        {},
-      );
+      const response = await request('GET', `/1/uploads/${upload.id}/raw`, { token }, {});
 
       expect(response).toHaveStatus(401);
       unmockTime();

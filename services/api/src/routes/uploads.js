@@ -38,13 +38,11 @@ router
     };
   })
   .get('/:id/url', async (ctx) => {
-    const { upload, authUser } = ctx.state;
+    const { upload } = ctx.state;
     validateAccess(ctx, upload);
     try {
       ctx.body = {
-        data: await getUploadUrl(upload, {
-          user: authUser,
-        }),
+        data: await getUploadUrl(upload),
       };
     } catch (error) {
       ctx.throw(400, error);

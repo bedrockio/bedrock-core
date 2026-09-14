@@ -1,36 +1,41 @@
-# Base layer has core package deps
-FROM node:24.12.0-alpine AS base
+# Base layer: runtime essentials shared by the build and production stages.
+# pnpm is intentionally NOT installed here so it stays out of the production image.
+FROM node:26.3.0-alpine AS base
 
 RUN apk add --update bash curl
 
 WORKDIR /service
 
-# Build layer runs root yarn install and builds the app.
-# Note that layers are immutable so node_modules will
-# persist in the image even if removed. This is why the
-# production stage copies only the files it needs.
+# Build layer installs pnpm + dependencies and builds the app. node_modules and
+# pnpm live only in this stage; the production stage copies just the built output.
 FROM base AS build
+
+# Install pnpm (Node 26 no longer bundles corepack)
+RUN npm install -g pnpm@11.5.2
 
 ARG NODE_ENV=production
 
-COPY package.json yarn.lock ./
-COPY serve/package.json serve/yarn.lock ./serve/
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY serve/package.json serve/pnpm-lock.yaml serve/pnpm-workspace.yaml ./serve/
 
-RUN yarn install --frozen-lockfile
+# CI=true makes pnpm default to --frozen-lockfile, including web's postinstall
+# that installs serve — keeps the image reproducible without forcing frozen
+# installs in local dev. Scoped to this RUN so it doesn't leak into runtime.
+RUN --mount=type=cache,target=/root/.local/share/pnpm/store --mount=type=cache,target=/root/.cache/pnpm CI=true pnpm install --frozen-lockfile
 
 COPY . .
 
-RUN yarn build
+RUN pnpm build
 
-# Dev target exposed here for docker compose
+# Dev target for docker compose (has pnpm + full deps for the Vite dev server).
 FROM build AS dev
 
 EXPOSE 2200
 
-CMD ["yarn", "start"]
+CMD ["pnpm", "start"]
 
-# Production (default) build copies over files
-# without node_modules to keep the image small.
+# Production (default) build copies over only the built assets and the static
+# server, without pnpm/npm or the app's build-time node_modules.
 FROM base
 
 EXPOSE 2200

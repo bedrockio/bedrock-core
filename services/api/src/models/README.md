@@ -91,11 +91,10 @@ Use the sync script (e.g., scripts/indexes/sync) to apply or update indexes in t
 
 ##### I get warnings like `The punycode module is deprecated`. What is this?
 
-This warning comes from later node versions and is usually deep in the dependency chain. Add this to your `package.json`
-and re-run `yarn install` and it should fix it:
+This warning comes from later node versions and is usually deep in the dependency chain. Add this to your
+`pnpm-workspace.yaml` and re-run `pnpm install` and it should fix it:
 
-```json
-"resolutions": {
-  "whatwg-url": "14.1.0"
-},
+```yaml
+overrides:
+  whatwg-url: 14.1.0
 ```

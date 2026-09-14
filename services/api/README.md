@@ -53,7 +53,7 @@ curl -sSLf https://get.volta.sh | bash
 Install dependencies: (will install correct Node.js version)
 
 ```
-yarn install
+pnpm install
 ```
 
 ## Bedrock Packages
@@ -81,7 +81,7 @@ Tests are written using Jest. Tests MUST follow these guidelines:
 Run tests with:
 
 ```
-yarn test
+pnpm test
 ```
 
 ## Running in Development
@@ -89,7 +89,7 @@ yarn test
 Start the development server with auto-reload:
 
 ```
-yarn start
+pnpm start
 ```
 
 This command will automatically populate MongoDB fixtures when and empty DB is found.
@@ -177,25 +177,25 @@ Fixtures are provided with the [@bedrockio/fixtures](https://github.com/bedrocki
 
 Package scripts are the main way of interacting with fixtures:
 
-- `yarn start` - When the development server starts, fixtures will be loaded if the database is empty.
-- `yarn fixtures:reload` - Drops the database and reloads all fixtures.
-- `yarn fixtures:load` - Loads fixtures if the database is empty. Fixtures are not auto-loaded in non-development
+- `pnpm start` - When the development server starts, fixtures will be loaded if the database is empty.
+- `pnpm fixtures:reload` - Drops the database and reloads all fixtures.
+- `pnpm fixtures:load` - Loads fixtures if the database is empty. Fixtures are not auto-loaded in non-development
   environments as multiple pods starting up at the same time can cause data duplication, so instead this script is used
   to provision the data once through the CLI pod.
-- `yarn fixtures:export` - Exports documents as a zip file in a format compatible with the `fixtures` directory.
+- `pnpm fixtures:export` - Exports documents as a zip file in a format compatible with the `fixtures` directory.
 
 Additionally, a function `importFixtures` manually imports fixtures for use with testing.
 
 You can force reload fixtures with the command:
 
 ```
-yarn fixtures:reload
+pnpm fixtures:reload
 ```
 
 _Note: In the staging environment this script can be run by obtaining a shell into the API CLI pod (see
 [../../deployment](../../deployment/README.md))_
 
-The `yarn fixtures:export` script exports documents as a zip file in a format compatible with the `fixtures` directory.
+The `pnpm fixtures:export` script exports documents as a zip file in a format compatible with the `fixtures` directory.
 This allows database changes to be "baked" in as fixtures. The following options are accepted:
 
 - `--model(s)`: Comma separated list of model names to export (required).
@@ -485,11 +485,10 @@ optimized for each method.
 
 ##### I get warnings like `The punycode module is deprecated`. What is this?
 
-This warning comes from later node versions and is usually deep in the dependency chain. Add this to your `package.json`
-and re-run `yarn install` and it should fix it:
+This warning comes from later node versions and is usually deep in the dependency chain. Add this to your
+`pnpm-workspace.yaml` and re-run `pnpm install` and it should fix it:
 
-```json
-"resolutions": {
-  "whatwg-url": "14.1.0"
-},
+```yaml
+overrides:
+  whatwg-url: 14.1.0
 ```

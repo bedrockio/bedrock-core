@@ -4,11 +4,12 @@
   "version": "0.0.1",
   "license": "MIT",
   "engines": {
-    "node": ">=20"
+    "node": ">=24"
   },
+  "packageManager": "pnpm@11.5.2",
   "scripts": {
     "start": "scripts/start-dev",
-    "debug": "MONGO_DEBUG=true yarn start",
+    "debug": "MONGO_DEBUG=true pnpm start",
     "start:production": "node src/index",
     "lint": "eslint",
     "test": "jest",
@@ -71,7 +72,6 @@
     "supertest": "^7.1.4"
   },
   "volta": {
-    "node": "24.12.0",
-    "yarn": "1.22.22"
+    "node": "26.3.0"
   }
 }

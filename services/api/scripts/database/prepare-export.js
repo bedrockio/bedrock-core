@@ -181,18 +181,14 @@ async function runSanitizations(connection, sanitizations) {
     const sanitizedName = `${collection}_sanitized`;
 
     try {
-      // Attempt to modify the view
-      await connection.db.command({
-        collMod: sanitizedName,
-        viewOn: collection,
-        pipeline,
-      });
-    } catch {
-      // View not created yet so create it
       await connection.createCollection(sanitizedName, {
         viewOn: collection,
         pipeline,
       });
+    } catch (error) {
+      if (error.codeName !== 'NamespaceExists') {
+        throw error;
+      }
     }
   }
 }
