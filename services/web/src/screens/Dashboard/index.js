@@ -3,7 +3,6 @@ import { ArrowRight, Building2, Store, Tag, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 import Meta from 'components/Meta';
-import { StatCard, StatGrid } from 'components/StatCard';
 
 import { useSession } from 'stores/session';
 
@@ -64,28 +63,13 @@ export default function Dashboard() {
       <Meta title="Dashboard" />
 
       <div>
-        <div className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-          Home
-        </div>
-        <h1 className="mt-1 text-2xl font-bold tracking-tight">
+        <h1 className="text-2xl font-bold tracking-tight">
           {firstName ? `Welcome back, ${firstName}` : 'Welcome back'}
         </h1>
         <p className="text-muted-foreground mt-1 text-sm">
           Your operations at a glance.
         </p>
       </div>
-
-      <StatGrid>
-        {SECTIONS.map((s) => (
-          <StatCard
-            key={s.resource}
-            label={s.label}
-            value={fmt(counts[s.resource])}
-            icon={s.icon}
-            hint="total"
-          />
-        ))}
-      </StatGrid>
 
       <div>
         <div className="text-muted-foreground mb-3 text-xs font-semibold tracking-wide uppercase">

@@ -39,8 +39,23 @@ export default function SortableHeader(props) {
     <TableHead
       {...rest}
       onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick();
+        }
+      }}
+      role="button"
+      tabIndex={0}
+      aria-sort={
+        sorted === 'asc'
+          ? 'ascending'
+          : sorted === 'desc'
+            ? 'descending'
+            : 'none'
+      }
       className={cn(
-        'group hover:text-foreground cursor-pointer transition-colors select-none',
+        'group hover:text-foreground focus-visible:ring-ring cursor-pointer transition-colors outline-none select-none focus-visible:ring-2',
         sorted && 'text-foreground',
         className,
       )}>

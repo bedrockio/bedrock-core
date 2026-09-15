@@ -17,7 +17,11 @@ export default function Footer() {
       <DensityToggle />
       <div className="flex items-center gap-2">
         <span className="text-muted-foreground text-xs font-bold">Theme</span>
-        <Switch checked={isDark} onCheckedChange={onToggle} />
+        <Switch
+          checked={isDark}
+          onCheckedChange={onToggle}
+          aria-label="Dark mode"
+        />
       </div>
       <div className="flex items-center gap-2">
         <span className="text-muted-foreground text-xs font-bold">

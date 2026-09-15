@@ -128,7 +128,9 @@ export default function ProductList() {
                         )}
                       </TableCell>
                       <TableCell>{formatUsd(product.priceUsd)}</TableCell>
-                      <TableCell>{formatDateTime(product.createdAt)}</TableCell>
+                      <TableCell className="text-muted-foreground font-mono text-xs">
+                        {formatDateTime(product.createdAt)}
+                      </TableCell>
                       <TableCell>
                         <div className="flex justify-center">
                           <Actions

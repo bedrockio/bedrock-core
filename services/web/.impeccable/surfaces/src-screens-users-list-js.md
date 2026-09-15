@@ -21,7 +21,7 @@ related_targets: []
 
 THESIS: Bedrock's admin is an operator's console — data leads, chrome recedes. It refuses the pastel-SaaS dashboard (rounded cards on flat grey, gradient hero, whitespace inflation) and its raw-terminal opposite. A calm near-white field where borderless cards float on their own light, one brand accent does all the pointing, and dense tables read at a glance.
 
-OWN-WORLD: Near-white ground carrying a faint accent-tinted aurora glow top-right (glow follows the brand token). Borderless cards; one depth language across light and dark — a light top-edge highlight + soft shadow, with tonal lift in dark. Headings Bricolage Grotesque; body Inter; numerics/identifiers mono, tabular. One accent (Indigo default, swappable) for primary action, active nav (tinted pill + accent text/icon) and the sort arrow. Lighter sidebar plane that recedes; hairlines only inside tables. Semantic green/amber/red kept apart from brand.
+OWN-WORLD: Near-white ground carrying a faint accent-tinted aurora glow top-right (glow follows the brand token). Borderless cards; one depth language across light and dark — a light top-edge highlight + soft shadow, with tonal lift in dark. Headings Bricolage Grotesque (self-hosted); body Geist; numerics/identifiers Geist Mono, tabular. One accent (Indigo default, swappable) for primary action, active nav (tinted pill + accent text/icon) and the sort arrow. Lighter sidebar plane that recedes; hairlines only inside tables. Semantic green/amber/red kept apart from brand.
 
 STORY: An operator lands, sees KPIs and a dense sortable table at once, trusts it instantly (precise, production-credible), and completes CRUD/oversight fast without the interface competing for attention.
 

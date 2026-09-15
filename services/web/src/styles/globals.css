@@ -180,7 +180,8 @@
   --font-mono: 'Geist Mono Variable', ui-monospace, SFMono-Regular, Menlo,
     Consolas, monospace;
   /* Operator's Console display face — headings + card/section titles. */
-  --font-heading: 'Bricolage Grotesque', 'Geist Variable', system-ui, sans-serif;
+  --font-heading: 'Bricolage Grotesque Variable', 'Geist Variable', system-ui,
+    sans-serif;
 }
 
 /*

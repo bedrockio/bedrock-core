@@ -1,36 +1,31 @@
 ---
-name: Bedrock Admin
-description: A production-credible, rebrandable admin design system for operators.
+name: Bedrock Admin — Operator's Console
+description: A data-first, white-label admin console for operators.
 colors:
-  ink: "oklch(0.145 0 0)"
+  ink: "oklch(0.17 0 0)"
   paper: "oklch(1 0 0)"
   primary: "oklch(0.505 0.18 266)"
   primary-on: "oklch(0.985 0 0)"
   surface-muted: "oklch(0.97 0 0)"
   ink-muted: "oklch(0.556 0 0)"
   hairline: "oklch(0.922 0 0)"
-  ring: "oklch(0.708 0 0)"
+  ring: "oklch(0.55 0.16 266)"
+  sidebar: "oklch(0.978 0.004 285)"
   destructive: "oklch(0.577 0.245 27.325)"
   info: "oklch(0.6 0.118 248)"
   success: "oklch(0.6 0.13 150)"
   warning: "oklch(0.68 0.15 65)"
 typography:
   display:
-    fontFamily: "Geist Variable, system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif"
-    fontSize: "1.875rem"
-    fontWeight: 600
-    lineHeight: 1.2
-    letterSpacing: "-0.02em"
-  headline:
-    fontFamily: "Geist Variable, system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif"
+    fontFamily: "Bricolage Grotesque, Geist Variable, system-ui, sans-serif"
     fontSize: "1.5rem"
-    fontWeight: 600
-    lineHeight: 1.25
-    letterSpacing: "-0.015em"
+    fontWeight: 700
+    lineHeight: 1.2
+    letterSpacing: "-0.01em"
   title:
-    fontFamily: "Geist Variable, system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif"
+    fontFamily: "Bricolage Grotesque, Geist Variable, system-ui, sans-serif"
     fontSize: "1.125rem"
-    fontWeight: 600
+    fontWeight: 700
     lineHeight: 1.3
     letterSpacing: "-0.01em"
   body:
@@ -40,22 +35,23 @@ typography:
     lineHeight: 1.5
     letterSpacing: "normal"
   label:
-    fontFamily: "Geist Variable, system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif"
+    fontFamily: "Geist Variable, system-ui, sans-serif"
     fontSize: "0.75rem"
-    fontWeight: 500
+    fontWeight: 600
     lineHeight: 1.4
-    letterSpacing: "normal"
+    letterSpacing: "0.03em"
   mono:
     fontFamily: "Geist Mono Variable, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
     fontSize: "0.8125rem"
-    fontWeight: 400
-    lineHeight: 1.5
+    fontWeight: 500
+    lineHeight: 1.4
     letterSpacing: "normal"
 rounded:
   sm: "6px"
   md: "8px"
   lg: "10px"
   xl: "14px"
+  2xl: "16px"
 spacing:
   sm: "8px"
   md: "16px"
@@ -67,184 +63,154 @@ components:
     rounded: "{rounded.md}"
     padding: "8px 16px"
     height: "36px"
-  button-secondary:
-    backgroundColor: "{colors.surface-muted}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.md}"
-    padding: "8px 16px"
-    height: "36px"
-  button-outline:
+  card:
     backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
-    rounded: "{rounded.md}"
-    padding: "8px 16px"
-    height: "36px"
+    rounded: "{rounded.2xl}"
+    padding: "20px"
+  stat-card:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.2xl}"
+    padding: "16px"
   input:
     backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
     rounded: "{rounded.md}"
     padding: "4px 12px"
     height: "36px"
-  card:
-    backgroundColor: "{colors.paper}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.xl}"
-    padding: "24px"
-  badge:
-    backgroundColor: "{colors.primary}"
-    textColor: "{colors.primary-on}"
-    rounded: "{rounded.md}"
-    padding: "2px 8px"
 ---
 
-# Design System: Bedrock Admin
+# Design System: Bedrock Admin — Operator's Console
 
 ## Overview
 
-**Creative North Star: "The Production Desk"**
+**Creative North Star: "The Operator's Console"**
 
-Bedrock's UI should read like a finished, shipped admin product from the first paint — never a scaffold or a demo. An operator sitting down at it feels like they've opened a real, mature tool: everything is where a category-fluent user expects it, nothing is subtly off, and the interface disappears into the task. This is a workbench for people doing fast, accurate CRUD and oversight, and its credibility is the point.
+Bedrock's admin is a console for operators who live in data all day — managing organizations, shops, products, users, and reviewing the audit log. Data leads; chrome recedes. The surface is a calm, near-white field over which **borderless cards float on their own light**, a single brand accent does all the pointing, and dense tables read at a glance. It should read as a finished, precise, production-credible tool from the first paint — the modern dev-console lineage (Linear / Vercel / Stripe), raised toward information density.
 
-The voice is **soft-gloss-minimal, warm and precise**. Restraint comes first: a warm, accent-tinted canvas, hairline structure, meaning-only color, a tight and consistent type scale. The gloss is quiet and specific, never decorative — cards sit at ~95% opacity so the warm ground *just* reads through them, and lift on a single soft shadow. The reference point is a quietly premium instrument: crafted, legible, never stark and never a playful consumer app.
+It refuses the two category defaults: the pastel-SaaS dashboard (rounded cards on a flat grey slab, a gradient hero, whitespace inflation) and its raw-terminal opposite. Instead: a warm-neutral-to-cool light field carrying a faint **accent-tinted aurora glow** at the top-right, cards with no borders that lift on one soft Highlight + Shadow depth, characterful **Bricolage** headings against a quiet workhorse body, and a decisive, swappable accent.
 
-Identity is a thin, swappable layer. Bedrock ships an **Indigo** brand by default, but that brand is a single white-label knob (`--primary`) an adopter changes to make the app theirs; generated screens must be indistinguishable from hand-built ones. The design system's job is to make "rebrandable by default" and "consistent by construction" true in practice. State only confirmed rejections: decorative color, heavy or hard shadows, glass-as-decoration, display type in UI chrome, and invented affordances for standard tasks.
+Identity is a thin, swappable layer. Bedrock ships **Indigo** by default, but the brand is a single white-label token (`--primary`) — an adopter changes it and the whole system, including the aurora glow, re-tints coherently. Generated screens must be indistinguishable from hand-built ones.
 
 **Key Characteristics:**
-- Production-credible from the first paint; earned familiarity over novelty.
-- Warm, accent-tinted canvas with soft-gloss-minimal cards (~95% opacity, one soft lift).
-- Indigo brand by default, carried entirely by a single white-label token.
-- Color carries meaning only — state and the one brand accent.
-- One primary action per view; importance via hierarchy, never ad-hoc color.
-- Brand is a single token; generated and hand-built screens are visually identical.
+- Data-first; the interface disappears into the task (Operate mode).
+- Borderless cards floating on ONE Highlight + Shadow depth, light and dark.
+- A faint accent-tinted aurora glow that follows the white-label brand token.
+- Bricolage display headings over a Geist body and tabular-mono numerics.
+- One decisive accent; semantic status colour kept apart from the brand.
 
 ## Colors
 
-An achromatic, gently warm neutral canvas where the only saturated color is meaningful — brand accent on primary actions and selection, and the semantic quartet for state. Values are authored in OKLCH in `src/styles/globals.css`; light mode is the base, dark mode inverts the same roles under `.dark`.
+A cool-neutral field where the only saturated colour is meaningful — the brand accent on primary actions, active nav, and the aurora glow, plus the semantic quartet for state. Authored in OKLCH in `src/styles/globals.css`; light is the base, dark inverts the roles under `.dark`.
 
 ### Primary
-- **Brand Indigo** (`oklch(0.505 0.18 266)` light · `oklch(0.62 0.17 266)` dark): the `--primary` token — the single white-label knob. It fills primary buttons, the current selection, active nav, the focus ring, and accent-tinted charts. An adopter rebrands the entire product by changing this one token (and its foreground) in light and dark; nothing else moves.
+- **Brand Indigo** (`oklch(0.505 0.18 266)` light · `oklch(0.62 0.17 266)` dark): the `--primary` token — the single white-label knob. It fills primary buttons, the active-nav pill and text, the focus ring, the sort chevron, and (as a `color-mix`) the aurora glow and stat-card icon chips. An adopter rebrands the whole product by changing this token pair; every accent surface and the glow follow.
 
 ### Neutral
-- **Ink** (`oklch(0.145 0 0)`): primary text and high-emphasis foreground.
-- **Ink Muted** (`oklch(0.556 0 0)`): secondary text, captions, table meta, placeholder.
-- **Paper** (`oklch(1 0 0)`): the app and card background — the working surface.
-- **Surface Muted** (`oklch(0.97 0 0)`): secondary/accent fills — hovered rows, secondary buttons, muted panels, and the sidebar plane.
-- **Hairline** (`oklch(0.922 0 0)`): borders, input strokes, and dividers. The primary structural device of the whole system.
-- **Ring** (`oklch(0.708 0 0)`): focus ring color, rendered at partial opacity.
+- **Ink** (`oklch(0.17 0 0)`): primary text.
+- **Ink Muted** (`oklch(0.556 0 0)`): labels, captions, table meta, placeholders.
+- **Paper** (`oklch(1 0 0)`): card surface — the working plane the data sits on.
+- **Sidebar** (`oklch(0.978 0.004 285)` light · `oklch(0.145 0.01 285)` dark): a lighter (light) / deeper (dark) recessive plane, faintly cool.
+- **Hairline** (`oklch(0.922 0 0)`): the only rules in the system — inside tables and dividers. Cards carry none.
 
 ### Semantic (meaning-only)
-- **Info** (`oklch(0.6 0.118 248)`): informational status and neutral notices.
-- **Success** (`oklch(0.6 0.13 150)`): confirmations, healthy/active status.
-- **Warning** (`oklch(0.68 0.15 65)`): caution, pending, needs-attention status.
-- **Destructive** (`oklch(0.577 0.245 27.325)`): errors, destructive actions, invalid fields.
+- **Info** `oklch(0.6 0.118 248)` · **Success** `oklch(0.6 0.13 150)` · **Warning** `oklch(0.68 0.15 65)` · **Destructive** `oklch(0.577 0.245 27.325)`. Status badges are the primary legitimate use of colour in tables.
 
 ### Named Rules
-**The Single-Knob Rule.** Brand identity lives in exactly one token pair (`--primary` / `--primary-foreground`, light + dark). A brand color is never hard-coded into a component; every primary button, active state, and focus emphasis reads from the token. Rebranding is a one-line change, by design.
+**The Single-Knob Rule.** Brand identity is exactly one token pair (`--primary` / `--primary-foreground`, light + dark). Never hard-code a brand colour in a component; the aurora glow, accents, and active states all `color-mix` from it, so a rebrand is a one-line change and the whole system re-tints.
 
-**The Meaning-Only Color Rule.** Saturated color is reserved for the brand accent (primary actions, current selection, state indicators) and the semantic quartet. Everything else is neutral. On any given screen, chromatic pixels stay a small minority — their rarity is what makes state legible at a glance. Never use color as decoration.
+**The Meaning-Only Colour Rule.** Saturated colour is the brand accent plus the semantic quartet; everything else is neutral. Semantic status colours stay fixed regardless of the brand accent — brand ≠ meaning — so a green Active badge still reads under an emerald brand.
 
 ## Typography
 
-**Display / Body / Label Font:** Geist Variable (with system-ui, -apple-system, Segoe UI, Helvetica, Arial fallbacks)
-**Mono Font:** Geist Mono Variable (with ui-monospace, SFMono-Regular, Menlo, Consolas fallbacks)
+**Display Font:** Bricolage Grotesque (headings, page/section/card titles, brand) — a contemporary grotesque with genuine character.
+**Body Font:** Geist Variable (with system-ui fallbacks) — a quiet, precise workhorse.
+**Mono Font:** Geist Mono Variable — every figure, identifier, timestamp, and count, set `tabular-nums`.
 
-**Character:** One humanist-geometric sans carries the entire interface — headings, controls, labels, body, and dense data. Geist is precise and contemporary without being cold; at UI sizes it stays quiet and legible, which is exactly what an operator surface needs. Mono is reserved for IDs, tokens, code, and audit payloads.
+**Character:** Bricolage gives the console a distinct, confident voice at the title level; the body stays neutral so dense data leads; tabular mono keeps numbers aligned in columns. (The exploration referenced Inter + JetBrains Mono for body/numerics; Bedrock ships the near-identical already-self-hosted Geist pair to avoid extra font downloads — a deliberate, swappable substitution.)
 
 ### Hierarchy
-- **Display** (600, 1.875rem/30px, line-height 1.2, tracking -0.02em): the largest page or screen title; used sparingly, one per view at most.
-- **Headline** (600, 1.5rem/24px, 1.25): section and screen headers.
-- **Title** (600, 1.125rem/18px, 1.3): card titles, dialog titles, panel headers.
-- **Body** (400, 0.875rem/14px, 1.5): the workhorse — default UI text, form values, table cells, descriptions. Prose columns cap at 65–75ch; tables and dense UI may run wider.
-- **Label** (500, 0.75rem/12px, 1.4): field labels, table column headers, badges, metadata, overline.
-- **Mono** (400, 0.8125rem/13px, 1.5): identifiers, code, keys, audit-log values.
+- **Display** (Bricolage 700, ~1.5rem, tracking -0.01em): page titles ("Users", "Welcome back, …").
+- **Title** (Bricolage 700, 1.125rem): card and section titles.
+- **Body** (Geist 400, 0.875rem/14px): the workhorse — table cells, form values, descriptions.
+- **Label** (Geist 600, 0.75rem, tracking 0.03em, UPPERCASE): column headers, KPI labels, section eyebrows, overline.
+- **Mono** (Geist Mono 500, 0.8125rem, tabular): KPI values, table figures, IDs, timestamps.
 
 ### Named Rules
-**The Fixed-Scale Rule.** Type sizes are a fixed rem scale, never fluid `clamp()`. Operators view at consistent DPI across long sessions; a heading that shrinks in a sidebar or reflows by viewport reads as broken, not responsive. Steps stay in a tight ~1.2 ratio so many adjacent UI elements don't create noise.
+**The Fixed-Scale Rule.** A fixed rem scale, never fluid `clamp()`. Operators view at consistent DPI across long sessions.
 
 ## Layout
 
-A conventional admin shell: a persistent left sidebar (secondary neutral plane) against a paper content canvas, with a top header for context and page-level actions. Content sits on a comfortable max width with generous gutters; dense surfaces (tables, detail panels) may use the full width.
+A conventional operator shell: a lighter, recessive left sidebar against the `--app-ground` content canvas, with the page title, search, and one primary action across the top. Content sits at a comfortable width; dense tables use the full width.
 
-- **Spacing rhythm** follows Tailwind's 4px base scale. The recurring rhythm is 8 / 16 / 24px; cards and panels use 24px internal padding, and 24px is the default gap between stacked sections.
-- **Density** is deliberate: comfortable by default, with room to go denser on data-heavy tables where operators need to scan many rows.
-- **Responsive behavior is structural, not fluid** — collapse the sidebar to icons, stack columns at breakpoints, switch tables to a responsive treatment. Type and spacing scales stay fixed. Breakpoints follow Tailwind defaults (sm 640, md 768, lg 1024, xl 1280).
+- **App ground** (`--app-ground`): a warm-neutral-to-cool near-white field (dark: near-black) carrying a faint **accent-tinted aurora glow** in the top-right corner — the glow follows `--primary`. Applied at layout level, not to the flat `--background` token.
+- **Spacing rhythm** follows Tailwind's 4px base; cards use 16–20px padding; 24px between stacked sections.
+- **Responsive** is structural: the sidebar collapses to a header-menu drawer on mobile; tables scroll within their card; type and spacing stay fixed. Breakpoints follow Tailwind defaults.
 
 ## Elevation & Depth
 
-This system uses **soft-gloss-minimal** depth. The app canvas is a warm, accent-tinted ground (`--app-ground`, light and dark). Cards sit on it at **~95% opacity** — enough that the warm ground *just* reads through, never enough to cost legibility — and lift on a **single soft shadow** (offset + blur, never a zero-offset halo). A subtle backdrop blur is a specific, restrained effect, not decoration. Borders are hairlines; a faint top highlight completes the glass. One token system carries both themes: in dark, the ground deepens to a warm-navy with an accent glow and cards tint toward the brand.
+**Borderless, floating, one language across both modes.** Cards have **no border**; they float on a single **Highlight + Shadow** treatment: a light top-edge highlight + a soft offset shadow, tuned per theme (in dark, a subtle tonal lift and a stronger shadow carry it). The `.card-soft` recipe applies it to every card — KPI cards, table panels, dashboard tiles. The aurora ground gives cards something to float above; in dark it deepens to near-black with the accent glow.
 
 ### Elevation tokens (globals.css)
-- **`--app-ground`**: the warm + accent-tinted canvas gradient behind screens (not the flat `--background` token).
-- **`--shadow-rest`**: the single soft lift on cards and panels (`0 1px 2px …, 0 10px 24px -14px …`).
-- **`--shadow-raised`**: menus, popovers, hover elevation.
-- **`--shadow-overlay`**: dialogs and sheets above dimmed content.
-- Card surface recipe: `color-mix(in oklch, var(--card) 95%, transparent)` + `backdrop-filter: blur(12px)` + a `1px` hairline border + `inset 0 1px 0` top highlight.
+- **`--app-ground`**: the accent-tinted aurora canvas (light + dark).
+- **`.card-soft`**: borderless card surface + the Highlight + Shadow box-shadow (with a `.dark` override).
+- Tables scroll inside a `max-height` card with a **sticky header**.
 
 ### Named Rules
-**The Soft-Gloss Rule.** Depth is one soft lift plus ~95% translucency over the warm ground — no stacked shadows, no hard or heavy shadow, no glass-as-decoration. Legibility outranks the effect: if the translucency or blur ever costs contrast, dial it back. Focus is communicated by the brand ring, never by a shadow.
+**The Float Rule.** Cards are borderless and defined by light — the Highlight + Shadow — never by a hairline box. Depth is one soft offset+blur shadow plus a light top edge; never a hard or zero-offset halo, never glass-as-decoration. The same recipe carries light and dark so a card is the same object in both. Focus is the brand ring, never a shadow.
 
 ## Shapes
 
-A softened-rectangle form language. The radius scale derives from a single `--radius` base of 10px: `sm` 6px, `md` 8px, `lg` 10px, `xl` 14px. Controls (buttons, inputs, selects, badges) use `md` (8px); cards, dialogs, and larger containers use `xl` (14px), which is what gives the system its warmth without tipping into playful. Borders are consistently 1px hairlines in the `hairline` token. Avatars and status dots are the only fully round forms. Corners are never sharp (0px) and never pill-round on rectangular controls.
+Softened rectangles. Cards and panels use the `2xl` radius (16px); controls (buttons, inputs, badges) use `md` (8px). Avatars and status dots are the only round forms. Corners are never sharp and never pill on rectangular controls. The only 1px rules in the system are hairlines inside tables and dividers.
 
 ## Components
 
-Every interactive component ships the full state set and shares one control vocabulary, so the same "save" button looks and behaves identically everywhere — including on generated screens.
+Every interactive component ships the full state set and shares one vocabulary, so generated and hand-built screens match.
 
 ### Buttons
-- **Character:** refined, confident, quietly premium — solid controls with a soft rest lift.
-- **Shape:** `md` radius (8px).
-- **Primary:** `primary` (Indigo) fill, `primary-on` text (`--primary` / `--primary-foreground`), rest shadow, 8×16px padding, 36px height. One per view.
-- **Secondary:** `surface-muted` fill, `ink` text — the at-most-one supporting action.
-- **Outline / Ghost:** `paper`/transparent with hairline border (outline) or bare (ghost) for tertiary and toolbar actions; importance is expressed by variant, never by ad-hoc color.
-- **Destructive:** `destructive` fill for irreversible actions, always paired with confirmation.
-- **States:** default, hover (subtle fill/opacity shift), focus-visible (3px ring at `ring/50` + border shift), active, disabled (50% opacity, no pointer), loading (spinner replaces label, width held), and — where relevant — a distinct pending state.
+- **Primary:** `primary` (Indigo) fill, white text, `md` radius, a soft accent glow shadow. One per view.
+- **Ghost / Outline:** paper fill + hairline for secondary/toolbar actions; importance is by variant, never ad-hoc colour.
+- **Destructive:** `destructive` fill, always with confirmation.
+- **States:** default, hover, focus-visible (ring), active, disabled (50%), loading.
 
-### Inputs / Fields
-- **Style:** transparent fill, 1px `hairline` border, `md` radius, 36px height, 12px horizontal padding, hairline `xs` shadow.
-- **Focus:** border shifts to `ring` and a 3px `ring/50` ring appears — the signature focus treatment across the system.
-- **Error:** `destructive` border and ring driven by `aria-invalid`; message in `destructive` below the field.
-- **Disabled:** 50% opacity, not-allowed cursor.
+### Cards & Stat cards
+- Borderless, `2xl` radius, `.card-soft` Highlight + Shadow. Stat cards: uppercase label, big tabular-mono value, muted context hint; optional accent-tinted icon chip (`bg-primary/10 text-primary`).
 
-### Cards / Containers
-- **Corner:** `xl` radius (14px).
-- **Background:** `paper`; **Border:** 1px `hairline`; **Shadow:** Rest (see Elevation).
-- **Internal padding:** 24px; internal rhythm 24px.
+### Tables (the core surface)
+- Panel is a borderless floating card that **scrolls internally** (`max-height`) with a **sticky, uppercase micro-label header**.
+- **Sort:** sortable columns show a muted up/down on hover; the active column shows its direction chevron in the brand accent (no accent underline — it distracts).
+- **Density:** a global **Comfortable / Compact** preference (`data-density` on `<html>`, toggled in the footer like dark mode) tightens rows for long lists.
+- **States:** skeleton rows while loading (`Search.Loading`), teaching empty states ("No X yet — do this next"), error surfaced in the toolbar status. Rows: neutral hover, no accent tint.
 
 ### Navigation
-- **Sidebar:** the `surface-muted` plane. Nav items are `body` weight; the active item uses the brand accent (fill or text + indicator); hover uses a muted fill. Collapses to icons at narrow widths.
-- **Header:** paper, hairline bottom border; holds breadcrumbs/title on the left and page actions on the right.
+- **Sidebar:** a lighter/deeper recessive plane. Brand + workspace switcher, grouped **Workspace / System** sections (uppercase labels), a **user profile block** with a dropdown. **Active item** = tinted pill (`bg-primary/12`) + accent text and icon — clear but calm, since the sidebar is a secondary indicator.
+- **Header:** page title (Bricolage) + breadcrumb, with search and the primary action on the right.
 
-### Badges / Status
-- **Style:** `label` type; brand-accent default, semantic variants (`info`/`success`/`warning`/`destructive`) for status. Status is the primary legitimate use of color in tables.
+### Home Dashboard
+- A welcome header, a KPI overview of real section counts, and a grid of borderless cards linking into each section (icon chip, count, "Manage →").
 
-### Feedback surfaces
-- **Toasts** (Sonner): transient, top-right, semantic accent by type.
-- **Skeletons:** used for loading content regions — never a centered spinner mid-content.
-- **Empty states:** teach the interface (what this is, how to add the first item), never a bare "nothing here."
+### Icons
+- **One system: Lucide** (`lucide-react`), consistent stroke. Brand marks Lucide lacks (Apple/Google) are inline SVG — the single exception.
 
 ### Named Rules
-**The One Primary Rule.** Exactly one primary button per view. Competing primaries destroy the hierarchy that makes an operator fast.
-
-**The Seven States Rule.** Every interactive component defines default, hover, focus-visible, active, disabled, loading, and error. Shipping half of them is shipping an unfinished component.
-
-**The Parity Rule.** A screen scaffolded by the generator must be visually and structurally indistinguishable from a hand-built one — same components, same tokens, same states. If a generated CRUD screen looks even slightly different from a hand-built equivalent, one of them is wrong. This is Bedrock's defining constraint.
+**The One Primary Rule.** Exactly one primary button per view.
+**The Seven States Rule.** Every interactive component defines default, hover, focus-visible, active, disabled, loading, and error; tables add skeleton-loading and teaching empty states.
+**The Parity Rule.** A generator-scaffolded screen must be visually and structurally indistinguishable from a hand-built one — same components, same tokens. Bedrock's defining constraint.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** rebrand through the single `--primary` / `--primary-foreground` token pair (light + dark); optionally match `--ring` and `--sidebar-primary`.
-- **Do** keep saturated color for the brand accent and the semantic quartet only; let neutrals carry everything else.
-- **Do** use hairline borders as the primary structural device, with soft Rest/Raised/Overlay shadows layered on for elevation.
-- **Do** use a fixed rem type scale in a tight ratio, one Geist family across the whole UI.
-- **Do** give every component all seven states, skeletons for loading, and teaching empty states.
+- **Do** rebrand through the single `--primary` / `--primary-foreground` pair; the aurora glow and every accent follow it.
+- **Do** keep cards borderless, floating on `.card-soft`; let the Highlight + Shadow define them, not a box.
+- **Do** keep saturated colour for the brand accent and the semantic quartet only; semantic colours stay fixed across brands.
+- **Do** set headings in Bricolage, body in Geist, and every figure in tabular mono.
+- **Do** give tables sticky uppercase headers, a clear sort affordance, density, skeletons, and teaching empty states.
 - **Do** keep generated and hand-built screens on the exact same components and tokens (Parity Rule).
-- **Do** let overlays escape their container (dialog, popover, portal) so dropdowns never clip inside `overflow` ancestors.
 
 ### Don't:
-- **Don't** hard-code a brand color into a component or express importance with ad-hoc color instead of variant.
-- **Don't** use color as decoration, or put more than one primary action in a view.
-- **Don't** use hard, heavy, or exaggerated shadows, or communicate focus with a shadow instead of the ring.
-- **Don't** use fluid `clamp()` type sizing or display fonts in labels, buttons, or data.
-- **Don't** reach for a modal as the first solution — exhaust inline and progressive alternatives first.
-- **Don't** invent non-standard affordances (custom scrollbars, odd form controls) for standard admin tasks.
+- **Don't** put a border on a card, or define depth with a hard/zero-offset halo, or use glass-as-decoration.
+- **Don't** hard-code a brand colour, or let the accent decorate rather than point.
+- **Don't** accent-underline the sorted column or tint the hovered row — keep the data calm.
+- **Don't** use fluid `clamp()` sizing or a display font in table data.
+- **Don't** mix icon families or use Unicode/emoji as icons.

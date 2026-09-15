@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-14T00:00:00.000Z",
+  "generatedAt": "2026-09-15T02:00:00.000Z",
   "title": "Design System: Bedrock Admin",
   "extensions": {
     "colorMeta": {
@@ -25,9 +25,9 @@
       "mono": { "displayName": "Mono", "purpose": "Identifiers, code, keys, audit-log values." }
     },
     "shadows": [
-      { "name": "rest", "value": "0 1px 2px oklch(0.25 0.03 60 / 0.05), 0 10px 24px -14px oklch(0.25 0.03 60 / 0.22)", "purpose": "The single soft lift on cards and panels (~95% opacity over --app-ground)." },
-      { "name": "raised", "value": "0 4px 14px oklch(0.25 0.03 60 / 0.12)", "purpose": "Dropdown menus, popovers, hover-elevated cards." },
-      { "name": "overlay", "value": "0 16px 48px oklch(0.25 0.03 60 / 0.18)", "purpose": "Dialogs and sheets above dimmed content." }
+      { "name": "card-light", "value": "inset 0 1px 0 oklch(1 0 0 / 0.9), 0 2px 4px oklch(0.22 0.03 285 / 0.05), 0 16px 34px -18px oklch(0.22 0.04 285 / 0.24)", "purpose": "Borderless card Highlight + Shadow in light — a light top edge + soft offset shadow (the .card-soft recipe)." },
+      { "name": "card-dark", "value": "inset 0 1px 0 oklch(1 0 0 / 0.08), 0 3px 8px oklch(0 0 0 / 0.36), 0 18px 34px -16px oklch(0 0 0 / 0.62)", "purpose": "The same recipe in dark — subtle light top highlight + stronger shadow + tonal lift." },
+      { "name": "overlay", "value": "0 16px 48px oklch(0 0 0 / 0.18)", "purpose": "Dialogs, sheets, and menus above content." }
     ],
     "motion": [
       { "name": "ease-out-cubic", "value": "cubic-bezier(0.215, 0.61, 0.355, 1)", "purpose": "Default easing for entrances and state transitions (150-250ms)." },
@@ -119,6 +119,7 @@
       "Do keep saturated color for the brand accent and the semantic quartet only; let neutrals carry everything else.",
       "Do use hairline borders as the primary structural device, with soft Rest/Raised/Overlay shadows layered on for elevation.",
       "Do use a fixed rem type scale in a tight ratio, one Geist family across the whole UI.",
+      "Do draw every icon from Lucide (one stroke system); the only exception is a brand mark Lucide lacks (Apple/Google), inline as SVG.",
       "Do give every component all seven states, skeletons for loading, and teaching empty states.",
       "Do keep generated and hand-built screens on the exact same components and tokens (Parity Rule).",
       "Do let overlays escape their container (dialog, popover, portal) so dropdowns never clip inside overflow ancestors."

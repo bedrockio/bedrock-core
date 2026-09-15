@@ -162,7 +162,9 @@ export default function ShopList() {
                           />
                         )}
                       </TableCell>
-                      <TableCell>{formatDateTime(shop.createdAt)}</TableCell>
+                      <TableCell className="text-muted-foreground font-mono text-xs">
+                        {formatDateTime(shop.createdAt)}
+                      </TableCell>
                       <TableCell>
                         <div className="flex justify-center">
                           <Actions
