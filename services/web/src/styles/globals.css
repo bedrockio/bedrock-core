@@ -83,6 +83,7 @@
   --shadow-rest: 0 1px 2px oklch(0.25 0.03 60 / 0.05), 0 10px 24px -14px oklch(0.25 0.03 60 / 0.22);
   --shadow-raised: 0 4px 14px oklch(0.25 0.03 60 / 0.12);
   --shadow-overlay: 0 16px 48px oklch(0.25 0.03 60 / 0.18);
+  --card-hi: oklch(1 0 0 / 0.55); /* soft-gloss top highlight */
   /* Warm + accent-tinted app canvas (applied at layout level, not to flat --background). */
   --app-ground:
     radial-gradient(1000px 520px at 84% -8%, color-mix(in oklch, var(--primary) 14%, transparent), transparent 60%),
@@ -129,6 +130,7 @@
   --shadow-rest: 0 1px 2px oklch(0 0 0 / 0.3), 0 14px 30px -16px oklch(0 0 0 / 0.55);
   --shadow-raised: 0 4px 14px oklch(0 0 0 / 0.5);
   --shadow-overlay: 0 20px 60px oklch(0 0 0 / 0.6);
+  --card-hi: oklch(1 0 0 / 0.09); /* soft-gloss top highlight */
   --app-ground:
     radial-gradient(1000px 560px at 82% -10%, color-mix(in oklch, var(--primary) 32%, transparent), transparent 60%),
     linear-gradient(162deg, oklch(0.185 0.011 285), oklch(0.152 0.009 60));
@@ -193,4 +195,24 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/*
+ * Soft-gloss-minimal card surface (DESIGN.md §Elevation).
+ * ~95% opacity over --app-ground + a subtle backdrop blur + one soft lift +
+ * a faint top highlight. The shadcn Card applies this via the `card-soft` class.
+ */
+@layer components {
+  .card-soft {
+    background: color-mix(in oklch, var(--card) 95%, transparent);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    box-shadow: var(--shadow-rest), inset 0 1px 0 var(--card-hi);
+  }
+}
+
+/* The authenticated app canvas: the warm + accent-tinted ground cards sit on. */
+.app-ground {
+  background: var(--app-ground);
+  background-attachment: fixed;
 }

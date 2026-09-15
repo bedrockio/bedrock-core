@@ -118,7 +118,7 @@ export default function DashboardLayout({ children }) {
   );
 
   return (
-    <div className="bg-background flex min-h-screen w-full">
+    <div className="app-ground flex min-h-screen w-full">
       {!isMobile && (
         <aside className="sticky top-0 h-screen shrink-0">{sidebar}</aside>
       )}
