@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react';
 
 import { TableHead } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
@@ -39,14 +39,20 @@ export default function SortableHeader(props) {
     <TableHead
       {...rest}
       onClick={onClick}
-      className={cn('cursor-pointer select-none', className)}>
+      className={cn(
+        'group hover:text-foreground cursor-pointer transition-colors select-none',
+        sorted && 'text-foreground',
+        className,
+      )}>
       <div className="flex items-center justify-between gap-2">
         {children}
         {sorted === 'asc' ? (
-          <ChevronUp className="size-3.5" />
+          <ChevronUp className="text-primary size-3.5" />
         ) : sorted === 'desc' ? (
-          <ChevronDown className="size-3.5" />
-        ) : null}
+          <ChevronDown className="text-primary size-3.5" />
+        ) : (
+          <ChevronsUpDown className="size-3.5 opacity-0 transition-opacity group-hover:opacity-50" />
+        )}
       </div>
     </TableHead>
   );

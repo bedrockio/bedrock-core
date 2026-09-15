@@ -4,7 +4,7 @@ function Table({ className, ...props }) {
   return (
     <div
       data-slot="table-container"
-      className="card-soft rounded-2xl relative w-full overflow-x-auto">
+      className="card-soft relative max-h-[70vh] w-full overflow-auto rounded-2xl">
       <table
         data-slot="table"
         className={cn('w-full caption-bottom text-sm', className)}
@@ -65,7 +65,7 @@ function TableHead({ className, ...props }) {
     <th
       data-slot="table-head"
       className={cn(
-        'text-muted-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]',
+        'bg-card text-muted-foreground sticky top-0 z-10 h-10 px-2 text-left align-middle text-xs font-medium tracking-wide uppercase whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]',
         className,
       )}
       {...props}

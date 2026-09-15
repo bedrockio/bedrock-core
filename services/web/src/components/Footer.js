@@ -1,3 +1,4 @@
+import DensityToggle from 'components/DensityToggle';
 import Logo from 'components/Logo';
 
 import { useTheme } from '@/components/ThemeProvider';
@@ -13,6 +14,7 @@ export default function Footer() {
 
   return (
     <footer className="mt-4 flex items-center justify-end gap-6 py-2">
+      <DensityToggle />
       <div className="flex items-center gap-2">
         <span className="text-muted-foreground text-xs font-bold">Theme</span>
         <Switch checked={isDark} onCheckedChange={onToggle} />
