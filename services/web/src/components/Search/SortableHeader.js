@@ -10,6 +10,18 @@ export default function SortableHeader(props) {
 
   const { sort, setSort } = useSearch();
 
+  // A header without a `name` is not sortable — render a plain cell with no
+  // button semantics, so it never becomes a focusable "sort" control that
+  // triggers a bogus setSort({ field: undefined }). (Search.Header already
+  // routes these to TableHead; this keeps SortableHeader correct in isolation.)
+  if (!name) {
+    return (
+      <TableHead className={className} {...rest}>
+        {children}
+      </TableHead>
+    );
+  }
+
   function getSorted() {
     let { field, order } = sort || {};
 
