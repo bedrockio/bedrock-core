@@ -6,6 +6,7 @@ import {
   Ellipsis,
   File,
   FileSearch,
+  House,
   LayoutGrid,
   Mail,
   Menu,
@@ -44,6 +45,7 @@ const navSections = [
   {
     label: 'Workspace',
     items: [
+      { icon: House, url: '/', label: 'Dashboard', exact: true },
       { icon: Store, url: '/shops', label: 'Shops' },
       { icon: Tag, url: '/products', label: 'Products' },
       {

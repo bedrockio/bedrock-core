@@ -1,6 +1,7 @@
 import { Link } from '@bedrockio/router';
 
 import ErrorMessage from 'components/ErrorMessage';
+import ListStats from 'components/ListStats';
 import PageHeader from 'components/PageHeader';
 import Search from 'components/Search';
 import SearchFilters from 'components/Search/Filters';
@@ -51,6 +52,8 @@ export default function ProductList() {
                 </>
               }
             />
+
+            <ListStats resource="products" label="Products" />
 
             <div className="flex items-center justify-between gap-4">
               <SearchFilters.Modal>
