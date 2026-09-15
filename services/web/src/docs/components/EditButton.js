@@ -1,4 +1,4 @@
-import { PiPencilSimpleBold } from 'react-icons/pi';
+import { Pencil } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 
@@ -15,7 +15,7 @@ export default function EditButton() {
       size="icon"
       className={className}
       onClick={() => setMode(mode === 'view' ? 'edit' : 'view')}>
-      <PiPencilSimpleBold />
+      <Pencil />
     </Button>
   );
 }

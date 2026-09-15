@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { PiArrowClockwiseBold } from 'react-icons/pi';
+import { RotateCw } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -35,7 +35,7 @@ class ErrorBoundary extends React.Component {
             </p>
             <div className="flex gap-3">
               <Button onClick={this.handleReset}>
-                <PiArrowClockwiseBold />
+                <RotateCw />
                 Try Again
               </Button>
               <Button

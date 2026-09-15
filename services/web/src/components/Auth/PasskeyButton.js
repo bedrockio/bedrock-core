@@ -1,6 +1,6 @@
 import { useNavigate } from '@bedrockio/router';
 import { noop } from 'lodash';
-import { PiFingerprintBold } from 'react-icons/pi';
+import { Fingerprint } from 'lucide-react';
 
 import { useSession } from 'stores/session';
 
@@ -38,7 +38,7 @@ export default function PasskeyButton(props) {
       className="size-[42px] rounded-full"
       title="Use passkey to sign in."
       onClick={onClick}>
-      <PiFingerprintBold />
+      <Fingerprint />
     </Button>
   );
 }

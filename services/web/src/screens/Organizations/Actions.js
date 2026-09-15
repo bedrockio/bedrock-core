@@ -1,12 +1,12 @@
 import { Link } from '@bedrockio/router';
 
 import {
-  PiCode,
-  PiDotsThreeOutlineVerticalBold,
-  PiListMagnifyingGlass,
-  PiPencilSimpleBold,
-  PiTrashBold,
-} from 'react-icons/pi';
+  Code,
+  EllipsisVertical,
+  FileSearch,
+  Pencil,
+  Trash2,
+} from 'lucide-react';
 
 import Protected from 'components/Protected';
 import Confirm from 'modals/Confirm';
@@ -33,7 +33,7 @@ export default function OrganizationActions({
         <Protected endpoint="organizations" permission="update">
           <Button asChild variant="outline" size="icon">
             <Link to={`/organizations/${organization.id}/edit`}>
-              <PiPencilSimpleBold />
+              <Pencil />
             </Link>
           </Button>
         </Protected>
@@ -63,7 +63,7 @@ export default function OrganizationActions({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="icon">
-            <PiDotsThreeOutlineVerticalBold />
+            <EllipsisVertical />
           </Button>
         </DropdownMenuTrigger>
 
@@ -73,7 +73,7 @@ export default function OrganizationActions({
             object={organization}
             trigger={
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                <PiCode />
+                <Code />
                 Inspect
               </DropdownMenuItem>
             }
@@ -82,7 +82,7 @@ export default function OrganizationActions({
             <DropdownMenuItem asChild>
               <Link
                 to={`/audit-log?object=${organization.id}&filterLabel=${organization.name}`}>
-                <PiListMagnifyingGlass />
+                <FileSearch />
                 Audit Logs
               </Link>
             </DropdownMenuItem>
@@ -109,7 +109,7 @@ export default function OrganizationActions({
                 <DropdownMenuItem
                   variant="destructive"
                   onSelect={(e) => e.preventDefault()}>
-                  <PiTrashBold />
+                  <Trash2 />
                   Delete
                 </DropdownMenuItem>
               }

@@ -1,7 +1,7 @@
 import JsonView from '@uiw/react-json-view';
 import { darkTheme } from '@uiw/react-json-view/dark';
 import { useState } from 'react';
-import { PiCheck, PiCopy } from 'react-icons/pi';
+import { Check, Copy } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 
@@ -45,7 +45,7 @@ function InspectObject({ object }) {
           size="icon"
           title={copied ? 'Copied' : 'Copy'}
           onClick={onCopy}>
-          {copied ? <PiCheck size={16} /> : <PiCopy size={16} />}
+          {copied ? <Check size={16} /> : <Copy size={16} />}
         </Button>
       </div>
       <div className="max-h-[60vh] overflow-auto">

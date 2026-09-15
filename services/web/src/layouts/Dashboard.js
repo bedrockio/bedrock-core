@@ -1,21 +1,19 @@
 import { NavLink, useLocation } from '@bedrockio/router';
-import { Building2, ChevronDown, Menu } from 'lucide-react';
-import React, { useEffect } from 'react';
-
 import {
-  PiBookBold,
-  PiBuildingOfficeBold,
-  PiDoorBold,
-  PiEnvelopeSimpleBold,
-  PiFileBold,
-  PiGearBold,
-  PiGridFourBold,
-  PiListMagnifyingGlass,
-  PiStorefrontBold,
-  PiTagBold,
-  PiTerminalBold,
-  PiUserBold,
-} from 'react-icons/pi';
+  Book,
+  Building2,
+  ChevronsUpDown,
+  Ellipsis,
+  File,
+  FileSearch,
+  LayoutGrid,
+  Mail,
+  Menu,
+  Store,
+  Tag,
+  User,
+} from 'lucide-react';
+import { useEffect } from 'react';
 
 import { useSession } from 'stores/session';
 
@@ -32,36 +30,62 @@ import { useMediaQuery } from 'hooks/useMediaQuery';
 
 import { userCanSwitchOrganizations } from 'utils/permissions';
 
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
-const menuItems = [
-  { icon: PiStorefrontBold, url: '/shops', label: 'Shops' },
-  { icon: PiTagBold, url: '/products', label: 'Products' },
+const navSections = [
   {
-    icon: PiUserBold,
-    label: 'Users',
-    url: '/users',
+    label: 'Workspace',
     items: [
-      { icon: PiEnvelopeSimpleBold, label: 'Invites', url: '/users/invites' },
+      { icon: Store, url: '/shops', label: 'Shops' },
+      { icon: Tag, url: '/products', label: 'Products' },
+      {
+        icon: User,
+        label: 'Users',
+        url: '/users',
+        items: [
+          {
+            icon: Mail,
+            label: 'Invites',
+            url: '/users/invites',
+          },
+        ],
+      },
+      {
+        icon: Building2,
+        url: '/organizations',
+        label: 'Organizations',
+      },
     ],
   },
-  { icon: PiBuildingOfficeBold, url: '/organizations', label: 'Organizations' },
-];
-
-const accountItems = [
   {
-    icon: PiTerminalBold,
     label: 'System',
     items: [
-      { icon: PiFileBold, url: '/templates', label: 'Templates' },
-      { icon: PiListMagnifyingGlass, url: '/audit-log', label: 'Audit Log' },
-      { icon: PiGridFourBold, url: '/applications', label: 'Applications' },
-      { icon: PiBookBold, url: '/docs', label: 'API Docs' },
+      { icon: File, url: '/templates', label: 'Templates' },
+      { icon: FileSearch, url: '/audit-log', label: 'Audit Log' },
+      { icon: LayoutGrid, url: '/applications', label: 'Applications' },
+      { icon: Book, url: '/docs', label: 'API Docs' },
     ],
   },
-  { icon: PiGearBold, url: '/settings', label: 'My Settings' },
-  { icon: PiDoorBold, url: '/logout', label: 'Log Out' },
 ];
+
+function getInitials(name) {
+  if (!name) return 'U';
+  return name
+    .split(' ')
+    .map((part) => part[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join('')
+    .toUpperCase();
+}
 
 export default function DashboardLayout({ children }) {
   const { user, organization } = useSession();
@@ -74,46 +98,80 @@ export default function DashboardLayout({ children }) {
   }, [location.pathname]);
 
   const sidebar = (
-    <div className="bg-sidebar text-sidebar-foreground border-sidebar-border flex h-full w-[260px] flex-col border-r">
-      <div className="flex flex-col gap-1 p-2">
-        <NavLink
-          to="/"
-          className="flex items-center justify-center py-2 no-underline">
-          <Logo style={{ width: '100%', padding: '0.4em 0.8em' }} />
+    <div className="sidebar-soft text-sidebar-foreground border-sidebar-border flex h-full w-[264px] flex-col border-r">
+      <div className="flex flex-col gap-2 p-3">
+        <NavLink to="/" className="flex items-center px-1 py-1 no-underline">
+          <Logo height={24} />
         </NavLink>
         {userCanSwitchOrganizations(user) && (
-          <React.Fragment>
-            <ModalTrigger
-              title="Select Organization"
-              trigger={
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start gap-2 font-medium">
-                  <Building2 className="size-4" />
-                  <span className="flex-1 truncate text-left">
-                    {organization?.name || 'Select Organization'}
-                  </span>
-                  <ChevronDown className="size-4 opacity-60" />
-                </Button>
-              }>
-              <OrganizationSelector />
-            </ModalTrigger>
-            <div className="border-sidebar-border my-1 border-t" />
-          </React.Fragment>
+          <ModalTrigger
+            title="Select Organization"
+            trigger={
+              <Button
+                variant="outline"
+                className="w-full justify-start gap-2 font-medium">
+                <Building2 className="size-4 opacity-70" />
+                <span className="flex-1 truncate text-left">
+                  {organization?.name || 'Select Organization'}
+                </span>
+                <ChevronsUpDown className="size-4 opacity-60" />
+              </Button>
+            }>
+            <OrganizationSelector />
+          </ModalTrigger>
         )}
       </div>
 
       <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-2 pb-2">
-        {menuItems.map((item) => (
-          <MenuItem key={item.label} {...item} />
+        {navSections.map((section) => (
+          <div key={section.label} className="flex flex-col gap-0.5">
+            <div className="text-muted-foreground/80 px-3 pt-4 pb-1.5 text-xs font-semibold tracking-wider uppercase">
+              {section.label}
+            </div>
+            {section.items.map((item) => (
+              <MenuItem key={item.label} {...item} />
+            ))}
+          </div>
         ))}
       </nav>
 
-      <nav className="border-sidebar-border flex flex-col gap-0.5 border-t p-2">
-        {accountItems.map((item) => (
-          <MenuItem key={item.label} {...item} />
-        ))}
-      </nav>
+      <div className="border-sidebar-border border-t p-2">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              type="button"
+              className="hover:bg-sidebar-accent flex w-full cursor-pointer appearance-none items-center gap-3 rounded-md border-0 bg-transparent px-2 py-2 text-left transition-colors">
+              <Avatar className="size-8">
+                <AvatarFallback className="bg-primary text-primary-foreground text-xs font-semibold">
+                  {getInitials(user?.name)}
+                </AvatarFallback>
+              </Avatar>
+              <div className="min-w-0 flex-1">
+                <div className="truncate text-sm font-semibold">
+                  {user?.name || 'Account'}
+                </div>
+                <div className="text-muted-foreground truncate text-xs">
+                  {user?.email}
+                </div>
+              </div>
+              <Ellipsis className="size-4 shrink-0 opacity-60" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="top" align="start" className="w-[228px]">
+            <DropdownMenuItem asChild>
+              <NavLink to="/settings" className="no-underline">
+                My Settings
+              </NavLink>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <NavLink to="/logout" className="no-underline">
+                Log Out
+              </NavLink>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </div>
   );
 

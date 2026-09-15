@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { PiMinus, PiPlus, PiTrashBold } from 'react-icons/pi';
+import { Minus, Plus, Trash2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 
@@ -85,7 +85,7 @@ export default function RouteExample(props) {
               className={getElementClass('summary')}
               trigger={
                 <Button variant="outline" size="icon">
-                  <PiTrashBold />
+                  <Trash2 />
                 </Button>
               }
             />
@@ -99,9 +99,7 @@ export default function RouteExample(props) {
                 onConfirm={async () => {
                   unsetPath(path);
                 }}
-                content={
-                  <p>Are you sure you want to delete this example?</p>
-                }
+                content={<p>Are you sure you want to delete this example?</p>}
                 trigger={
                   <Button
                     variant="outline"
@@ -109,12 +107,12 @@ export default function RouteExample(props) {
                     onClick={(evt) => {
                       evt.stopPropagation();
                     }}>
-                    <PiTrashBold />
+                    <Trash2 />
                   </Button>
                 }
               />
             )}
-            {open ? <PiMinus /> : <PiPlus />}
+            {open ? <Minus /> : <Plus />}
           </div>
         </div>
       </div>

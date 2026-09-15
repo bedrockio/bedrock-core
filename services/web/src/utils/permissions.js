@@ -1,4 +1,4 @@
-import { PiGlobeHemisphereWestBold, PiHouseBold } from 'react-icons/pi';
+import { Globe, House } from 'lucide-react';
 
 const VALID_SCOPES = ['global', 'organization'];
 
@@ -74,7 +74,7 @@ export function formatRoles(roles) {
       labels.push({
         key: `global-${role.role}`,
         content: role.roleDefinition.name,
-        icon: PiGlobeHemisphereWestBold,
+        icon: Globe,
       });
     } else {
       const key = `${role.role}-${role.scope}-${role.scopeRef}`;
@@ -83,7 +83,7 @@ export function formatRoles(roles) {
         labels.push({
           key: key,
           content: role.roleDefinition.name,
-          icon: PiHouseBold,
+          icon: House,
         });
       }
     }

@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
 
 import {
-  PiFileArchiveLight,
-  PiFileAudioLight,
-  PiFileImageLight,
-  PiFileLight,
-  PiFileTextLight,
-  PiFileVideoLight,
-  PiTrashSimpleBold,
-} from 'react-icons/pi';
+  File,
+  FileArchive,
+  FileAudio,
+  FileImage,
+  FileText,
+  FileVideo,
+  Trash2,
+} from 'lucide-react';
 
 import PrivateAudio from 'components/PrivateAudio';
 import PrivateImage from 'components/PrivateImage';
@@ -257,7 +257,7 @@ export default function UploadsField(props) {
             key={getUploadId(upload)}
             className="border-input relative overflow-hidden rounded-md border">
             {renderUpload(upload)}
-            <PiTrashSimpleBold
+            <Trash2
               style={{
                 position: 'absolute',
                 inset: '5px 5px auto auto',
@@ -299,7 +299,7 @@ export default function UploadsField(props) {
             variant="secondary"
             className="gap-1">
             {upload.filename || 'File'}
-            <PiTrashSimpleBold
+            <Trash2
               style={{ cursor: 'pointer' }}
               onClick={(evt) => remove(evt, upload)}
             />
@@ -357,17 +357,17 @@ export default function UploadsField(props) {
   function renderIconForType(type) {
     type ||= getTypes()[0];
     if (type === 'zip') {
-      return <PiFileArchiveLight />;
+      return <FileArchive />;
     } else if (type === 'image') {
-      return <PiFileImageLight />;
+      return <FileImage />;
     } else if (type === 'audio') {
-      return <PiFileAudioLight />;
+      return <FileAudio />;
     } else if (type === 'video') {
-      return <PiFileVideoLight />;
+      return <FileVideo />;
     } else if (type === 'text') {
-      return <PiFileTextLight />;
+      return <FileText />;
     } else {
-      return <PiFileLight />;
+      return <File />;
     }
   }
 

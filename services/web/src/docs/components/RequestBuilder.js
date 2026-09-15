@@ -1,13 +1,7 @@
 import { get, set } from 'lodash';
 import React, { useState } from 'react';
 
-import {
-  PiMinus,
-  PiPlayBold,
-  PiPlus,
-  PiRecordBold,
-  PiTrashBold,
-} from 'react-icons/pi';
+import { Circle, Minus, Play, Plus, Trash2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,12 +15,7 @@ import {
 } from '@/components/ui/sheet';
 import { Spinner } from '@/components/ui/spinner';
 import { Switch } from '@/components/ui/switch';
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '@/components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 
 import Code from 'components/Code';
@@ -284,7 +273,7 @@ export default function RequestBuilder(props) {
                     <label style={{ marginBottom: '1em' }}>
                       {key}{' '}
                       <Button variant="outline" size="icon" onClick={toggle}>
-                        {open ? <PiMinus /> : <PiPlus />}
+                        {open ? <Minus /> : <Plus />}
                       </Button>
                     </label>
                     {open && (
@@ -309,7 +298,7 @@ export default function RequestBuilder(props) {
                     set(req, p, [...values, undefined]);
                     setReq({ ...req });
                   }}>
-                  <PiPlus />
+                  <Plus />
                 </Button>
               </label>
               {renderSchema(schema, [...path, key])}
@@ -346,7 +335,7 @@ export default function RequestBuilder(props) {
                       set(req, path, updated);
                       setReq({ ...req });
                     }}>
-                    <PiTrashBold />
+                    <Trash2 />
                   </Button>
                 ),
               })}
@@ -451,9 +440,7 @@ export default function RequestBuilder(props) {
       {React.cloneElement(trigger, {
         onClick: open,
       })}
-      <Sheet
-        open={opened}
-        onOpenChange={(value) => (value ? open() : close())}>
+      <Sheet open={opened} onOpenChange={(value) => (value ? open() : close())}>
         <SheetContent side="right" className="overflow-y-auto">
           <SheetHeader>
             <SheetTitle>{route}</SheetTitle>
@@ -491,7 +478,7 @@ export default function RequestBuilder(props) {
                 size="icon"
                 title="Perform request and record as example"
                 onClick={onRecordClick}>
-                <PiRecordBold />
+                <Circle />
               </Button>
             )}
             <Button
@@ -500,7 +487,7 @@ export default function RequestBuilder(props) {
               disabled={loading}
               onClick={onPlayClick}
               title="Perform request">
-              <PiPlayBold />
+              <Play />
             </Button>
           </div>
         </SheetContent>

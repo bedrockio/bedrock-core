@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { PiTrashBold } from 'react-icons/pi';
+import { Trash2 } from 'lucide-react';
 
 import { useSession } from 'stores/session';
 
@@ -135,7 +135,7 @@ export default function Security() {
                           title="Delete"
                           disabled={loading}
                           onClick={() => deletePasskey(passkey)}>
-                          <PiTrashBold />
+                          <Trash2 />
                         </Button>
                       </div>
                     );

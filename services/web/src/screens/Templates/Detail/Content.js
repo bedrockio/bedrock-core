@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 
 import {
-  PiChatCircleBold,
-  PiCodeBold,
-  PiDeviceMobileBold,
-  PiEnvelopeBold,
-  PiQuestionBold,
-} from 'react-icons/pi';
+  CircleHelp,
+  Code,
+  Mail,
+  MessageCircle,
+  Smartphone,
+} from 'lucide-react';
 
 import { usePage } from 'stores/page';
 
@@ -31,9 +31,9 @@ import ParamsModal from './ParamsModal';
 import SendPreviewButton from './SendPreviewButton';
 
 const CHANNEL_ICONS = {
-  email: PiEnvelopeBold,
-  sms: PiChatCircleBold,
-  push: PiDeviceMobileBold,
+  email: Mail,
+  sms: MessageCircle,
+  push: Smartphone,
 };
 
 const CHANNEL_LABELS = {
@@ -98,7 +98,7 @@ export default function Content() {
             <HelpModal
               trigger={
                 <Button size="sm" variant="outline">
-                  <PiQuestionBold />
+                  <CircleHelp />
                   Help
                 </Button>
               }
@@ -108,7 +108,7 @@ export default function Content() {
               template={template}
               trigger={
                 <Button variant="outline" size="sm">
-                  <PiCodeBold />
+                  <Code />
                   Params
                 </Button>
               }

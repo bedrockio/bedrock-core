@@ -1,10 +1,6 @@
 import { Link } from '@bedrockio/router';
 
-import {
-  PiDotsThreeOutlineVerticalBold,
-  PiPencilSimpleBold,
-  PiTrashBold,
-} from 'react-icons/pi';
+import { EllipsisVertical, Pencil, Trash2 } from 'lucide-react';
 
 import Confirm from 'modals/Confirm';
 
@@ -23,14 +19,14 @@ export default function ApplicationActions({ application, reload }) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="icon">
-          <PiDotsThreeOutlineVerticalBold />
+          <EllipsisVertical />
         </Button>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent>
         <DropdownMenuItem asChild>
           <Link to={`/applications/${application.id}/edit`}>
-            <PiPencilSimpleBold />
+            <Pencil />
             Edit
           </Link>
         </DropdownMenuItem>
@@ -55,7 +51,7 @@ export default function ApplicationActions({ application, reload }) {
             <DropdownMenuItem
               variant="destructive"
               onSelect={(e) => e.preventDefault()}>
-              <PiTrashBold />
+              <Trash2 />
               Delete
             </DropdownMenuItem>
           }

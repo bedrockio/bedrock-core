@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from '@bedrockio/router';
 import { useEffect } from 'react';
-import { PiArrowClockwiseBold } from 'react-icons/pi';
+import { RotateCw } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 
@@ -112,7 +112,7 @@ export default function ApiDocs() {
                 variant="outline"
                 size="icon"
                 title="Generate Documentation">
-                <PiArrowClockwiseBold />
+                <RotateCw />
               </Button>
             }
           />

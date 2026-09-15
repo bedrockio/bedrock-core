@@ -26,7 +26,8 @@ export default function MenuItem(props) {
     hasItems &&
     items.some(
       (item) =>
-        item.url && (pathname === item.url || pathname.startsWith(`${item.url}/`)),
+        item.url &&
+        (pathname === item.url || pathname.startsWith(`${item.url}/`)),
     );
   const routeOpen = (url && pathname.startsWith(url)) || childActive;
 
@@ -42,7 +43,8 @@ export default function MenuItem(props) {
   const itemClass = cn(
     'flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm font-medium no-underline transition-colors',
     'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
-    isActive && 'bg-sidebar-accent text-sidebar-accent-foreground',
+    isActive &&
+      'bg-primary/12 text-primary hover:bg-primary/15 hover:text-primary',
     level > 1 && 'pl-9',
   );
 
@@ -79,7 +81,10 @@ export default function MenuItem(props) {
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className={cn(itemClass, 'cursor-pointer appearance-none border-0 bg-transparent')}>
+        className={cn(
+          itemClass,
+          'cursor-pointer appearance-none border-0 bg-transparent',
+        )}>
         {content}
       </button>
     );
@@ -91,7 +96,11 @@ export default function MenuItem(props) {
       {hasItems && open && (
         <div className="mt-0.5 flex flex-col gap-0.5">
           {items.map((item) => (
-            <MenuItem key={item.url || item.label} {...item} level={level + 1} />
+            <MenuItem
+              key={item.url || item.label}
+              {...item}
+              level={level + 1}
+            />
           ))}
         </div>
       )}

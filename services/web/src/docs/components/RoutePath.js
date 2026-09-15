@@ -1,5 +1,5 @@
 import React from 'react';
-import { PiPlayBold } from 'react-icons/pi';
+import { Play } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 
@@ -17,7 +17,7 @@ export default class Route extends React.Component {
             route={route}
             trigger={
               <Button variant="outline" size="icon">
-                <PiPlayBold />
+                <Play />
               </Button>
             }
           />

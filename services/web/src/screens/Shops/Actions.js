@@ -1,12 +1,12 @@
 import { Link } from '@bedrockio/router';
 
 import {
-  PiCode,
-  PiDotsThreeOutlineVerticalBold,
-  PiListMagnifyingGlass,
-  PiPencilSimpleBold,
-  PiTrashBold,
-} from 'react-icons/pi';
+  Code,
+  EllipsisVertical,
+  FileSearch,
+  Pencil,
+  Trash2,
+} from 'lucide-react';
 
 import Protected from 'components/Protected';
 import Confirm from 'modals/Confirm';
@@ -29,7 +29,7 @@ export default function ShopsActions({ shop, reload, displayMode = 'show' }) {
         <Protected endpoint="shops" permission="update">
           <Button asChild variant="outline" size="icon">
             <Link to={`/shops/${shop.id}/edit`}>
-              <PiPencilSimpleBold />
+              <Pencil />
             </Link>
           </Button>
         </Protected>
@@ -57,7 +57,7 @@ export default function ShopsActions({ shop, reload, displayMode = 'show' }) {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="icon">
-            <PiDotsThreeOutlineVerticalBold />
+            <EllipsisVertical />
           </Button>
         </DropdownMenuTrigger>
 
@@ -67,7 +67,7 @@ export default function ShopsActions({ shop, reload, displayMode = 'show' }) {
             object={shop}
             trigger={
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                <PiCode />
+                <Code />
                 Inspect
               </DropdownMenuItem>
             }
@@ -76,7 +76,7 @@ export default function ShopsActions({ shop, reload, displayMode = 'show' }) {
             <DropdownMenuItem asChild>
               <Link
                 to={`/audit-log?object=${shop.id}&filterLabel=${shop.name}`}>
-                <PiListMagnifyingGlass />
+                <FileSearch />
                 Audit Logs
               </Link>
             </DropdownMenuItem>
@@ -103,7 +103,7 @@ export default function ShopsActions({ shop, reload, displayMode = 'show' }) {
                 <DropdownMenuItem
                   variant="destructive"
                   onSelect={(e) => e.preventDefault()}>
-                  <PiTrashBold />
+                  <Trash2 />
                   Delete
                 </DropdownMenuItem>
               }

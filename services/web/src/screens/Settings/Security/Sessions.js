@@ -1,4 +1,4 @@
-import { PiTrash } from 'react-icons/pi';
+import { Trash2 } from 'lucide-react';
 
 import { useSession } from 'stores/session';
 
@@ -89,7 +89,7 @@ export default function Sessions() {
                     onClick={() =>
                       logoutRequest.request({ body: { jti: token.jti } })
                     }>
-                    <PiTrash className="text-destructive" />
+                    <Trash2 className="text-destructive" />
                   </Button>
                 </TableCell>
               </TableRow>

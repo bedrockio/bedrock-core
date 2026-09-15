@@ -1,4 +1,4 @@
-import { PiPaperPlaneTiltBold } from 'react-icons/pi';
+import { Send } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 
@@ -10,7 +10,7 @@ export default function SendPreviewButton(props) {
       {...props}
       trigger={
         <Button variant="outline">
-          <PiPaperPlaneTiltBold />
+          <Send />
           Test
         </Button>
       }

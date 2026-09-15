@@ -1,8 +1,4 @@
-import {
-  PiDotsThreeOutlineVerticalBold,
-  PiRepeatBold,
-  PiTrashBold,
-} from 'react-icons/pi';
+import { EllipsisVertical, Repeat, Trash2 } from 'lucide-react';
 
 import Confirm from 'modals/Confirm';
 
@@ -40,7 +36,7 @@ export default function InviteActions({ invite, reload }) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="icon">
-          <PiDotsThreeOutlineVerticalBold />
+          <EllipsisVertical />
         </Button>
       </DropdownMenuTrigger>
 
@@ -49,7 +45,7 @@ export default function InviteActions({ invite, reload }) {
           onSelect={() => {
             resentRequest.request();
           }}>
-          <PiRepeatBold />
+          <Repeat />
           Resend Invite
         </DropdownMenuItem>
 
@@ -73,7 +69,7 @@ export default function InviteActions({ invite, reload }) {
             <DropdownMenuItem
               variant="destructive"
               onSelect={(e) => e.preventDefault()}>
-              <PiTrashBold />
+              <Trash2 />
               Delete
             </DropdownMenuItem>
           }

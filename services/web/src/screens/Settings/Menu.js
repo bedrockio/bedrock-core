@@ -1,5 +1,4 @@
-import { IoMdNotifications } from 'react-icons/io';
-import { PiLockKeyOpenBold, PiUserBold } from 'react-icons/pi';
+import { Bell, LockOpen, User } from 'lucide-react';
 
 import PageHeader from 'components/PageHeader';
 
@@ -19,17 +18,17 @@ export default function SettingsMenu() {
       tabs={[
         {
           title: 'Details',
-          icon: <PiUserBold />,
+          icon: <User />,
           href: `/settings/details`,
         },
         {
           title: 'Security',
-          icon: <PiLockKeyOpenBold />,
+          icon: <LockOpen />,
           href: '/settings/security',
         },
         {
           title: 'Notifications',
-          icon: <IoMdNotifications />,
+          icon: <Bell />,
           href: '/settings/notifications',
         },
       ]}

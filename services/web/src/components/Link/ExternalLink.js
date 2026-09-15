@@ -1,5 +1,5 @@
 import React from 'react';
-import { PiArrowSquareOutBold } from 'react-icons/pi';
+import { SquareArrowOutUpRight } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
@@ -16,7 +16,7 @@ export default class ExternalLink extends React.Component {
           className,
         )}
         {...rest}>
-        {icon && <PiArrowSquareOutBold />}
+        {icon && <SquareArrowOutUpRight />}
         {children || href}
       </a>
     );

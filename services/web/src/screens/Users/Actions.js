@@ -1,13 +1,13 @@
 import { Link, useNavigate } from '@bedrockio/router';
 
 import {
-  PiCode,
-  PiDotsThreeOutlineVerticalBold,
-  PiKeyBold,
-  PiPencilSimpleBold,
-  PiRowsBold,
-  PiTrashBold,
-} from 'react-icons/pi';
+  Code,
+  EllipsisVertical,
+  Key,
+  Pencil,
+  Rows3,
+  Trash2,
+} from 'lucide-react';
 
 import { showSuccessNotification } from 'helpers/notifications';
 import { useSession } from 'stores/session';
@@ -49,7 +49,7 @@ export default function UserActions(props) {
         <Protected endpoint="users" permission="update">
           <Button asChild variant="outline" size="icon">
             <Link to={`/users/${user.id}/edit`}>
-              <PiPencilSimpleBold />
+              <Pencil />
             </Link>
           </Button>
         </Protected>
@@ -79,7 +79,7 @@ export default function UserActions(props) {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="icon">
-            <PiDotsThreeOutlineVerticalBold />
+            <EllipsisVertical />
           </Button>
         </DropdownMenuTrigger>
 
@@ -91,7 +91,7 @@ export default function UserActions(props) {
               <DropdownMenuItem
                 disabled={!canAuthenticate}
                 onSelect={(e) => e.preventDefault()}>
-                <PiKeyBold />
+                <Key />
                 Login as User
               </DropdownMenuItem>
             }
@@ -100,7 +100,7 @@ export default function UserActions(props) {
           <Protected endpoint="auditEntries" permission="read">
             <DropdownMenuItem asChild>
               <Link to={`/audit-log?user=${user.id}&filterLabel=${user.name}`}>
-                <PiRowsBold />
+                <Rows3 />
                 Audit Logs
               </Link>
             </DropdownMenuItem>
@@ -111,7 +111,7 @@ export default function UserActions(props) {
             object={user}
             trigger={
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                <PiCode />
+                <Code />
                 Inspect
               </DropdownMenuItem>
             }
@@ -144,7 +144,7 @@ export default function UserActions(props) {
                 <DropdownMenuItem
                   variant="destructive"
                   onSelect={(e) => e.preventDefault()}>
-                  <PiTrashBold />
+                  <Trash2 />
                   Delete
                 </DropdownMenuItem>
               }

@@ -1,6 +1,6 @@
 import { Link } from '@bedrockio/router';
 import React from 'react';
-import { PiPencilSimpleBold } from 'react-icons/pi';
+import { Pencil } from 'lucide-react';
 
 import { usePage } from 'stores/page';
 
@@ -58,7 +58,7 @@ export default function TemplateMenu({ displayMode }) {
               <Button variant="outline" asChild>
                 <Link to={`/templates/${template.id}/edit`}>
                   Edit
-                  <PiPencilSimpleBold />
+                  <Pencil />
                 </Link>
               </Button>
             </Protected>

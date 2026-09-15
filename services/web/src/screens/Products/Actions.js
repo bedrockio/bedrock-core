@@ -1,11 +1,6 @@
 import { Link } from '@bedrockio/router';
 
-import {
-  PiCode,
-  PiDotsThreeOutlineVerticalBold,
-  PiListMagnifyingGlass,
-  PiPencilSimpleBold,
-} from 'react-icons/pi';
+import { Code, EllipsisVertical, FileSearch, Pencil } from 'lucide-react';
 
 import Protected from 'components/Protected';
 import Confirm from 'modals/Confirm';
@@ -32,7 +27,7 @@ export default function ProductsActions({
         <Protected endpoint="products" permission="update">
           <Button asChild variant="outline" size="icon">
             <Link to={`/products/${product.id}/edit`}>
-              <PiPencilSimpleBold />
+              <Pencil />
             </Link>
           </Button>
         </Protected>
@@ -60,7 +55,7 @@ export default function ProductsActions({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="icon">
-            <PiDotsThreeOutlineVerticalBold />
+            <EllipsisVertical />
           </Button>
         </DropdownMenuTrigger>
 
@@ -70,7 +65,7 @@ export default function ProductsActions({
             object={product}
             trigger={
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                <PiCode />
+                <Code />
                 Inspect
               </DropdownMenuItem>
             }
@@ -79,7 +74,7 @@ export default function ProductsActions({
             <DropdownMenuItem asChild>
               <Link
                 to={`/audit-log?object=${product.id}&filterLabel=${product.name}`}>
-                <PiListMagnifyingGlass />
+                <FileSearch />
                 Audit Logs
               </Link>
             </DropdownMenuItem>
@@ -106,7 +101,7 @@ export default function ProductsActions({
                 <DropdownMenuItem
                   variant="destructive"
                   onSelect={(e) => e.preventDefault()}>
-                  <PiListMagnifyingGlass />
+                  <FileSearch />
                   Delete
                 </DropdownMenuItem>
               }

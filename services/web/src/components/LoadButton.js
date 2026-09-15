@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { PiWarningCircleBold } from 'react-icons/pi';
+import { CircleAlert } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -82,7 +82,7 @@ export default function LoadButton({ onClick, children, ...otherProps }) {
           <div
             onClick={handlePopoverClose}
             className="border-destructive/30 bg-destructive/5 flex cursor-pointer items-start gap-2 rounded-md border px-4 py-3 text-sm">
-            <PiWarningCircleBold className="text-destructive mt-0.5 size-4 shrink-0" />
+            <CircleAlert className="text-destructive mt-0.5 size-4 shrink-0" />
             <div>
               <div className="font-medium">Error</div>
               <div className="text-muted-foreground">
