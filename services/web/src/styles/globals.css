@@ -21,14 +21,18 @@
  * ┌──────────────────────────────────────────────────────────────────────────┐
  * │  TO BRAND THE APP — change the primary colour                              │
  * │                                                                            │
- * │  The default primary is the shadcn neutral (near-black in light, near-     │
- * │  white in dark). To give the app a brand colour, set --primary to that     │
- * │  colour and --primary-foreground to a contrasting text colour, in BOTH     │
- * │  :root (light) and .dark below. They are tagged `BRAND PRIMARY` inline.    │
+ * │  SHIPPED DEFAULT: Indigo. This IS the white-label knob — an adopter        │
+ * │  rebrands the whole app by changing --primary + --primary-foreground in     │
+ * │  BOTH :root (light) and .dark below (tagged `BRAND PRIMARY` inline).        │
+ * │  Nothing else needs to change: every primary button, focus ring, active     │
+ * │  nav and selection reads from these tokens.                                 │
  * │                                                                            │
- * │  Example — Bedrock green:                                                  │
- * │      :root  { --primary: oklch(0.55 0.12 152);  --primary-foreground: oklch(0.985 0 0); }
- * │      .dark  { --primary: oklch(0.62 0.13 152);  --primary-foreground: oklch(0.205 0 0); }
+ * │  Current default — Indigo:                                                 │
+ * │      :root  { --primary: oklch(0.505 0.18 266);  --primary-foreground: oklch(0.985 0 0); }
+ * │      .dark  { --primary: oklch(0.62 0.17 266);   --primary-foreground: oklch(0.985 0 0); }
+ * │  To rebrand — e.g. green:                                                  │
+ * │      :root  { --primary: oklch(0.55 0.12 152);   --primary-foreground: oklch(0.985 0 0); }
+ * │      .dark  { --primary: oklch(0.62 0.13 152);   --primary-foreground: oklch(0.985 0 0); }
  * │                                                                            │
  * │  Optionally also brand --ring (focus) and --sidebar-primary to match.      │
  * │  Nothing else needs to change — every primary button, focus ring and       │
@@ -45,7 +49,7 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
 
-  --primary: oklch(0.205 0 0); /* BRAND PRIMARY (light) — see header */
+  --primary: oklch(0.505 0.18 266); /* BRAND PRIMARY (light) — Indigo white-label knob, see header */
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -58,7 +62,7 @@
 
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --ring: oklch(0.55 0.16 266); /* focus ring follows the brand */
 
   /* semantic (Alert info/success/warning) — meaning-only colours (§5.6) */
   --info: oklch(0.6 0.118 248);
@@ -67,12 +71,22 @@
 
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary: oklch(0.505 0.18 266);
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-ring: oklch(0.55 0.16 266);
+
+  /* Soft-gloss-minimal elevation vocabulary (DESIGN.md §Elevation).
+     Cards sit at ~95% opacity over --app-ground and lift with ONE soft shadow. */
+  --shadow-rest: 0 1px 2px oklch(0.25 0.03 60 / 0.05), 0 10px 24px -14px oklch(0.25 0.03 60 / 0.22);
+  --shadow-raised: 0 4px 14px oklch(0.25 0.03 60 / 0.12);
+  --shadow-overlay: 0 16px 48px oklch(0.25 0.03 60 / 0.18);
+  /* Warm + accent-tinted app canvas (applied at layout level, not to flat --background). */
+  --app-ground:
+    radial-gradient(1000px 520px at 84% -8%, color-mix(in oklch, var(--primary) 14%, transparent), transparent 60%),
+    linear-gradient(162deg, oklch(0.986 0.008 74), oklch(0.966 0.011 56));
 }
 
 .dark {
@@ -83,8 +97,8 @@
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
 
-  --primary: oklch(0.922 0 0); /* BRAND PRIMARY (dark) — see header */
-  --primary-foreground: oklch(0.205 0 0);
+  --primary: oklch(0.62 0.17 266); /* BRAND PRIMARY (dark) — Indigo white-label knob, see header */
+  --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
@@ -96,7 +110,7 @@
 
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  --ring: oklch(0.58 0.15 266); /* focus ring follows the brand */
 
   --info: oklch(0.68 0.13 248);
   --success: oklch(0.68 0.14 150);
@@ -104,12 +118,20 @@
 
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.922 0 0);
-  --sidebar-primary-foreground: oklch(0.205 0 0);
+  --sidebar-primary: oklch(0.62 0.17 266);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.269 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar-ring: oklch(0.58 0.15 266);
+
+  /* Soft-gloss-minimal elevation vocabulary — dark (DESIGN.md §Elevation). */
+  --shadow-rest: 0 1px 2px oklch(0 0 0 / 0.3), 0 14px 30px -16px oklch(0 0 0 / 0.55);
+  --shadow-raised: 0 4px 14px oklch(0 0 0 / 0.5);
+  --shadow-overlay: 0 20px 60px oklch(0 0 0 / 0.6);
+  --app-ground:
+    radial-gradient(1000px 560px at 82% -10%, color-mix(in oklch, var(--primary) 32%, transparent), transparent 60%),
+    linear-gradient(162deg, oklch(0.185 0.011 285), oklch(0.152 0.009 60));
 }
 
 @theme inline {
