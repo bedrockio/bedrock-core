@@ -106,12 +106,18 @@ export default function UserList() {
                 </TableRow>
               </TableHeader>
               <TableBody>
+                <Search.Loading columns={6} />
                 <Search.EmptyMessage>
                   <TableRow>
                     <TableCell colSpan={6}>
-                      <p className="py-4 text-center font-bold">
-                        No users found.
-                      </p>
+                      <div className="text-muted-foreground flex flex-col items-center gap-1 py-12 text-center">
+                        <p className="text-foreground font-semibold">
+                          No users found
+                        </p>
+                        <p className="text-sm">
+                          Invite a teammate, or adjust your filters.
+                        </p>
+                      </div>
                     </TableCell>
                   </TableRow>
                 </Search.EmptyMessage>

@@ -128,12 +128,18 @@ export default function ShopList() {
                 </TableRow>
               </TableHeader>
               <TableBody>
+                <Search.Loading columns={5} />
                 <Search.EmptyMessage>
                   <TableRow>
                     <TableCell colSpan={5}>
-                      <p className="py-4 text-center font-bold">
-                        No shops found.
-                      </p>
+                      <div className="text-muted-foreground flex flex-col items-center gap-1 py-12 text-center">
+                        <p className="text-foreground font-semibold">
+                          No shops yet
+                        </p>
+                        <p className="text-sm">
+                          Create your first shop to get started.
+                        </p>
+                      </div>
                     </TableCell>
                   </TableRow>
                 </Search.EmptyMessage>
