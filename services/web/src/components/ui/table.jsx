@@ -4,7 +4,7 @@ function Table({ className, ...props }) {
   return (
     <div
       data-slot="table-container"
-      className="card-soft rounded-2xl border relative w-full overflow-x-auto">
+      className="card-soft rounded-2xl relative w-full overflow-x-auto">
       <table
         data-slot="table"
         className={cn('w-full caption-bottom text-sm', className)}

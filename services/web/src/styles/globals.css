@@ -69,13 +69,13 @@
   --success: oklch(0.6 0.13 150);
   --warning: oklch(0.68 0.15 65);
 
-  --sidebar: oklch(0.972 0.008 75);
+  --sidebar: oklch(0.978 0.004 285);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.505 0.18 266);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.945 0.01 75);
+  --sidebar-accent: oklch(0.955 0.005 285);
   --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.9 0.008 75);
+  --sidebar-border: oklch(0.92 0.004 285);
   --sidebar-ring: oklch(0.55 0.16 266);
 
   /* Soft-gloss-minimal elevation vocabulary (DESIGN.md §Elevation).
@@ -86,16 +86,16 @@
   --card-hi: oklch(1 0 0 / 0.55); /* soft-gloss top highlight */
   /* Warm + accent-tinted app canvas (applied at layout level, not to flat --background). */
   --app-ground:
-    radial-gradient(1000px 520px at 84% -8%, color-mix(in oklch, var(--primary) 14%, transparent), transparent 60%),
-    linear-gradient(162deg, oklch(0.986 0.008 74), oklch(0.966 0.011 56));
+    radial-gradient(1050px 540px at 86% -12%, color-mix(in oklch, var(--primary) 10%, transparent), transparent 62%),
+    linear-gradient(165deg, oklch(0.984 0.004 285), oklch(0.96 0.005 285));
 }
 
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
+  --card: oklch(0.2 0.012 285);
   --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
+  --popover: oklch(0.2 0.012 285);
   --popover-foreground: oklch(0.985 0 0);
 
   --primary: oklch(0.62 0.17 266); /* BRAND PRIMARY (dark) — Indigo white-label knob, see header */
@@ -117,11 +117,11 @@
   --success: oklch(0.68 0.14 150);
   --warning: oklch(0.75 0.15 65);
 
-  --sidebar: oklch(0.19 0.012 285);
+  --sidebar: oklch(0.145 0.01 285);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.62 0.17 266);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.255 0.014 285);
+  --sidebar-accent: oklch(0.22 0.012 285);
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.58 0.15 266);
@@ -132,8 +132,8 @@
   --shadow-overlay: 0 20px 60px oklch(0 0 0 / 0.6);
   --card-hi: oklch(1 0 0 / 0.09); /* soft-gloss top highlight */
   --app-ground:
-    radial-gradient(1000px 560px at 82% -10%, color-mix(in oklch, var(--primary) 32%, transparent), transparent 60%),
-    linear-gradient(162deg, oklch(0.185 0.011 285), oklch(0.152 0.009 60));
+    radial-gradient(1050px 580px at 86% -12%, color-mix(in oklch, var(--primary) 42%, transparent), transparent 58%),
+    linear-gradient(165deg, oklch(0.16 0.012 285), oklch(0.11 0.008 285));
 }
 
 @theme inline {
@@ -179,6 +179,8 @@
     'Segoe UI', Helvetica, Arial, sans-serif;
   --font-mono: 'Geist Mono Variable', ui-monospace, SFMono-Regular, Menlo,
     Consolas, monospace;
+  /* Operator's Console display face — headings + card/section titles. */
+  --font-heading: 'Bricolage Grotesque', 'Geist Variable', system-ui, sans-serif;
 }
 
 /*
@@ -195,6 +197,15 @@
   body {
     @apply bg-background text-foreground;
   }
+  /* Headings and card/section titles take the Bricolage display face. */
+  h1,
+  h2,
+  h3,
+  h4,
+  [data-slot='card-title'] {
+    font-family: var(--font-heading);
+    letter-spacing: -0.01em;
+  }
 }
 
 /*
@@ -203,11 +214,21 @@
  * a faint top highlight. The shadcn Card applies this via the `card-soft` class.
  */
 @layer components {
+  /* Operator's Console card: borderless, floats on Highlight + Shadow.
+     One depth language across light and dark (a light top-edge highlight +
+     soft shadow; tonal lift carries dark). */
   .card-soft {
-    background: color-mix(in oklch, var(--card) 95%, transparent);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-    box-shadow: var(--shadow-rest), inset 0 1px 0 var(--card-hi);
+    background: var(--card);
+    box-shadow:
+      inset 0 1px 0 oklch(1 0 0 / 0.9),
+      0 2px 4px oklch(0.22 0.03 285 / 0.05),
+      0 16px 34px -18px oklch(0.22 0.04 285 / 0.24);
+  }
+  .dark .card-soft {
+    box-shadow:
+      inset 0 1px 0 oklch(1 0 0 / 0.08),
+      0 3px 8px oklch(0 0 0 / 0.36),
+      0 18px 34px -16px oklch(0 0 0 / 0.62);
   }
 }
 
@@ -223,7 +244,5 @@
  * as the cards, not a flat cool slab of chrome.
  */
 .sidebar-soft {
-  background: color-mix(in oklch, var(--sidebar) 88%, transparent);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
+  background: var(--sidebar);
 }
