@@ -1,5 +1,5 @@
-nodeLinker: hoisted
 minimumReleaseAge: 10080
+trustLockfile: true
 blockExoticSubdeps: true
 allowBuilds:
   protobufjs: true
