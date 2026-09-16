@@ -155,8 +155,8 @@ export default function DashboardLayout({ children }) {
 
   const sidebar = (
     <div className="sidebar-soft text-sidebar-foreground border-sidebar-border flex h-full w-[264px] flex-col border-r">
-      <div className="flex flex-col gap-2 p-3">
-        <NavLink to="/" className="flex items-center px-1 py-1 no-underline">
+      <div className="border-sidebar-border flex flex-col gap-3 border-b px-3 pt-4 pb-3">
+        <NavLink to="/" className="flex items-center px-2 py-1 no-underline">
           <Logo height={24} />
         </NavLink>
         {userCanSwitchOrganizations(user) && (
@@ -168,7 +168,7 @@ export default function DashboardLayout({ children }) {
                 className="w-full justify-start gap-2 font-medium">
                 <Building2 className="size-4 opacity-70" />
                 <span className="flex-1 truncate text-left">
-                  {organization?.name || 'Select Organization'}
+                  {organization?.name || 'All Organizations'}
                 </span>
                 <ChevronsUpDown className="size-4 opacity-60" />
               </Button>
