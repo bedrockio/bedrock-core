@@ -9,6 +9,14 @@ import ErrorMessage from 'components/ErrorMessage';
 import Meta from 'components/Meta';
 
 import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
@@ -88,41 +96,52 @@ function Notifications() {
 
       <ErrorMessage error={saveRequest.error} />
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <fieldset className="mb-4">
-          <legend className="mb-4 text-sm font-medium">Notifications</legend>
-          {notificationsValue.map((notification, index) => {
-            const { name, label } = notification;
-            return (
-              <div className="flex flex-col gap-2" key={name}>
-                <p className="text-sm">{label}</p>
-                <div className="flex gap-4">
-                  {CHANNELS.map((channel) => {
-                    const fieldName = `notifications.${index}.${channel.value}`;
-                    const id = `${name}-${channel.value}`;
-                    return (
-                      <div
-                        className="flex items-center gap-2"
-                        key={channel.value}>
-                        <Checkbox
-                          id={id}
-                          checked={!!form.watch(fieldName)}
-                          onCheckedChange={(checked) => {
-                            form.setValue(fieldName, checked === true);
-                          }}
-                        />
-                        <Label htmlFor={id}>{channel.label}</Label>
-                      </div>
-                    );
-                  })}
+        <Card>
+          <CardHeader>
+            <CardTitle>Notifications</CardTitle>
+            <CardDescription>
+              Choose how you'd like to be notified on each channel.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="divide-border flex flex-col divide-y">
+            {notificationsValue.map((notification, index) => {
+              const { name, label } = notification;
+              return (
+                <div
+                  className="flex flex-col gap-2 py-4 first:pt-0 last:pb-0"
+                  key={name}>
+                  <p className="text-sm font-medium">{label}</p>
+                  <div className="flex flex-wrap gap-4">
+                    {CHANNELS.map((channel) => {
+                      const fieldName = `notifications.${index}.${channel.value}`;
+                      const id = `${name}-${channel.value}`;
+                      return (
+                        <div
+                          className="flex items-center gap-2"
+                          key={channel.value}>
+                          <Checkbox
+                            id={id}
+                            checked={!!form.watch(fieldName)}
+                            onCheckedChange={(checked) => {
+                              form.setValue(fieldName, checked === true);
+                            }}
+                          />
+                          <Label htmlFor={id}>{channel.label}</Label>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </fieldset>
-        <Button type="submit" disabled={saveRequest.loading}>
-          {saveRequest.loading && <Spinner className="text-current" />}
-          Update Profile
-        </Button>
+              );
+            })}
+          </CardContent>
+          <CardFooter className="border-t pt-6">
+            <Button type="submit" disabled={saveRequest.loading}>
+              {saveRequest.loading && <Spinner className="text-current" />}
+              Save preferences
+            </Button>
+          </CardFooter>
+        </Card>
       </form>
     </div>
   );

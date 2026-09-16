@@ -43,11 +43,11 @@
   --radius: 0.625rem;
 
   --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --foreground: oklch(0.24 0.008 285); /* muted near-black ink (was pure 0.145) — softer, still ~11:1 on the near-white ground */
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.24 0.008 285);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
+  --popover-foreground: oklch(0.24 0.008 285);
 
   --primary: oklch(0.505 0.18 266); /* BRAND PRIMARY (light) — Indigo white-label knob, see header */
   --primary-foreground: oklch(0.985 0 0);
@@ -70,7 +70,7 @@
   --warning: oklch(0.68 0.15 65);
 
   --sidebar: oklch(0.978 0.004 285);
-  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-foreground: oklch(0.24 0.008 285);
   --sidebar-primary: oklch(0.505 0.18 266);
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.955 0.005 285);

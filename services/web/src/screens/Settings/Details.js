@@ -11,6 +11,14 @@ import PhoneField from 'components/form-fields/Phone';
 
 import { Button } from '@/components/ui/button';
 import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
   Form,
   FormControl,
   FormField,
@@ -85,9 +93,14 @@ function Profile() {
       <ErrorMessage error={saveRequest.error} />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <fieldset className="mb-4">
-            <legend className="mb-4 text-sm font-medium">Profile</legend>
-            <div className="flex flex-col gap-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Profile</CardTitle>
+              <CardDescription>
+                Update the personal details on your account.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4">
               <FormField
                 control={form.control}
                 name="firstName"
@@ -149,13 +162,14 @@ function Profile() {
                   )}
                 />
               )}
-            </div>
-          </fieldset>
-
-          <Button type="submit" disabled={saveRequest.loading}>
-            {saveRequest.loading && <Spinner className="text-current" />}
-            Update Profile
-          </Button>
+            </CardContent>
+            <CardFooter className="border-t pt-6">
+              <Button type="submit" disabled={saveRequest.loading}>
+                {saveRequest.loading && <Spinner className="text-current" />}
+                Update Profile
+              </Button>
+            </CardFooter>
+          </Card>
         </form>
       </Form>
     </div>

@@ -2,7 +2,7 @@
 name: Bedrock Admin — Operator's Console
 description: A data-first, white-label admin console for operators.
 colors:
-  ink: "oklch(0.17 0 0)"
+  ink: "oklch(0.24 0.008 285)"
   paper: "oklch(1 0 0)"
   primary: "oklch(0.505 0.18 266)"
   primary-on: "oklch(0.985 0 0)"

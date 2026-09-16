@@ -11,7 +11,10 @@ function DefinitionList({ className, ...props }) {
   return (
     <dl
       data-slot="definition-list"
-      className={cn('divide-border divide-y rounded-md border text-sm', className)}
+      className={cn(
+        'card-soft divide-border divide-y rounded-2xl text-sm',
+        className,
+      )}
       {...props}
     />
   );
@@ -19,9 +22,10 @@ function DefinitionList({ className, ...props }) {
 
 function DefinitionItem({ label, children, className }) {
   return (
-    <div className={cn('grid grid-cols-[180px_1fr] gap-4 px-4 py-3', className)}>
+    <div
+      className={cn('grid grid-cols-[180px_1fr] gap-4 px-6 py-3.5', className)}>
       <dt className="text-muted-foreground font-medium">{label}</dt>
-      <dd className="min-w-0">{children}</dd>
+      <dd className="text-foreground min-w-0">{children}</dd>
     </div>
   );
 }

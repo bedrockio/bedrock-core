@@ -9,6 +9,13 @@ import ErrorMessage from 'components/ErrorMessage';
 import Meta from 'components/Meta';
 
 import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Spinner } from '@/components/ui/spinner';
 
@@ -109,23 +116,28 @@ export default function Security() {
             <Spinner className="size-6" />
           </div>
         )}
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-          <div className="flex flex-col gap-4">
-            <fieldset>
-              <legend className="mb-2 text-sm font-medium">Passkey</legend>
-              <div className="flex flex-col gap-2">
+        <div className="grid grid-cols-1 items-start gap-6 md:grid-cols-2">
+          <div className="flex flex-col gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Passkey</CardTitle>
+                <CardDescription>
+                  Sign in without a password using a passkey on your device.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex flex-col gap-3">
                 {user.authenticators
                   .filter((authenticator) => authenticator.type === 'passkey')
                   .map((passkey) => {
                     const { id, name, createdAt, lastUsedAt } = passkey;
                     return (
                       <div
-                        className="flex items-center justify-between"
+                        className="flex items-center justify-between gap-4"
                         key={id}>
-                        <div className="flex flex-col gap-0">
-                          <span className="text-sm">{name}</span>
-                          <span className="text-sm">
-                            Added on {formatDate(createdAt)} | Last used{' '}
+                        <div className="flex min-w-0 flex-col">
+                          <span className="text-sm font-medium">{name}</span>
+                          <span className="text-muted-foreground text-xs">
+                            Added {formatDate(createdAt)} · Last used{' '}
                             {fromNow(lastUsedAt)}
                           </span>
                         </div>
@@ -145,44 +157,68 @@ export default function Security() {
                     Add Passkey
                   </Button>
                 </div>
-              </div>
-            </fieldset>
-            <fieldset>
-              <legend className="mb-2 text-sm font-medium">
-                Two-factor authentication
-              </legend>
-              <TwoFactorAuthentication />
-            </fieldset>
-            <fieldset>
-              <legend className="mb-2 text-sm font-medium">Sign-in with</legend>
-              <ErrorMessage error={error} />
+              </CardContent>
+            </Card>
 
-              <p className="text-sm font-bold">Google</p>
-              <div>
-                {hasAuthenticator('google') ? (
-                  <GoogleDisableButton onDisabled={onGoogleDisabled} />
-                ) : (
-                  <p className="text-sm">Sign in with Google to enable.</p>
-                )}
-              </div>
+            <Card>
+              <CardHeader>
+                <CardTitle>Two-factor authentication</CardTitle>
+                <CardDescription>
+                  Require a second step at sign-in for extra security.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <TwoFactorAuthentication />
+              </CardContent>
+            </Card>
 
-              <Separator className="my-4" />
+            <Card>
+              <CardHeader>
+                <CardTitle>Sign-in with</CardTitle>
+                <CardDescription>
+                  Connect a provider to sign in faster.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ErrorMessage error={error} />
 
-              <p className="text-sm font-bold">Apple</p>
-              <div>
-                {hasAuthenticator('apple') ? (
-                  <AppleDisableButton onDisabled={onAppleDisabled} />
-                ) : (
-                  <p className="text-sm">Sign in with Apple to enable.</p>
-                )}
-              </div>
-            </fieldset>
+                <p className="text-sm font-semibold">Google</p>
+                <div className="mt-1">
+                  {hasAuthenticator('google') ? (
+                    <GoogleDisableButton onDisabled={onGoogleDisabled} />
+                  ) : (
+                    <p className="text-muted-foreground text-sm">
+                      Sign in with Google to enable.
+                    </p>
+                  )}
+                </div>
+
+                <Separator className="my-4" />
+
+                <p className="text-sm font-semibold">Apple</p>
+                <div className="mt-1">
+                  {hasAuthenticator('apple') ? (
+                    <AppleDisableButton onDisabled={onAppleDisabled} />
+                  ) : (
+                    <p className="text-muted-foreground text-sm">
+                      Sign in with Apple to enable.
+                    </p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
           </div>
-          <div>
-            <fieldset className="mt-4">
-              <legend className="mb-2 text-sm font-medium">Sessions</legend>
-              <Sessions />
-            </fieldset>
+
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-1.5">
+              <h2 className="text-base leading-none font-semibold tracking-tight">
+                Sessions
+              </h2>
+              <p className="text-muted-foreground text-sm">
+                Devices currently signed in to your account.
+              </p>
+            </div>
+            <Sessions />
           </div>
         </div>
       </div>

@@ -23,13 +23,14 @@ export default function ShopOverview() {
       <div className="mt-4 flex flex-col gap-4">
         <p className="text-base leading-normal">{product.description}</p>
         <h2 className="text-xl font-bold tracking-tight">Images</h2>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap gap-4">
           {product.images.map((image) => (
-            <Thumbnail
-              key={image}
-              src={urlForUpload(image)}
-              className="h-[200px] w-[300px]"
-            />
+            <div key={image} className="card-soft rounded-2xl p-1.5">
+              <Thumbnail
+                src={urlForUpload(image)}
+                className="h-[200px] w-[300px] rounded-xl"
+              />
+            </div>
           ))}
         </div>
 
