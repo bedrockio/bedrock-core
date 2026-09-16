@@ -189,7 +189,8 @@ Every interactive component ships the full state set and shares one vocabulary, 
 - **Header:** page title (Bricolage) + breadcrumb, with search and the primary action on the right.
 
 ### Home Dashboard
-- A welcome header, a KPI overview of real section counts, and a grid of borderless cards linking into each section (icon chip, count, "Manage →").
+- Breadcrumb + "Dashboard" title (matches every other screen) and a short greeting. A KPI row focused on the catalog — Products and Shops drill into their sections (arrow affordance), Featured and Expiring-soon are product signals — then a "Catalog by price" chart. Metrics are exact (search `meta.total` with filters); the chart buckets a bounded product sample client-side.
+- **Charts** live in a `card-soft` panel and use the brand accent for the data mark (`bg-primary` bars) over a muted track, mono tabular figures, and no chart library — a lightweight bar built from the same tokens as everything else.
 
 ### Icons
 - **One system: Lucide** (`lucide-react`), consistent stroke. Brand marks Lucide lacks (Apple/Google) are inline SVG — the single exception.
