@@ -86,6 +86,7 @@ export default function Dashboard() {
               <Link
                 key={s.resource}
                 to={s.url}
+                aria-label={`Manage ${s.label}`}
                 className="card-soft group rounded-2xl p-5 no-underline transition-shadow hover:shadow-lg">
                 <div className="flex items-center justify-between">
                   <span className="bg-primary/10 text-primary flex size-9 items-center justify-center rounded-lg">

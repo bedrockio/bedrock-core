@@ -14,7 +14,7 @@ import {
   Tag,
   User,
 } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { useSession } from 'stores/session';
 
@@ -94,10 +94,64 @@ export default function DashboardLayout({ children }) {
   const [opened, { toggle, close }] = useDisclosure();
   const isMobile = useMediaQuery('(max-width: 62em)', false);
   const location = useLocation();
+  const drawerRef = useRef(null);
 
   useEffect(() => {
     close();
   }, [location.pathname]);
+
+  // Mobile drawer keyboard + focus contract: Escape closes it, focus moves in
+  // on open and returns to the trigger on close, and Tab cycles within the
+  // panel so keyboard users are never stranded behind the backdrop.
+  useEffect(() => {
+    if (!isMobile || !opened) {
+      return;
+    }
+
+    const previouslyFocused = document.activeElement;
+    const panel = drawerRef.current;
+    const focusable = () =>
+      panel
+        ? Array.from(
+            panel.querySelectorAll(
+              'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])',
+            ),
+          )
+        : [];
+
+    focusable()[0]?.focus();
+
+    function onKeyDown(e) {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        close();
+        return;
+      }
+      if (e.key === 'Tab') {
+        const items = focusable();
+        if (items.length === 0) {
+          return;
+        }
+        const first = items[0];
+        const last = items[items.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    }
+
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      if (previouslyFocused instanceof HTMLElement) {
+        previouslyFocused.focus();
+      }
+    };
+  }, [isMobile, opened, close]);
 
   const sidebar = (
     <div className="sidebar-soft text-sidebar-foreground border-sidebar-border flex h-full w-[264px] flex-col border-r">
@@ -127,7 +181,7 @@ export default function DashboardLayout({ children }) {
       <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-2 pb-2">
         {navSections.map((section) => (
           <div key={section.label} className="flex flex-col gap-0.5">
-            <div className="text-muted-foreground/80 px-3 pt-4 pb-1.5 text-xs font-semibold tracking-wider uppercase">
+            <div className="text-muted-foreground px-3 pt-4 pb-1.5 text-xs font-semibold tracking-wider uppercase">
               {section.label}
             </div>
             {section.items.map((item) => (
@@ -190,7 +244,15 @@ export default function DashboardLayout({ children }) {
             onClick={close}
             aria-hidden="true"
           />
-          <div className="relative z-10 h-full">{sidebar}</div>
+          <div
+            ref={drawerRef}
+            id="mobile-nav"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Navigation"
+            className="relative z-10 h-full">
+            {sidebar}
+          </div>
         </div>
       )}
 
@@ -201,6 +263,8 @@ export default function DashboardLayout({ children }) {
               type="button"
               onClick={toggle}
               aria-label="Toggle navigation"
+              aria-expanded={opened}
+              aria-controls="mobile-nav"
               className="text-sidebar-foreground inline-flex size-9 cursor-pointer appearance-none items-center justify-center rounded-md border-0 bg-transparent hover:bg-sidebar-accent">
               <Menu className="size-5" />
             </button>

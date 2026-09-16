@@ -260,3 +260,30 @@ html[data-density='compact'] [data-slot='table-cell'] {
 html[data-density='compact'] [data-slot='table-head'] {
   height: 2rem;
 }
+
+/*
+ * Reduced motion — honor the OS setting (WCAG 2.3.3). Collapse tweened
+ * transitions and the enter/exit animations (dialogs, dropdowns, accordions,
+ * the arrow nudge / chevron rotate) so nothing slides, zooms or moves. We keep
+ * the looping status indicators — the spinner and the skeleton pulse — running,
+ * because they communicate live state rather than decorate; killing them would
+ * destroy useful feedback, which is the failure mode a blanket kill causes.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .animate-spin {
+    animation-duration: 1s !important;
+    animation-iteration-count: infinite !important;
+  }
+  .animate-pulse {
+    animation-duration: 2s !important;
+    animation-iteration-count: infinite !important;
+  }
+}
