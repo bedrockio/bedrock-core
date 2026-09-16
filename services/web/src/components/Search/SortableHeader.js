@@ -67,8 +67,7 @@ export default function SortableHeader(props) {
             : 'none'
       }
       className={cn(
-        'group hover:text-foreground focus-visible:ring-ring cursor-pointer transition-colors outline-none select-none focus-visible:ring-2',
-        sorted && 'text-foreground',
+        'group focus-visible:ring-ring cursor-pointer outline-none select-none focus-visible:ring-2',
         className,
       )}>
       <div className="flex items-center justify-between gap-2">

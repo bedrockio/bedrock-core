@@ -178,8 +178,9 @@ Every interactive component ships the full state set and shares one vocabulary, 
 - Borderless, `2xl` radius, `.card-soft` Highlight + Shadow. Stat cards: uppercase label, big tabular-mono value, muted context hint; optional accent-tinted icon chip (`bg-primary/10 text-primary`).
 
 ### Tables (the core surface)
-- Panel is a borderless floating card that **scrolls internally** (`max-height`) with a **sticky, uppercase micro-label header**.
-- **Sort:** sortable columns show a muted up/down on hover; the active column shows its direction chevron in the brand accent (no accent underline — it distracts).
+- Panel is a borderless floating card that **scrolls internally** (`max-height`) with a **sticky, uppercase header**. Cells carry comfortable edge padding (24px against the card, 12px between columns) so data never hugs the border.
+- **Header labels** are near-black (`--ink`, Geist 600 uppercase) and uniform across every column — readable, not a muted micro-label. Colour never marks the sorted column.
+- **Sort:** sortable columns show a muted up/down on hover; the active column shows its direction chevron in the brand accent (no accent underline, and no darkened text — the chevron alone marks it).
 - **Density:** a global **Comfortable / Compact** preference (`data-density` on `<html>`, toggled in the footer like dark mode) tightens rows for long lists.
 - **States:** skeleton rows while loading (`Search.Loading`), teaching empty states ("No X yet — do this next"), error surfaced in the toolbar status. Rows: neutral hover, no accent tint.
 
