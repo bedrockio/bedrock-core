@@ -2,6 +2,7 @@ import { Link } from '@bedrockio/router';
 
 import ErrorMessage from 'components/ErrorMessage';
 import ListStats from 'components/ListStats';
+import ListToolbar from 'components/ListToolbar';
 import PageHeader from 'components/PageHeader';
 import Protected from 'components/Protected';
 import Search from 'components/Search';
@@ -82,35 +83,28 @@ export default function ShopList() {
 
             <ListStats resource="shops" label="Shops" />
 
-            <div className="flex items-center justify-between gap-4">
-              <SearchFilters.Modal>
-                <SearchFilters.Select
-                  data={countries}
-                  search
-                  name="country"
-                  label="Country"
-                />
-                <SearchFilters.Select
-                  search
-                  onDataNeeded={fetchOwners}
-                  name="owner"
-                  label="Owner"
-                />
-                <SearchFilters.Select
-                  search
-                  multiple
-                  onDataNeeded={fetchCategories}
-                  name="categories"
-                  label="Categories"
-                />
-                <SearchFilters.DateRange label="Created At" name="createdAt" />
-              </SearchFilters.Modal>
-
-              <div className="flex items-center gap-4">
-                <Search.Status />
-                <SearchFilters.Keyword />
-              </div>
-            </div>
+            <ListToolbar>
+              <SearchFilters.Select
+                data={countries}
+                search
+                name="country"
+                label="Country"
+              />
+              <SearchFilters.Select
+                search
+                onDataNeeded={fetchOwners}
+                name="owner"
+                label="Owner"
+              />
+              <SearchFilters.Select
+                search
+                multiple
+                onDataNeeded={fetchCategories}
+                name="categories"
+                label="Categories"
+              />
+              <SearchFilters.DateRange label="Created At" name="createdAt" />
+            </ListToolbar>
 
             <ErrorMessage error={error} />
 

@@ -2,6 +2,7 @@ import { Link } from '@bedrockio/router';
 
 import ErrorMessage from 'components/ErrorMessage';
 import ListStats from 'components/ListStats';
+import ListToolbar from 'components/ListToolbar';
 import PageHeader from 'components/PageHeader';
 import Search from 'components/Search';
 import SearchFilters from 'components/Search/Filters';
@@ -69,22 +70,15 @@ export default function UserList() {
 
             <ListStats resource="users" label="Users" />
 
-            <div className="flex items-center justify-between gap-4">
-              <SearchFilters.Modal>
-                <SearchFilters.Select
-                  onDataNeeded={fetchRoles}
-                  name="roles"
-                  label="Roles"
-                  multiple
-                />
-                <SearchFilters.DateRange label="Created At" name="createdAt" />
-              </SearchFilters.Modal>
-
-              <div className="flex items-center gap-4">
-                <Search.Status />
-                <SearchFilters.Keyword />
-              </div>
-            </div>
+            <ListToolbar>
+              <SearchFilters.Select
+                onDataNeeded={fetchRoles}
+                name="roles"
+                label="Roles"
+                multiple
+              />
+              <SearchFilters.DateRange label="Created At" name="createdAt" />
+            </ListToolbar>
 
             <ErrorMessage error={error} />
 

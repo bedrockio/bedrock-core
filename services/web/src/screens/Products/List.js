@@ -2,6 +2,7 @@ import { Link } from '@bedrockio/router';
 
 import ErrorMessage from 'components/ErrorMessage';
 import ListStats from 'components/ListStats';
+import ListToolbar from 'components/ListToolbar';
 import PageHeader from 'components/PageHeader';
 import Search from 'components/Search';
 import SearchFilters from 'components/Search/Filters';
@@ -55,27 +56,12 @@ export default function ProductList() {
 
             <ListStats resource="products" label="Products" />
 
-            <div className="flex items-center justify-between gap-4">
-              <SearchFilters.Modal>
-                <SearchFilters.Checkbox name="isFeatured" label="Is Featured" />
-                <SearchFilters.Number name="priceUsd" label="Price Usd" />
-                <SearchFilters.DateRange
-                  time
-                  name="expiresAt"
-                  label="Expires At"
-                />
-                <SearchFilters.DateRange
-                  time
-                  name="createdAt"
-                  label="Created At"
-                />
-              </SearchFilters.Modal>
-
-              <div className="flex items-center gap-4">
-                <Search.Status />
-                <SearchFilters.Keyword />
-              </div>
-            </div>
+            <ListToolbar>
+              <SearchFilters.Checkbox name="isFeatured" label="Is Featured" />
+              <SearchFilters.Number name="priceUsd" label="Price Usd" />
+              <SearchFilters.DateRange time name="expiresAt" label="Expires At" />
+              <SearchFilters.DateRange time name="createdAt" label="Created At" />
+            </ListToolbar>
 
             <ErrorMessage error={error} />
 
