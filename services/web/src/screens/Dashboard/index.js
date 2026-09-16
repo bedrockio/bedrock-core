@@ -279,7 +279,7 @@ function SectionHeader({ title, to, linkLabel }) {
 }
 
 function TopShops({ shops, catalogValue }) {
-  const grid = 'grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(240px,1fr))]';
+  const grid = 'grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3';
   if (!shops) {
     return (
       <div className={grid}>

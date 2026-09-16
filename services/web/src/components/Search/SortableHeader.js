@@ -70,14 +70,14 @@ export default function SortableHeader(props) {
         'group focus-visible:ring-ring cursor-pointer outline-none select-none focus-visible:ring-2',
         className,
       )}>
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex items-center gap-1.5">
         {children}
         {sorted === 'asc' ? (
-          <ChevronUp className="text-primary size-3.5" />
+          <ChevronUp className="text-primary size-3.5 shrink-0" />
         ) : sorted === 'desc' ? (
-          <ChevronDown className="text-primary size-3.5" />
+          <ChevronDown className="text-primary size-3.5 shrink-0" />
         ) : (
-          <ChevronsUpDown className="size-3.5 opacity-0 transition-opacity group-hover:opacity-50" />
+          <ChevronsUpDown className="size-3.5 shrink-0 opacity-0 transition-opacity group-hover:opacity-50" />
         )}
       </div>
     </TableHead>

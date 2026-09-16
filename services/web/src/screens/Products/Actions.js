@@ -1,6 +1,12 @@
 import { Link } from '@bedrockio/router';
 
-import { Code, EllipsisVertical, FileSearch, Pencil } from 'lucide-react';
+import {
+  Code,
+  EllipsisVertical,
+  FileSearch,
+  Pencil,
+  Trash2,
+} from 'lucide-react';
 
 import Protected from 'components/Protected';
 import Confirm from 'modals/Confirm';
@@ -101,7 +107,7 @@ export default function ProductsActions({
                 <DropdownMenuItem
                   variant="destructive"
                   onSelect={(e) => e.preventDefault()}>
-                  <FileSearch />
+                  <Trash2 />
                   Delete
                 </DropdownMenuItem>
               }

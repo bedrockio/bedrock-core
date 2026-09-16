@@ -37,7 +37,7 @@ export default function ErrorMessage(props) {
   }
 
   return (
-    <Alert variant="destructive" className={cn('mb-4', className)}>
+    <Alert variant="destructive" className={className}>
       <AlertDescription>{error.message || 'An error occurred'}</AlertDescription>
     </Alert>
   );
