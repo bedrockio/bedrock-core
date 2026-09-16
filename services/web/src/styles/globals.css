@@ -79,15 +79,17 @@
   --sidebar-ring: oklch(0.55 0.16 266);
 
   /* Soft-gloss-minimal elevation vocabulary (DESIGN.md §Elevation).
-     Cards sit at ~95% opacity over --app-ground and lift with ONE soft shadow. */
+     Cards lift off the --app-base canvas with ONE soft shadow. */
   --shadow-rest: 0 1px 2px oklch(0.25 0.03 60 / 0.05), 0 10px 24px -14px oklch(0.25 0.03 60 / 0.22);
   --shadow-raised: 0 4px 14px oklch(0.25 0.03 60 / 0.12);
   --shadow-overlay: 0 16px 48px oklch(0.25 0.03 60 / 0.18);
   --card-hi: oklch(1 0 0 / 0.55); /* soft-gloss top highlight */
-  /* Warm + accent-tinted app canvas (applied at layout level, not to flat --background). */
-  --app-ground:
-    radial-gradient(1050px 540px at 86% -12%, color-mix(in oklch, var(--primary) 10%, transparent), transparent 62%),
-    linear-gradient(165deg, oklch(0.984 0.004 285), oklch(0.96 0.005 285));
+  /* Warm + accent-tinted app canvas (applied at layout level, not to flat
+     --background). Split in two: the base tint fills the scroll box, the aurora
+     rides a fixed composited layer (see .app-ground) instead of a repaint-heavy
+     background-attachment: fixed. */
+  --app-base: linear-gradient(165deg, oklch(0.984 0.004 285), oklch(0.96 0.005 285));
+  --app-aurora: radial-gradient(1050px 540px at 86% -12%, color-mix(in oklch, var(--primary) 10%, transparent), transparent 62%);
 }
 
 .dark {
@@ -131,9 +133,8 @@
   --shadow-raised: 0 4px 14px oklch(0 0 0 / 0.5);
   --shadow-overlay: 0 20px 60px oklch(0 0 0 / 0.6);
   --card-hi: oklch(1 0 0 / 0.09); /* soft-gloss top highlight */
-  --app-ground:
-    radial-gradient(1050px 580px at 86% -12%, color-mix(in oklch, var(--primary) 42%, transparent), transparent 58%),
-    linear-gradient(165deg, oklch(0.16 0.012 285), oklch(0.11 0.008 285));
+  --app-base: linear-gradient(165deg, oklch(0.16 0.012 285), oklch(0.11 0.008 285));
+  --app-aurora: radial-gradient(1050px 580px at 86% -12%, color-mix(in oklch, var(--primary) 42%, transparent), transparent 58%);
 }
 
 @theme inline {
@@ -211,8 +212,8 @@
 
 /*
  * Soft-gloss-minimal card surface (DESIGN.md §Elevation).
- * ~95% opacity over --app-ground + a subtle backdrop blur + one soft lift +
- * a faint top highlight. The shadcn Card applies this via the `card-soft` class.
+ * A borderless surface over the --app-base canvas: one soft lift + a faint top
+ * highlight. The shadcn Card applies this via the `card-soft` class.
  */
 @layer components {
   /* Operator's Console card: borderless, floats on Highlight + Shadow.
@@ -233,10 +234,27 @@
   }
 }
 
-/* The authenticated app canvas: the warm + accent-tinted ground cards sit on. */
+/*
+ * The authenticated app canvas: the warm + accent-tinted ground cards sit on.
+ * The base tint paints on the scroll box; the aurora glow rides a fixed,
+ * GPU-composited pseudo-element pinned to the viewport's top-right corner, so it
+ * stays put on scroll without the full-viewport repaint that
+ * `background-attachment: fixed` costs (and that mobile Safari renders wrong).
+ * `z-index: 0` establishes a stacking context so the -1 layer sits above the
+ * base tint but behind all content.
+ */
 .app-ground {
-  background: var(--app-ground);
-  background-attachment: fixed;
+  position: relative;
+  z-index: 0;
+  background: var(--app-base);
+}
+.app-ground::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--app-aurora);
 }
 
 /*

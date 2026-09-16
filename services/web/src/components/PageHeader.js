@@ -49,9 +49,9 @@ const PageHeader = ({
           </Breadcrumb>
         )}
 
-        <div className="flex flex-nowrap items-center justify-between gap-4">
-          <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
-          <div className="flex flex-none items-center gap-2">{rightSection}</div>
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
+          <h1 className="min-w-0 text-2xl font-bold tracking-tight">{title}</h1>
+          <div className="flex shrink-0 items-center gap-2">{rightSection}</div>
         </div>
 
         {tabs.length > 0 && (
