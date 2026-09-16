@@ -1,12 +1,11 @@
-import { Link, useNavigate } from '@bedrockio/router';
+import { useNavigate } from '@bedrockio/router';
 
+import CloseButton from 'components/CloseButton';
 import PageHeader from 'components/PageHeader';
-
-import { Button } from '@/components/ui/button';
 
 import Form from './Form';
 
-export default function NewShop() {
+export default function NewApplication() {
   const navigate = useNavigate();
 
   return (
@@ -15,14 +14,10 @@ export default function NewShop() {
         title="New Application"
         breadcrumbItems={[
           { title: 'Home', href: '/' },
-          { title: 'Applications', href: '/Applications' },
+          { title: 'Applications', href: '/applications' },
           { title: 'New Application' },
         ]}
-        rightSection={
-          <Button asChild variant="outline">
-            <Link to="/applications">Back</Link>
-          </Button>
-        }
+        rightSection={<CloseButton to="/applications" />}
       />
       <Form
         onSave={() => {

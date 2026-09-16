@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import CancelButton from 'components/CancelButton';
 import ErrorMessage from 'components/ErrorMessage';
 
 import { Button } from '@/components/ui/button';
@@ -106,11 +107,12 @@ export default function ApplicationForm({ application, onSave }) {
           </div>
         </div>
         <ErrorMessage error={error} />
-        <div className="flex">
-          <Button className="mt-4" type="submit" disabled={loading}>
+        <div className="mt-4 flex items-center gap-3">
+          <Button type="submit" disabled={loading}>
             {loading && <Spinner />}
             {isUpdate ? 'Update Application' : 'Create New Application'}
           </Button>
+          <CancelButton />
         </div>
       </form>
     </Form>

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import CancelButton from 'components/CancelButton';
 import ErrorMessage from 'components/ErrorMessage';
 import SearchDropdown from 'components/SearchDropdown';
 import CurrencyField from 'components/form-fields/Currency';
@@ -263,6 +264,7 @@ export default function ProductForm({ product, shop, onSuccess = () => {} }) {
             {form.formState.isSubmitting && <Spinner />}
             {isUpdate ? 'Update' : 'Create'} Product
           </Button>
+          <CancelButton />
         </div>
       </form>
     </Form>

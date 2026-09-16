@@ -1,8 +1,7 @@
-import { Link, useNavigate } from '@bedrockio/router';
+import { useNavigate } from '@bedrockio/router';
 
+import CloseButton from 'components/CloseButton';
 import PageHeader from 'components/PageHeader';
-
-import { Button } from '@/components/ui/button';
 
 import Form from './Form';
 
@@ -18,18 +17,11 @@ export default function NewShop() {
           { title: 'Shops', href: '/shops' },
           { title: 'New Shop' },
         ]}
-        rightSection={
-          <Button asChild variant="outline">
-            <Link to="/shops">Back</Link>
-          </Button>
-        }
+        rightSection={<CloseButton to="/shops" />}
       />
       <Form
         onSuccess={(shop) => {
           navigate(`/shops/${shop.id}`);
-        }}
-        onCancel={() => {
-          navigate('/shops');
         }}
       />
     </div>

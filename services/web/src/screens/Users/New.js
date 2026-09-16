@@ -1,8 +1,7 @@
-import { Link, useNavigate } from '@bedrockio/router';
+import { useNavigate } from '@bedrockio/router';
 
+import CloseButton from 'components/CloseButton';
 import PageHeader from 'components/PageHeader';
-
-import { Button } from '@/components/ui/button';
 
 import Form from './Form';
 
@@ -18,11 +17,7 @@ export default function NewUser() {
           { title: 'Users', href: '/users' },
           { title: 'New User' },
         ]}
-        rightSection={
-          <Button asChild variant="outline">
-            <Link to="/users">Back</Link>
-          </Button>
-        }
+        rightSection={<CloseButton to="/users" />}
       />
 
       <Form

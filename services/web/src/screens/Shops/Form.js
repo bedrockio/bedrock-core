@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import CancelButton from 'components/CancelButton';
 import ErrorMessage from 'components/ErrorMessage';
 import SearchDropdown from 'components/SearchDropdown';
 import UploadsField from 'components/form-fields/Uploads';
@@ -278,6 +279,7 @@ export default function ShopForm({ shop, onSuccess = () => {} }) {
               )}
               {isUpdate ? 'Update' : 'Create New'} Shop
             </Button>
+            <CancelButton />
           </div>
         </div>
       </form>

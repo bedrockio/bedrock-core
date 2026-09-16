@@ -8,6 +8,7 @@ import {
   Trash2,
 } from 'lucide-react';
 
+import CloseButton from 'components/CloseButton';
 import Protected from 'components/Protected';
 import Confirm from 'modals/Confirm';
 import InspectObject from 'modals/InspectObject';
@@ -27,6 +28,11 @@ export default function ProductsActions({
   reload,
   displayMode = 'show',
 }) {
+  // In edit mode the header only offers a way out — a close (✕), no row menu.
+  if (displayMode === 'edit') {
+    return <CloseButton to={`/products/${product.id}`} />;
+  }
+
   function renderButton() {
     if (displayMode === 'list') {
       return (

@@ -12,6 +12,7 @@ import {
 import { showSuccessNotification } from 'helpers/notifications';
 import { useSession } from 'stores/session';
 
+import CloseButton from 'components/CloseButton';
 import Protected from 'components/Protected';
 import Confirm from 'modals/Confirm';
 import InspectObject from 'modals/InspectObject';
@@ -32,6 +33,11 @@ export default function UserActions(props) {
   const { user: authUser } = useSession();
 
   const navigate = useNavigate();
+
+  // In edit mode the header only offers a way out — a close (✕), no row menu.
+  if (displayMode === 'edit') {
+    return <CloseButton to={`/users/${user.id}`} />;
+  }
 
   const authenticatableRoles = authUser.roles.reduce(
     (result, { roleDefinition }) =>

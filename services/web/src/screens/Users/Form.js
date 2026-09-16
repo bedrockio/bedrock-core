@@ -6,6 +6,7 @@ import { showSuccessNotification } from 'helpers/notifications';
 
 import ErrorMessage from 'components/ErrorMessage';
 import Protected from 'components/Protected';
+import CancelButton from 'components/CancelButton';
 import Actions from 'components/form-fields/Actions';
 import PhoneField from 'components/form-fields/Phone';
 import RolesField from 'components/form-fields/Roles';
@@ -241,6 +242,7 @@ export default function UserForm(props) {
             {submitting && <Spinner />}
             Submit
           </Button>
+          <CancelButton />
         </Actions>
       </form>
     </Form>
