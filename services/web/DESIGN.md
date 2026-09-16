@@ -188,9 +188,8 @@ Every interactive component ships the full state set and shares one vocabulary, 
 - **Sidebar:** a lighter/deeper recessive plane. Brand + workspace switcher, grouped **Workspace / System** sections (uppercase labels), a **user profile block** with a dropdown. **Active item** = tinted pill (`bg-primary/12`) + accent text and icon — clear but calm, since the sidebar is a secondary indicator.
 - **Header:** page title (Bricolage) + breadcrumb, with search and the primary action on the right.
 
-### Home Dashboard
-- An at-a-glance overview that is also a launchpad: breadcrumb + "Dashboard" title + a short greeting; a five-tile KPI strip (Products and Shops drill into their sections, plus Featured, Expiring-soon, and Catalog value); then a titled "Catalog by price" chart and a "Top shops" panel side by side. Every section header carries a link to its full view (`View products →`, `All shops →`), and each top-shop row opens that shop.
-- Counts are exact (search `meta.total`, filtered for Featured/Expiring). Catalog value, the price distribution, and the per-shop value ranking are computed client-side from a bounded product sample.
+- An at-a-glance overview that is also a launchpad: breadcrumb + "Dashboard" title (no greeting); a five-tile KPI strip (Products and Shops drill into their sections, plus Featured, Expiring-soon, and Catalog value); a **Top shops** row of three storefront cards (stats + a share-of-catalog-value bar, each opening that shop); then a **Catalog analytics** section — the "Catalog by price" distribution beside a Featured-mix donut with average/median price. Every section header links to its full view (`All shops →`, `View products →`).
+- Counts are exact (search `meta.total`, filtered for Featured/Expiring). Catalog value, avg/median price, the price distribution, and the per-shop rollups are computed client-side from a bounded product sample.
 - **Charts** live in a `card-soft` panel and use the brand accent for the data mark (`bg-primary` bars) over a muted track, mono tabular figures, and no chart library — a lightweight bar built from the same tokens as everything else.
 
 ### Icons
