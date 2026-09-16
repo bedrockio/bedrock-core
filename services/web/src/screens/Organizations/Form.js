@@ -99,10 +99,12 @@ function OrganizationForm({ organization, onSuccess = () => {} }) {
         </div>
         <div className="mt-4 flex flex-col gap-4">
           <ErrorMessage error={editRequest.error} />
-          <Button type="submit" disabled={editRequest.loading}>
-            {editRequest.loading && <Spinner />}
-            {isUpdate ? 'Update' : 'Create'} Organization
-          </Button>
+          <div className="flex items-center gap-4">
+            <Button type="submit" disabled={editRequest.loading}>
+              {editRequest.loading && <Spinner />}
+              {isUpdate ? 'Update' : 'Create'} Organization
+            </Button>
+          </div>
         </div>
       </form>
     </Form>

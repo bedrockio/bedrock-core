@@ -155,7 +155,7 @@ A conventional operator shell: a lighter, recessive left sidebar against the `--
 ### Elevation tokens (globals.css)
 - **`--app-ground`**: the accent-tinted aurora canvas (light + dark).
 - **`.card-soft`**: borderless card surface + the Highlight + Shadow box-shadow (with a `.dark` override).
-- Tables scroll inside a `max-height` card with a **sticky header**.
+- Tables expand to their full height inside the floating card; the page scrolls, not the card (no nested scrollbar). Narrow viewports scroll the table horizontally within its own `overflow-x` container so the page body never scrolls sideways.
 
 ### Named Rules
 **The Float Rule.** Cards are borderless and defined by light — the Highlight + Shadow — never by a hairline box. Depth is one soft offset+blur shadow plus a light top edge; never a hard or zero-offset halo, never glass-as-decoration. The same recipe carries light and dark so a card is the same object in both. Focus is the brand ring, never a shadow.
@@ -178,7 +178,7 @@ Every interactive component ships the full state set and shares one vocabulary, 
 - Borderless, `2xl` radius, `.card-soft` Highlight + Shadow. Stat cards: uppercase label, big tabular-mono value, muted context hint; optional accent-tinted icon chip (`bg-primary/10 text-primary`).
 
 ### Tables (the core surface)
-- Panel is a borderless floating card that **scrolls internally** (`max-height`) with a **sticky, uppercase header**. Cells carry comfortable edge padding (24px against the card, 12px between columns) so data never hugs the border.
+- Panel is a borderless floating card that **expands to full height** — the page scrolls, not the card. A wide table scrolls horizontally within its own `overflow-x` container so the body never scrolls sideways. Uppercase header row. Cells carry comfortable edge padding (24px against the card, 12px between columns) so data never hugs the border.
 - **Header labels** are near-black (`--ink`, Geist 600 uppercase) and uniform across every column — readable, not a muted micro-label. Colour never marks the sorted column.
 - **Sort:** sortable columns show a muted up/down on hover; the active column shows its direction chevron in the brand accent (no accent underline, and no darkened text — the chevron alone marks it).
 - **Density:** a global **Comfortable / Compact** preference (`data-density` on `<html>`, toggled in the footer like dark mode) tightens rows for long lists.
@@ -206,7 +206,7 @@ Every interactive component ships the full state set and shares one vocabulary, 
 - **Do** keep cards borderless, floating on `.card-soft`; let the Highlight + Shadow define them, not a box.
 - **Do** keep saturated colour for the brand accent and the semantic quartet only; semantic colours stay fixed across brands.
 - **Do** set headings in Bricolage, body in Geist, and every figure in tabular mono.
-- **Do** give tables sticky uppercase headers, a clear sort affordance, density, skeletons, and teaching empty states.
+- **Do** give tables an uppercase header row, a clear sort affordance, density, skeletons, and teaching empty states.
 - **Do** keep generated and hand-built screens on the exact same components and tokens (Parity Rule).
 
 ### Don't:

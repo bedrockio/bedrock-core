@@ -16,8 +16,8 @@ export default function ShopOverview() {
       <Menu />
 
       <div className="mt-4 flex flex-col gap-4">
-        <p className="text-base">{organization.name}</p>
-        <DefinitionList className="mt-4">
+        <DefinitionList>
+          <DefinitionItem label="Name">{organization.name}</DefinitionItem>
           <DefinitionItem label="Created At">
             {formatDateTime(organization.createdAt)}
           </DefinitionItem>

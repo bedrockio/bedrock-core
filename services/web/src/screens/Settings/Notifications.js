@@ -96,7 +96,7 @@ function Notifications() {
 
       <ErrorMessage error={saveRequest.error} />
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <Card>
+        <Card className="max-w-2xl">
           <CardHeader>
             <CardTitle>Notifications</CardTitle>
             <CardDescription>
@@ -109,12 +109,12 @@ function Notifications() {
               return (
                 <div
                   className="flex flex-col gap-2 py-4 first:pt-0 last:pb-0"
-                  key={name}>
+                  key={name ?? label ?? index}>
                   <p className="text-sm font-medium">{label}</p>
                   <div className="flex flex-wrap gap-4">
                     {CHANNELS.map((channel) => {
                       const fieldName = `notifications.${index}.${channel.value}`;
-                      const id = `${name}-${channel.value}`;
+                      const id = `${name ?? index}-${channel.value}`;
                       return (
                         <div
                           className="flex items-center gap-2"

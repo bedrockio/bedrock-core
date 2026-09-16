@@ -21,7 +21,6 @@ export default function ShopOverview() {
       <Menu />
 
       <div className="mt-4 flex flex-col gap-4">
-        <p className="text-base leading-normal">{product.description}</p>
         <h2 className="text-xl font-bold tracking-tight">Images</h2>
         <div className="flex flex-wrap gap-4">
           {product.images.map((image) => (
@@ -34,7 +33,10 @@ export default function ShopOverview() {
           ))}
         </div>
 
-        <DefinitionList className="mt-4">
+        <DefinitionList>
+          <DefinitionItem label="Description">
+            {product.description}
+          </DefinitionItem>
           <DefinitionItem label="Price">
             {formatCurrency(product.priceUsd || 0, 'USD')}
           </DefinitionItem>

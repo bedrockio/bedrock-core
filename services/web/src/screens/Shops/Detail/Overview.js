@@ -20,7 +20,6 @@ export default function ShopOverview() {
       <Menu />
 
       <div className="mt-4 flex flex-col gap-4">
-        <p className="text-base leading-normal">{shop.description}</p>
         <h2 className="text-xl font-bold tracking-tight">Images</h2>
         <div className="flex flex-wrap gap-4">
           {shop.images.map((image) => (
@@ -33,7 +32,10 @@ export default function ShopOverview() {
           ))}
         </div>
 
-        <DefinitionList className="mt-4">
+        <DefinitionList>
+          <DefinitionItem label="Description">
+            {shop.description}
+          </DefinitionItem>
           <DefinitionItem label="Categories">
             <ul>
               {shop.categories.map((category) => {

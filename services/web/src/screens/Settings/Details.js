@@ -93,7 +93,7 @@ function Profile() {
       <ErrorMessage error={saveRequest.error} />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <Card>
+          <Card className="max-w-2xl">
             <CardHeader>
               <CardTitle>Profile</CardTitle>
               <CardDescription>
