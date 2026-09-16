@@ -189,7 +189,8 @@ Every interactive component ships the full state set and shares one vocabulary, 
 - **Header:** page title (Bricolage) + breadcrumb, with search and the primary action on the right.
 
 ### Home Dashboard
-- Breadcrumb + "Dashboard" title (matches every other screen) and a short greeting. A KPI row focused on the catalog — Products and Shops drill into their sections (arrow affordance), Featured and Expiring-soon are product signals — then a "Catalog by price" chart. Metrics are exact (search `meta.total` with filters); the chart buckets a bounded product sample client-side.
+- An at-a-glance overview that is also a launchpad: breadcrumb + "Dashboard" title + a short greeting; a five-tile KPI strip (Products and Shops drill into their sections, plus Featured, Expiring-soon, and Catalog value); then a titled "Catalog by price" chart and a "Top shops" panel side by side. Every section header carries a link to its full view (`View products →`, `All shops →`), and each top-shop row opens that shop.
+- Counts are exact (search `meta.total`, filtered for Featured/Expiring). Catalog value, the price distribution, and the per-shop value ranking are computed client-side from a bounded product sample.
 - **Charts** live in a `card-soft` panel and use the brand accent for the data mark (`bg-primary` bars) over a muted track, mono tabular figures, and no chart library — a lightweight bar built from the same tokens as everything else.
 
 ### Icons
