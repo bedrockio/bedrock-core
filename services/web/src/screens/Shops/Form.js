@@ -277,7 +277,7 @@ export default function ShopForm({ shop, onSuccess = () => {} }) {
               {form.formState.isSubmitting && (
                 <Spinner className="text-current" />
               )}
-              {isUpdate ? 'Update' : 'Create New'} Shop
+              {isUpdate ? 'Update' : 'Create'} Shop
             </Button>
             <CancelButton />
           </div>

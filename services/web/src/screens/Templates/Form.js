@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import CancelButton from 'components/CancelButton';
 import ErrorMessage from 'components/ErrorMessage';
-import Actions from 'components/form-fields/Actions';
 import ChipsField from 'components/form-fields/Chips';
 
 import { Button } from '@/components/ui/button';
@@ -97,7 +97,9 @@ export default function TemplateForm(props) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex max-w-2xl flex-col gap-4">
         <Card>
           <CardContent>
             <div className="flex flex-col gap-4">
@@ -136,19 +138,13 @@ export default function TemplateForm(props) {
             </div>
           </CardContent>
         </Card>
-        <Actions>
-          <Button
-            type="button"
-            variant="outline"
-            disabled={loading}
-            onClick={onCancelClick}>
-            Cancel
-          </Button>
+        <div className="flex items-center gap-3">
           <Button type="submit" disabled={loading}>
             {loading && <Spinner className="text-current" />}
-            {template ? 'Update' : 'Create'}
+            {template ? 'Update' : 'Create'} Template
           </Button>
-        </Actions>
+          <CancelButton onClick={onCancelClick} />
+        </div>
       </form>
     </Form>
   );

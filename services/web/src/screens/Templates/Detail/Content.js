@@ -11,7 +11,6 @@ import {
 import { usePage } from 'stores/page';
 
 import ErrorMessage from 'components/ErrorMessage';
-import Actions from 'components/form-fields/Actions';
 import { useFields } from 'hooks/forms';
 import { useRequest } from 'hooks/request';
 
@@ -72,7 +71,7 @@ export default function Content() {
 
   function render() {
     return (
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} className="flex flex-col gap-4">
         <Menu />
         <Card className="gap-0 p-4">
           <ErrorMessage error={error} />
@@ -117,12 +116,12 @@ export default function Content() {
           </div>
         </Card>
 
-        <Actions>
+        <div className="flex items-center gap-3">
           <Button type="submit" disabled={loading}>
             {loading && <Spinner className="text-current" />}
-            Save
+            Save Content
           </Button>
-        </Actions>
+        </div>
       </form>
     );
   }

@@ -79,10 +79,12 @@ export default function Preview() {
             style={{ width: '100%', height: '500px', border: 'none' }}
           />
         </Card>
-        <div className="flex justify-end">
+        <div className="flex">
           <SendTestButton
             channel="email"
             template={template}
+            variant="default"
+            label="Send Test"
             onSent={onTestSent}
           />
         </div>

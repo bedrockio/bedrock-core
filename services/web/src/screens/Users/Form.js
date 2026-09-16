@@ -4,10 +4,9 @@ import { z } from 'zod';
 
 import { showSuccessNotification } from 'helpers/notifications';
 
+import CancelButton from 'components/CancelButton';
 import ErrorMessage from 'components/ErrorMessage';
 import Protected from 'components/Protected';
-import CancelButton from 'components/CancelButton';
-import Actions from 'components/form-fields/Actions';
 import PhoneField from 'components/form-fields/Phone';
 import RolesField from 'components/form-fields/Roles';
 import UploadsField from 'components/form-fields/Uploads';
@@ -107,10 +106,11 @@ export default function UserForm(props) {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4">
         <ErrorMessage error={error} />
-        <Card>
-          <CardHeader>
-            <CardTitle>Profile</CardTitle>
-          </CardHeader>
+        <div className="grid items-start gap-4 lg:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>Profile</CardTitle>
+            </CardHeader>
           <CardContent className="flex flex-col gap-4">
             <FormField
               control={form.control}
@@ -236,14 +236,15 @@ export default function UserForm(props) {
               />
             </div>
           </CardContent>
-        </Card>
-        <Actions>
+          </Card>
+        </div>
+        <div className="mt-4 flex items-center gap-3">
           <Button type="submit" disabled={submitting}>
             {submitting && <Spinner />}
-            Submit
+            {user ? 'Update' : 'Create'} User
           </Button>
           <CancelButton />
-        </Actions>
+        </div>
       </form>
     </Form>
   );
