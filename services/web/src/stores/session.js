@@ -1,13 +1,7 @@
 import { withRouter } from '@bedrockio/router';
 import { omit } from 'lodash';
 
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { useCallback, use, useEffect, useRef, useState } from 'react';
 
 import { trackSession } from 'utils/analytics';
 import { hasToken, request, setToken } from 'utils/api';
@@ -34,15 +28,17 @@ function SessionProvider({ children, location }) {
     return data || {};
   };
 
-  const [state, setState] = useState({
-    user: null,
-    error: null,
-    ready: false,
-    loading: true,
-    organization: null,
-    stored: loadStoredData(),
-    isLoggingIn: false,
-    meta: null,
+  const [state, setState] = useState(() => {
+    return {
+      user: null,
+      error: null,
+      ready: false,
+      loading: true,
+      organization: null,
+      stored: loadStoredData(),
+      isLoggingIn: false,
+      meta: null,
+    };
   });
 
   const prevLocationRef = useRef(location);
@@ -339,11 +335,7 @@ function SessionProvider({ children, location }) {
     popStored,
   };
 
-  return (
-    <SessionContext.Provider value={contextValue}>
-      {children}
-    </SessionContext.Provider>
-  );
+  return <SessionContext value={contextValue}>{children}</SessionContext>;
 }
 
 const Provider = withRouter(SessionProvider);
@@ -351,7 +343,7 @@ const Provider = withRouter(SessionProvider);
 export { Provider as SessionProvider };
 
 export function useSession() {
-  return useContext(SessionContext);
+  return use(SessionContext);
 }
 
 export const withSession = wrapContext(SessionContext);

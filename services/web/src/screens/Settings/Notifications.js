@@ -45,10 +45,6 @@ function Notifications() {
     },
   });
 
-  if (!user) {
-    return null;
-  }
-
   const saveRequest = useRequest({
     method: 'PATCH',
     path: `/1/users/me`,
@@ -61,6 +57,10 @@ function Notifications() {
       });
     },
   });
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <Stack gap="md">

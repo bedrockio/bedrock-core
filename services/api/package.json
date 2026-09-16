@@ -6,7 +6,7 @@
   "engines": {
     "node": ">=24"
   },
-  "packageManager": "pnpm@11.5.2",
+  "packageManager": "pnpm@12.4.2",
   "scripts": {
     "start": "scripts/start-dev",
     "debug": "MONGO_DEBUG=true pnpm start",
@@ -34,6 +34,7 @@
     "@simplewebauthn/server": "^13.1.0",
     "bcryptjs": "^3.0.3",
     "commander": "^12.1.0",
+    "eslint": "^10.10.0",
     "fast-csv": "^5.0.1",
     "firebase-admin": "^12.2.0",
     "front-matter": "^4.0.2",
@@ -58,11 +59,10 @@
     "verify-apple-id-token": "^3.1.0"
   },
   "devDependencies": {
-    "@bedrockio/eslint-plugin": "^1.5.0",
+    "@bedrockio/eslint-plugin": "^1.6.0",
     "@bedrockio/prettier-config": "^1.1.1",
     "@shelf/jest-mongodb": "^5.2.2",
     "@sinonjs/fake-timers": "^14.0.0",
-    "eslint": "^9.33.0",
     "jest": "^30.0.5",
     "jest-changed-files": "^30.0.5",
     "jest-environment-node": "^30.0.5",

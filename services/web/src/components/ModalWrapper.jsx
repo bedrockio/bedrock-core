@@ -1,6 +1,6 @@
 import { Modal } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { cloneElement, createContext, isValidElement, useContext } from 'react';
+import { cloneElement, createContext, isValidElement, use } from 'react';
 
 // Create a context for the modal
 const ModalContext = createContext({
@@ -9,7 +9,7 @@ const ModalContext = createContext({
 
 // Hook for components to use within the modal
 export function useModalContext() {
-  return useContext(ModalContext);
+  return use(ModalContext);
 }
 
 export default function ModalWrapper({
@@ -50,9 +50,9 @@ export default function ModalWrapper({
         centered
         size={size}
         {...otherProps}>
-        <ModalContext.Provider value={{ close: handleClose }}>
+        <ModalContext value={{ close: handleClose }}>
           {component ? component : children}
-        </ModalContext.Provider>
+        </ModalContext>
       </Modal>
     </>
   );

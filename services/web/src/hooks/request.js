@@ -7,7 +7,9 @@ export function useRequest(arg) {
     resolveOptions(arg);
 
   const [error, setError] = useState(null);
-  const [result, setResult] = useState(getInitial?.());
+  const [result, setResult] = useState(() => {
+    return getInitial?.();
+  });
   const [loading, setLoading] = useState(false);
 
   async function run(...args) {

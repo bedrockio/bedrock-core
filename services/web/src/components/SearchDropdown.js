@@ -121,17 +121,6 @@ export default class SearchDropdown extends React.Component {
     return uniqBy([...this.state.items, ...this.state.selectedItems], 'id');
   }
 
-  getSelectedItems() {
-    const { value } = this.props;
-    if (Array.isArray(value)) {
-      return value;
-    } else if (value) {
-      return [value];
-    } else {
-      return [];
-    }
-  }
-
   getOptions() {
     return this.getAllItems().map((item) => {
       const { getOptionLabel, getOptionValue } = this.props;
