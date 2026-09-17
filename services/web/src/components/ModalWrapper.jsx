@@ -76,9 +76,11 @@ export default function ModalWrapper({
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
           </DialogHeader>
-          <ModalContext.Provider value={{ close: handleClose }}>
-            {component ? component : children}
-          </ModalContext.Provider>
+          <div className="-mr-3 max-h-[70vh] overflow-y-auto pr-3">
+            <ModalContext.Provider value={{ close: handleClose }}>
+              {component ? component : children}
+            </ModalContext.Provider>
+          </div>
         </DialogContent>
       </Dialog>
     </>

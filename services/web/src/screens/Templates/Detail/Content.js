@@ -112,7 +112,11 @@ export default function Content() {
                 </Button>
               }
             />
-            <SendPreviewButton channel={channel} template={template} />
+            <SendPreviewButton
+              channel={channel}
+              template={template}
+              size="sm"
+            />
           </div>
         </Card>
 
