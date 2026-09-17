@@ -22,7 +22,6 @@ import {
   PiEnvelopeSimpleBold,
   PiFileBold,
   PiGearBold,
-  PiGridFourBold,
   PiListMagnifyingGlass,
   PiStorefrontBold,
   PiTagBold,
@@ -89,11 +88,6 @@ const accountItems = [
         icon: PiListMagnifyingGlass,
         url: '/audit-log',
         label: 'Audit Log',
-      },
-      {
-        icon: PiGridFourBold,
-        url: '/applications',
-        label: 'Applications',
       },
       {
         icon: PiBookBold,

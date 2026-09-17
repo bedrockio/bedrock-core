@@ -4,7 +4,6 @@ const url = '%url%';
 const { data, meta } = await fetch(url, {
   method: '%method%',
   headers: {
-    'Api-Key': '%apiKey%',
     'Authorization': 'Bearer <token>',
     'Content-Type': 'application/json',
   },
@@ -21,7 +20,6 @@ data.append('file', blob);
 const { data, meta } = await fetch(url, {
   method: '%method%',
   headers: {
-    'Api-Key': '%apiKey%',
     'Authorization': 'Bearer <token>',
     'Content-Type': 'application/json',
   },

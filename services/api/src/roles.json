@@ -5,7 +5,6 @@
       "global"
     ],
     "permissions": {
-      "applications": "all",
       "auditEntries": "all",
       "organizations": "all",
       "templates": "all",
@@ -27,7 +26,6 @@
     ],
     "permissions": {
       "auditEntries": "read",
-      "applications": "all",
       "templates": "all",
       "products": "all",
       "roles": "all",
@@ -42,7 +40,6 @@
       "global"
     ],
     "permissions": {
-      "applications": "read",
       "auditEntries": "read",
       "roles": "read",
       "organizations": "read",
