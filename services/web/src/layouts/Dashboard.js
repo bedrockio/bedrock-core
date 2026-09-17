@@ -3,7 +3,6 @@ import {
   Book,
   Building2,
   Check,
-  ChevronsUpDown,
   Ellipsis,
   House,
   LayoutGrid,
@@ -26,7 +25,6 @@ import ConnectionError from 'components/ConnectionError';
 import ErrorBoundary from 'components/ErrorBoundary';
 import Logo from 'components/Logo';
 import MenuItem from 'components/MenuItem';
-import ModalTrigger from 'components/ModalWrapper';
 import OrganizationSelector from 'components/OrganizationSelector';
 
 import { useDisclosure } from 'hooks/useDisclosure';
@@ -36,7 +34,6 @@ import { userCanSwitchOrganizations } from 'utils/permissions';
 
 import { useTheme } from '@/components/ThemeProvider';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -80,7 +77,7 @@ function getInitials(name) {
 }
 
 export default function DashboardLayout({ children }) {
-  const { user, organization } = useSession();
+  const { user } = useSession();
   const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
   const [opened, { toggle, close }] = useDisclosure();
@@ -151,23 +148,7 @@ export default function DashboardLayout({ children }) {
         <NavLink to="/" className="flex items-center px-2 py-1 no-underline">
           <Logo height={24} />
         </NavLink>
-        {userCanSwitchOrganizations(user) && (
-          <ModalTrigger
-            title="Select Organization"
-            trigger={
-              <Button
-                variant="outline"
-                className="w-full justify-start gap-2 font-medium">
-                <Building2 className="size-4 opacity-70" />
-                <span className="flex-1 truncate text-left">
-                  {organization?.name || 'All Organizations'}
-                </span>
-                <ChevronsUpDown className="size-4 opacity-60" />
-              </Button>
-            }>
-            <OrganizationSelector />
-          </ModalTrigger>
-        )}
+        {userCanSwitchOrganizations(user) && <OrganizationSelector />}
       </div>
 
       <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-2 pb-2">

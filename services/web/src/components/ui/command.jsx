@@ -83,6 +83,16 @@ function CommandItem({ className, ...props }) {
   );
 }
 
+function CommandSeparator({ className, ...props }) {
+  return (
+    <CommandPrimitive.Separator
+      data-slot="command-separator"
+      className={cn('bg-border -mx-1 my-1 h-px', className)}
+      {...props}
+    />
+  );
+}
+
 export {
   Command,
   CommandInput,
@@ -90,4 +100,5 @@ export {
   CommandEmpty,
   CommandGroup,
   CommandItem,
+  CommandSeparator,
 };
