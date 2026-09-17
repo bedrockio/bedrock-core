@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { useSession } from 'stores/session';
 
 import ErrorMessage from 'components/ErrorMessage';
-import Meta from 'components/Meta';
+import PageHeader from 'components/PageHeader';
 import PhoneField from 'components/form-fields/Phone';
 
 import { Button } from '@/components/ui/button';
@@ -85,7 +85,7 @@ function Profile() {
 
   return (
     <div className="flex flex-col gap-4">
-      <Meta title="Account Details" />
+      <PageHeader title="Details" />
 
       <ErrorMessage error={saveRequest.error} />
       <Form {...form}>
