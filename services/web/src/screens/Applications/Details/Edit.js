@@ -17,16 +17,17 @@ export default function EditApplication() {
         title={`Edit ${application.name}`}
         breadcrumbItems={[
           { title: 'Home', href: '/' },
-          { title: 'Applications', href: '/applications' },
+          { title: 'Organization Settings', href: '/organization' },
+          { title: 'Applications', href: '/organization/applications' },
           { title: application.name },
         ]}
-        rightSection={<CloseButton to="/applications" />}
+        rightSection={<CloseButton to="/organization/applications" />}
       />
       <Form
         application={application}
         onSave={() => {
           reload();
-          navigate(`/applications`);
+          navigate(`/organization/applications`);
         }}
       />
     </div>

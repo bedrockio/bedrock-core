@@ -9,9 +9,9 @@ export default class Applications extends React.Component {
   render() {
     return (
       <Routes>
-        <Route exact path="/applications" render={List} />
-        <Route path="/applications/new" render={New} />
-        <Route path="/applications/:id" render={Details} />
+        <Route exact path="/organization/applications" render={List} />
+        <Route path="/organization/applications/new" render={New} />
+        <Route path="/organization/applications/:id" render={Details} />
       </Routes>
     );
   }

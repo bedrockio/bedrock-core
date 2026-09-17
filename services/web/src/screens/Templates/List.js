@@ -38,12 +38,13 @@ export default function TemplateList() {
               title="Templates"
               breadcrumbItems={[
                 { href: '/', title: 'Home' },
+                { href: '/organization', title: 'Organization Settings' },
                 { title: 'Templates' },
               ]}
               rightSection={
                 <Protected endpoint="templates" permission="create">
                   <Button asChild>
-                    <Link to="/templates/new">New Template</Link>
+                    <Link to="/organization/templates/new">New Template</Link>
                   </Button>
                 </Protected>
               }
@@ -88,7 +89,7 @@ export default function TemplateList() {
                       <TableCell>
                         <Link
                           className="text-foreground no-underline hover:underline"
-                          to={`/templates/${template.id}`}>
+                          to={`/organization/templates/${template.id}`}>
                           {template.name}
                         </Link>
                       </TableCell>

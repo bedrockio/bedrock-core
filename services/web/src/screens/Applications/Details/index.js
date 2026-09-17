@@ -22,13 +22,20 @@ export default function ApplicationDetail() {
     <Loader
       notFound={
         <NotFound
-          link={<Link to="/applications">Applications</Link>}
+          link={<Link to="/organization/applications">Applications</Link>}
           message="Sorry that application wasn't found."
         />
       }>
       <Routes>
-        <Route path="/applications/:id/edit" render={Edit} exact />
-        <Redirect path="/applications/:id" to="/applications/:id/edit" />
+        <Route
+          path="/organization/applications/:id/edit"
+          render={Edit}
+          exact
+        />
+        <Redirect
+          path="/organization/applications/:id"
+          to="/organization/applications/:id/edit"
+        />
       </Routes>
     </Loader>
   );

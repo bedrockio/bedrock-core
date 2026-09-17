@@ -14,14 +14,15 @@ export default function NewApplication() {
         title="New Application"
         breadcrumbItems={[
           { title: 'Home', href: '/' },
-          { title: 'Applications', href: '/applications' },
+          { title: 'Organization Settings', href: '/organization' },
+          { title: 'Applications', href: '/organization/applications' },
           { title: 'New Application' },
         ]}
-        rightSection={<CloseButton to="/applications" />}
+        rightSection={<CloseButton to="/organization/applications" />}
       />
       <Form
         onSave={() => {
-          navigate(`/applications`);
+          navigate(`/organization/applications`);
         }}
       />
     </div>

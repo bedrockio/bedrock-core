@@ -105,7 +105,7 @@ export default function UserActions(props) {
 
           <Protected endpoint="auditEntries" permission="read">
             <DropdownMenuItem asChild>
-              <Link to={`/audit-log?user=${user.id}&filterLabel=${user.name}`}>
+              <Link to={`/organization/audit-log?user=${user.id}&filterLabel=${user.name}`}>
                 <Rows3 />
                 Audit Logs
               </Link>

@@ -1,16 +1,18 @@
 import { NavLink, useLocation } from '@bedrockio/router';
 import {
-  Book,
   Building2,
+  Check,
   ChevronsUpDown,
   Ellipsis,
-  File,
-  FileSearch,
   House,
-  LayoutGrid,
+  LogOut,
   Mail,
   Menu,
+  Monitor,
+  Moon,
+  Settings,
   Store,
+  Sun,
   Tag,
   User,
 } from 'lucide-react';
@@ -31,6 +33,7 @@ import { useMediaQuery } from 'hooks/useMediaQuery';
 
 import { userCanSwitchOrganizations } from 'utils/permissions';
 
+import { useTheme } from '@/components/ThemeProvider';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -67,15 +70,6 @@ const navSections = [
       },
     ],
   },
-  {
-    label: 'System',
-    items: [
-      { icon: File, url: '/templates', label: 'Templates' },
-      { icon: FileSearch, url: '/audit-log', label: 'Audit Log' },
-      { icon: LayoutGrid, url: '/applications', label: 'Applications' },
-      { icon: Book, url: '/docs', label: 'API Docs' },
-    ],
-  },
 ];
 
 function getInitials(name) {
@@ -91,6 +85,7 @@ function getInitials(name) {
 
 export default function DashboardLayout({ children }) {
   const { user, organization } = useSession();
+  const { theme, setTheme } = useTheme();
   const [opened, { toggle, close }] = useDisclosure();
   const isMobile = useMediaQuery('(max-width: 62em)', false);
   const location = useLocation();
@@ -213,15 +208,48 @@ export default function DashboardLayout({ children }) {
               <Ellipsis className="size-4 shrink-0 opacity-60" />
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent side="top" align="start" className="w-[228px]">
+          <DropdownMenuContent side="top" align="start" className="w-[240px]">
+            <div className="px-2 py-1.5">
+              <div className="truncate text-sm font-semibold">
+                {user?.name || 'Account'}
+              </div>
+              <div className="text-muted-foreground truncate text-xs">
+                {user?.email}
+              </div>
+            </div>
+            <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
               <NavLink to="/settings" className="no-underline">
+                <Settings />
                 My Settings
               </NavLink>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <NavLink to="/organization" className="no-underline">
+                <Building2 />
+                Organization Settings
+              </NavLink>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onSelect={() => setTheme('light')}>
+              <Sun />
+              Light Theme
+              {theme === 'light' && <Check className="ml-auto" />}
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => setTheme('dark')}>
+              <Moon />
+              Dark Theme
+              {theme === 'dark' && <Check className="ml-auto" />}
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => setTheme('system')}>
+              <Monitor />
+              System Theme
+              {theme === 'system' && <Check className="ml-auto" />}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
               <NavLink to="/logout" className="no-underline">
+                <LogOut />
                 Log Out
               </NavLink>
             </DropdownMenuItem>

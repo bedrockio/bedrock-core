@@ -47,7 +47,7 @@ export default function TemplatesActions(props) {
           <Protected endpoint="auditEntries" permission="read">
             <DropdownMenuItem asChild>
               <Link
-                to={`/audit-log?object=${template.id}&filterLabel=${template.name}`}>
+                to={`/organization/audit-log?object=${template.id}&filterLabel=${template.name}`}>
                 <FileSearch />
                 Audit Logs
               </Link>

@@ -25,7 +25,7 @@ export default function ApplicationActions({ application, reload }) {
 
       <DropdownMenuContent>
         <DropdownMenuItem asChild>
-          <Link to={`/applications/${application.id}/edit`}>
+          <Link to={`/organization/applications/${application.id}/edit`}>
             <Pencil />
             Edit
           </Link>

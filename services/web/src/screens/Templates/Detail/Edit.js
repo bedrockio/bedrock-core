@@ -16,7 +16,7 @@ export default function Edit() {
         template={template}
         onSuccess={() => {
           reload();
-          navigate(`/templates/${template.id}`);
+          navigate(`/organization/templates/${template.id}`);
         }}
       />
     </div>

@@ -87,7 +87,7 @@ export default function OrganizationActions({
           <Protected endpoint="auditEntries" permission="read">
             <DropdownMenuItem asChild>
               <Link
-                to={`/audit-log?object=${organization.id}&filterLabel=${organization.name}`}>
+                to={`/organization/audit-log?object=${organization.id}&filterLabel=${organization.name}`}>
                 <FileSearch />
                 Audit Logs
               </Link>

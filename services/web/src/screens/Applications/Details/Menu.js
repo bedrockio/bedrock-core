@@ -13,7 +13,8 @@ export default function ApplicationMenu() {
       title="Application"
       breadcrumbItems={[
         { title: 'Home', href: '/' },
-        { title: 'Applications', href: '/applications' },
+        { title: 'Organization Settings', href: '/organization' },
+        { title: 'Applications', href: '/organization/applications' },
         { title: application.name },
       ]}
       description="Manage your applications"
@@ -22,7 +23,7 @@ export default function ApplicationMenu() {
         {
           icon: <Pencil />,
           title: 'Edit',
-          href: `/applications/${application.id}/edit`,
+          href: `/organization/applications/${application.id}/edit`,
         },
       ]}
     />

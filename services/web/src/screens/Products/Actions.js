@@ -85,7 +85,7 @@ export default function ProductsActions({
           <Protected endpoint="auditEntries" permission="read">
             <DropdownMenuItem asChild>
               <Link
-                to={`/audit-log?object=${product.id}&filterLabel=${product.name}`}>
+                to={`/organization/audit-log?object=${product.id}&filterLabel=${product.name}`}>
                 <FileSearch />
                 Audit Logs
               </Link>

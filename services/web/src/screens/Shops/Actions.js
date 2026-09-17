@@ -81,7 +81,7 @@ export default function ShopsActions({ shop, reload, displayMode = 'show' }) {
           <Protected endpoint="auditEntries" permission="read">
             <DropdownMenuItem asChild>
               <Link
-                to={`/audit-log?object=${shop.id}&filterLabel=${shop.name}`}>
+                to={`/organization/audit-log?object=${shop.id}&filterLabel=${shop.name}`}>
                 <FileSearch />
                 Audit Logs
               </Link>

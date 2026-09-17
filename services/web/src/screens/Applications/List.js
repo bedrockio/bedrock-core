@@ -38,11 +38,14 @@ export default function Applications() {
                 title="Applications"
                 breadcrumbItems={[
                   { href: '/', title: 'Home' },
+                  { href: '/organization', title: 'Organization Settings' },
                   { title: 'Applications' },
                 ]}
                 rightSection={
                   <Button asChild>
-                    <Link to="/applications/new">New Application</Link>
+                    <Link to="/organization/applications/new">
+                      New Application
+                    </Link>
                   </Button>
                 }
               />

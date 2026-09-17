@@ -14,18 +14,21 @@ export default function TemplateMenu({ displayMode }) {
   const { template, reload } = usePage();
   const isEditing = displayMode === 'edit';
 
+  const base = `/organization/templates/${template.id}`;
+
   const items = [
     { title: 'Home', href: '/' },
-    { title: 'Templates', href: '/templates' },
+    { title: 'Organization Settings', href: '/organization' },
+    { title: 'Templates', href: '/organization/templates' },
     { title: template.name },
   ];
 
   const tabs = [
-    { title: 'Overview', href: `/templates/${template.id}` },
-    { title: 'Content', href: `/templates/${template.id}/content` },
+    { title: 'Overview', href: base },
+    { title: 'Content', href: `${base}/content` },
   ];
   if (template.channels.includes('email')) {
-    tabs.push({ title: 'Preview', href: `/templates/${template.id}/preview` });
+    tabs.push({ title: 'Preview', href: `${base}/preview` });
   }
 
   return (
@@ -35,12 +38,12 @@ export default function TemplateMenu({ displayMode }) {
       breadcrumbItems={items}
       rightSection={
         isEditing ? (
-          <CloseButton to={`/templates/${template.id}`} />
+          <CloseButton to={base} />
         ) : (
           <>
             <Protected endpoint="templates" permission="update">
               <Button variant="outline" asChild>
-                <Link to={`/templates/${template.id}/edit`}>Edit</Link>
+                <Link to={`${base}/edit`}>Edit</Link>
               </Button>
             </Protected>
             <Actions

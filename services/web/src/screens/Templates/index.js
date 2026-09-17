@@ -7,9 +7,9 @@ import New from './New';
 export default function Templates() {
   return (
     <Routes>
-      <Route path="/templates" render={List} exact />
-      <Route path="/templates/new" render={New} />
-      <Route path="/templates/:id" render={Detail} />
+      <Route path="/organization/templates" render={List} exact />
+      <Route path="/organization/templates/new" render={New} />
+      <Route path="/organization/templates/:id" render={Detail} />
     </Routes>
   );
 }

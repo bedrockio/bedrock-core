@@ -14,14 +14,15 @@ export default function NewTemplate() {
         title="New Template"
         breadcrumbItems={[
           { title: 'Home', href: '/' },
-          { title: 'Templates', href: '/templates' },
+          { title: 'Organization Settings', href: '/organization' },
+          { title: 'Templates', href: '/organization/templates' },
           { title: 'New Template' },
         ]}
-        rightSection={<CloseButton to="/templates" />}
+        rightSection={<CloseButton to="/organization/templates" />}
       />
       <Form
         onSuccess={(template) => {
-          navigate(`/templates/${template.id}`);
+          navigate(`/organization/templates/${template.id}`);
         }}
       />
     </div>

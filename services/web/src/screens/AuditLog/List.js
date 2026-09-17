@@ -122,6 +122,7 @@ export default function AuditLogList() {
               title="Audit Log"
               breadcrumbItems={[
                 { href: '/', title: 'Home' },
+                { href: '/organization', title: 'Organization Settings' },
                 { title: 'Audit Log' },
               ]}
             />

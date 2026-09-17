@@ -7,7 +7,7 @@ export default class AuditLog extends React.Component {
   render() {
     return (
       <Routes>
-        <Route path="/audit-Log" render={List} exact />
+        <Route path="/organization/audit-log" render={List} exact />
       </Routes>
     );
   }
