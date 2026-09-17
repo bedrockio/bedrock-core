@@ -1,5 +1,6 @@
 import { NavLink, useLocation, useNavigate } from '@bedrockio/router';
 import {
+  Book,
   Building2,
   Check,
   ChevronsUpDown,
@@ -225,6 +226,10 @@ export default function DashboardLayout({ children }) {
             <DropdownMenuItem onSelect={() => navigate('/organizations')}>
               <LayoutGrid />
               Organizations
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => navigate('/docs')}>
+              <Book />
+              API Docs
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onSelect={() => setTheme('light')}>

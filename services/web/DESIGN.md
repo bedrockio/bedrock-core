@@ -298,10 +298,13 @@ so generated and hand-built screens match.
   **Active item** = tinted pill (`bg-primary/12`) + accent text and icon. There
   is no app footer — theme lives in the user dropdown, and the old density
   toggle and "powered by" logo are gone.
-- **Settings areas** are pages with a secondary nav: **My Settings** (horizontal
-  tabs) and **Organization Settings** (a persistent vertical nav that houses the
-  org-level admin sections — Templates, Applications, Audit Log — under
-  `/organization/*`).
+- **Settings areas** share one shell (`SettingsShell`): a page-level breadcrumb
+  above a persistent **vertical** secondary nav (left) and the section content
+  (right). **My Settings** (Details, Security, Notifications) and **Organization
+  Settings** (General plus the org-level admin sections — Templates,
+  Applications, Audit Log — under `/organization/*`) both use it, so they read
+  identically. Section forms keep the primary action **below** the card, never
+  inside it.
 - **Header:** page title (Bricolage) + breadcrumb, with search and the primary
   action on the right.
 - **Create / edit forms are pages, not modals** (so forms can be large). Every

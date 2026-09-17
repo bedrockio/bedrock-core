@@ -13,7 +13,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -24,7 +23,6 @@ import { Spinner } from '@/components/ui/spinner';
 import { useRequest } from 'utils/api';
 import { notify } from 'utils/notify';
 
-import Menu from './Menu';
 
 const CHANNELS = [
   {
@@ -92,11 +90,12 @@ function Notifications() {
   return (
     <div className="flex flex-col gap-4">
       <Meta title="Account Details" />
-      <Menu />
 
       <ErrorMessage error={saveRequest.error} />
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <Card className="max-w-2xl">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex max-w-2xl flex-col gap-4">
+        <Card>
           <CardHeader>
             <CardTitle>Notifications</CardTitle>
             <CardDescription>
@@ -135,13 +134,13 @@ function Notifications() {
               );
             })}
           </CardContent>
-          <CardFooter className="border-t pt-6">
-            <Button type="submit" disabled={saveRequest.loading}>
-              {saveRequest.loading && <Spinner className="text-current" />}
-              Save preferences
-            </Button>
-          </CardFooter>
         </Card>
+        <div className="flex items-center gap-3">
+          <Button type="submit" disabled={saveRequest.loading}>
+            {saveRequest.loading && <Spinner className="text-current" />}
+            Save preferences
+          </Button>
+        </div>
       </form>
     </div>
   );

@@ -22,7 +22,6 @@ import { Spinner } from '@/components/ui/spinner';
 import { createPasskey, removePasskey } from 'utils/auth/passkey';
 import { formatDate, fromNow } from 'utils/date';
 
-import Menu from '../Menu';
 import Sessions from './Sessions';
 import TwoFactorAuthentication from './TwoFactorAuthentication';
 
@@ -109,7 +108,6 @@ export default function Security() {
   return (
     <div className="flex flex-col gap-4">
       <Meta title="Security" />
-      <Menu />
       <div className="relative">
         {loading && (
           <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/60">
