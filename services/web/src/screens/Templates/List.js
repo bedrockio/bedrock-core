@@ -36,11 +36,6 @@ export default function TemplateList() {
           <div className="flex flex-col gap-4">
             <PageHeader
               title="Templates"
-              breadcrumbItems={[
-                { href: '/', title: 'Home' },
-                { href: '/organization', title: 'Organization Settings' },
-                { title: 'Templates' },
-              ]}
               rightSection={
                 <Protected endpoint="templates" permission="create">
                   <Button asChild>

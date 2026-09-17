@@ -11,12 +11,6 @@ export default function ApplicationMenu() {
   return (
     <PageHeader
       title="Application"
-      breadcrumbItems={[
-        { title: 'Home', href: '/' },
-        { title: 'Organization Settings', href: '/organization' },
-        { title: 'Applications', href: '/organization/applications' },
-        { title: application.name },
-      ]}
       description="Manage your applications"
       rightSection={<Actions application={application} reload={reload} />}
       tabs={[

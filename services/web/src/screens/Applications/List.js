@@ -36,11 +36,6 @@ export default function Applications() {
             <div className="flex flex-col gap-4">
               <PageHeader
                 title="Applications"
-                breadcrumbItems={[
-                  { href: '/', title: 'Home' },
-                  { href: '/organization', title: 'Organization Settings' },
-                  { title: 'Applications' },
-                ]}
                 rightSection={
                   <Button asChild>
                     <Link to="/organization/applications/new">

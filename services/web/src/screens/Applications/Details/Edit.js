@@ -15,12 +15,6 @@ export default function EditApplication() {
     <div className="flex flex-col gap-4">
       <PageHeader
         title={`Edit ${application.name}`}
-        breadcrumbItems={[
-          { title: 'Home', href: '/' },
-          { title: 'Organization Settings', href: '/organization' },
-          { title: 'Applications', href: '/organization/applications' },
-          { title: application.name },
-        ]}
         rightSection={<CloseButton to="/organization/applications" />}
       />
       <Form

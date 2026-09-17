@@ -293,7 +293,8 @@ so generated and hand-built screens match.
 - **Sidebar:** a lighter/deeper recessive plane. Brand + workspace switcher, a
   single **Workspace** nav group (uppercase label), and a **user block** at the
   bottom-left whose dropdown holds account and app actions — My Settings,
-  Organization Settings, the theme choice (Light / Dark / System), and Log Out.
+  Organization Settings, Organizations, the theme choice (Light / Dark /
+  System), and Log Out.
   **Active item** = tinted pill (`bg-primary/12`) + accent text and icon. There
   is no app footer — theme lives in the user dropdown, and the old density
   toggle and "powered by" logo are gone.

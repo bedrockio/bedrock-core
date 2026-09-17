@@ -16,13 +16,6 @@ export default function TemplateMenu({ displayMode }) {
 
   const base = `/organization/templates/${template.id}`;
 
-  const items = [
-    { title: 'Home', href: '/' },
-    { title: 'Organization Settings', href: '/organization' },
-    { title: 'Templates', href: '/organization/templates' },
-    { title: template.name },
-  ];
-
   const tabs = [
     { title: 'Overview', href: base },
     { title: 'Content', href: `${base}/content` },
@@ -35,7 +28,6 @@ export default function TemplateMenu({ displayMode }) {
     <PageHeader
       tabs={isEditing ? undefined : tabs}
       title={template.name}
-      breadcrumbItems={items}
       rightSection={
         isEditing ? (
           <CloseButton to={base} />

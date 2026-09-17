@@ -12,12 +12,6 @@ export default function NewTemplate() {
     <div className="flex flex-col gap-4">
       <PageHeader
         title="New Template"
-        breadcrumbItems={[
-          { title: 'Home', href: '/' },
-          { title: 'Organization Settings', href: '/organization' },
-          { title: 'Templates', href: '/organization/templates' },
-          { title: 'New Template' },
-        ]}
         rightSection={<CloseButton to="/organization/templates" />}
       />
       <Form

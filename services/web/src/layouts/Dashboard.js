@@ -1,10 +1,11 @@
-import { NavLink, useLocation } from '@bedrockio/router';
+import { NavLink, useLocation, useNavigate } from '@bedrockio/router';
 import {
   Building2,
   Check,
   ChevronsUpDown,
   Ellipsis,
   House,
+  LayoutGrid,
   LogOut,
   Mail,
   Menu,
@@ -62,11 +63,6 @@ const navSections = [
           },
         ],
       },
-      {
-        icon: Building2,
-        url: '/organizations',
-        label: 'Organizations',
-      },
     ],
   },
 ];
@@ -85,6 +81,7 @@ function getInitials(name) {
 export default function DashboardLayout({ children }) {
   const { user, organization } = useSession();
   const { theme, setTheme } = useTheme();
+  const navigate = useNavigate();
   const [opened, { toggle, close }] = useDisclosure();
   const isMobile = useMediaQuery('(max-width: 62em)', false);
   const location = useLocation();
@@ -217,17 +214,17 @@ export default function DashboardLayout({ children }) {
               </div>
             </div>
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <NavLink to="/settings" className="no-underline">
-                <Settings />
-                My Settings
-              </NavLink>
+            <DropdownMenuItem onSelect={() => navigate('/settings')}>
+              <Settings />
+              My Settings
             </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <NavLink to="/organization" className="no-underline">
-                <Building2 />
-                Organization Settings
-              </NavLink>
+            <DropdownMenuItem onSelect={() => navigate('/organization')}>
+              <Building2 />
+              Organization Settings
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => navigate('/organizations')}>
+              <LayoutGrid />
+              Organizations
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onSelect={() => setTheme('light')}>
@@ -246,11 +243,9 @@ export default function DashboardLayout({ children }) {
               {theme === 'system' && <Check className="ml-auto" />}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <NavLink to="/logout" className="no-underline">
-                <LogOut />
-                Log Out
-              </NavLink>
+            <DropdownMenuItem onSelect={() => navigate('/logout')}>
+              <LogOut />
+              Log Out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

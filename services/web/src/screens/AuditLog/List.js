@@ -120,11 +120,6 @@ export default function AuditLogList() {
           <div className="flex flex-col gap-4">
             <PageHeader
               title="Audit Log"
-              breadcrumbItems={[
-                { href: '/', title: 'Home' },
-                { href: '/organization', title: 'Organization Settings' },
-                { title: 'Audit Log' },
-              ]}
             />
 
             <div className="flex items-center justify-between gap-4">

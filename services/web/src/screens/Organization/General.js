@@ -9,14 +9,7 @@ export default function General() {
 
   return (
     <div className="flex flex-col gap-4">
-      <PageHeader
-        title="General"
-        breadcrumbItems={[
-          { title: 'Home', href: '/' },
-          { title: 'Organization Settings', href: '/organization' },
-          { title: 'General' },
-        ]}
-      />
+      <PageHeader title="General" />
       {organization ? (
         <Form organization={organization} onSuccess={() => {}} />
       ) : (
