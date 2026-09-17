@@ -267,19 +267,6 @@
 }
 
 /*
- * Table density — a global operator preference (data-density on <html>, set by
- * the DensityToggle, mirroring dark mode). Comfortable is the default; compact
- * tightens rows for scanning long lists.
- */
-html[data-density='compact'] [data-slot='table-cell'] {
-  padding-top: 0.3rem;
-  padding-bottom: 0.3rem;
-}
-html[data-density='compact'] [data-slot='table-head'] {
-  height: 2rem;
-}
-
-/*
  * Reduced motion — honor the OS setting (WCAG 2.3.3). Collapse tweened
  * transitions and the enter/exit animations (dialogs, dropdowns, accordions,
  * the arrow nudge / chevron rotate) so nothing slides, zooms or moves. We keep

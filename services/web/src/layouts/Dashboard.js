@@ -22,7 +22,6 @@ import { useSession } from 'stores/session';
 
 import ConnectionError from 'components/ConnectionError';
 import ErrorBoundary from 'components/ErrorBoundary';
-import Footer from 'components/Footer';
 import Logo from 'components/Logo';
 import MenuItem from 'components/MenuItem';
 import ModalTrigger from 'components/ModalWrapper';
@@ -301,11 +300,8 @@ export default function DashboardLayout({ children }) {
         )}
 
         <main className="flex flex-1 flex-col p-6">
-          <div className="flex-1">
-            <ConnectionError />
-            <ErrorBoundary>{children}</ErrorBoundary>
-          </div>
-          <Footer />
+          <ConnectionError />
+          <ErrorBoundary>{children}</ErrorBoundary>
         </main>
       </div>
     </div>

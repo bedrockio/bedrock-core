@@ -294,9 +294,9 @@ so generated and hand-built screens match.
   single **Workspace** nav group (uppercase label), and a **user block** at the
   bottom-left whose dropdown holds account and app actions — My Settings,
   Organization Settings, the theme choice (Light / Dark / System), and Log Out.
-  **Active item** = tinted pill (`bg-primary/12`) + accent text and icon. The
-  old footer toggles and "powered by" logo are gone; the density toggle is the
-  footer's only control.
+  **Active item** = tinted pill (`bg-primary/12`) + accent text and icon. There
+  is no app footer — theme lives in the user dropdown, and the old density
+  toggle and "powered by" logo are gone.
 - **Settings areas** are pages with a secondary nav: **My Settings** (horizontal
   tabs) and **Organization Settings** (a persistent vertical nav that houses the
   org-level admin sections — Templates, Applications, Audit Log — under
