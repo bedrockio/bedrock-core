@@ -1,10 +1,9 @@
-import { Link, useNavigate } from '@bedrockio/router';
+import { useNavigate } from '@bedrockio/router';
 
 import { usePage } from 'stores/page';
 
+import CloseButton from 'components/CloseButton';
 import PageHeader from 'components/PageHeader';
-
-import { Button } from '@/components/ui/button';
 
 import Form from '../Form';
 
@@ -21,11 +20,7 @@ export default function EditApplication() {
           { title: 'Applications', href: '/applications' },
           { title: application.name },
         ]}
-        rightSection={
-          <Button asChild variant="outline">
-            <Link to={`/applications`}>Show</Link>
-          </Button>
-        }
+        rightSection={<CloseButton to="/applications" />}
       />
       <Form
         application={application}

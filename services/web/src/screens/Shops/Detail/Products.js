@@ -45,7 +45,7 @@ export default function ShopProducts() {
       <Search.Provider onDataNeeded={onDataNeeded}>
         {({ items: products, reload, loading, error }) => {
           return (
-            <div className="mt-4">
+            <div className="mt-4 flex flex-col gap-4">
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
                   {loading && <Spinner />}
@@ -58,7 +58,7 @@ export default function ShopProducts() {
 
               <ErrorMessage error={error} />
 
-              <Table className="mt-4">
+              <Table>
                 <TableHeader>
                   <TableRow>
                     <Search.Header name="name">Name</Search.Header>

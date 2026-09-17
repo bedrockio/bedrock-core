@@ -4,7 +4,6 @@ import {
   Code,
   EllipsisVertical,
   FileSearch,
-  Pencil,
   Trash2,
 } from 'lucide-react';
 
@@ -45,14 +44,6 @@ export default function TemplatesActions(props) {
               </DropdownMenuItem>
             }
           />
-          <Protected endpoint="templates" permission="update">
-            <DropdownMenuItem asChild>
-              <Link to={`/templates/${template.id}/edit`}>
-                <Pencil />
-                Edit
-              </Link>
-            </DropdownMenuItem>
-          </Protected>
           <Protected endpoint="auditEntries" permission="read">
             <DropdownMenuItem asChild>
               <Link

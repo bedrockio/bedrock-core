@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { showSuccessNotification } from 'helpers/notifications';
 
 import CancelButton from 'components/CancelButton';
+import { useRegisterDirty } from 'components/UnsavedGuard';
 import ErrorMessage from 'components/ErrorMessage';
 import Protected from 'components/Protected';
 import PhoneField from 'components/form-fields/Phone';
@@ -99,6 +100,8 @@ export default function UserForm(props) {
   }
 
   const submitting = loading || form.formState.isSubmitting;
+
+  useRegisterDirty(form.formState.isDirty);
 
   return (
     <Form {...form}>

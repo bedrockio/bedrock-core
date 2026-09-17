@@ -3,6 +3,8 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import CancelButton from 'components/CancelButton';
+import { useRegisterDirty } from 'components/UnsavedGuard';
+import Code from 'components/Code';
 import ErrorMessage from 'components/ErrorMessage';
 
 import { Button } from '@/components/ui/button';
@@ -16,7 +18,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { Textarea } from '@/components/ui/textarea';
 
@@ -51,6 +52,8 @@ export default function ApplicationForm({ application, onSave }) {
     });
     onSave();
   }
+
+  useRegisterDirty(form.formState.isDirty);
 
   return (
     <Form {...form}>
@@ -97,12 +100,12 @@ export default function ApplicationForm({ application, onSave }) {
           </div>
           <div>
             {isUpdate && application.apiKey && (
-              <div className="flex flex-col gap-2">
-                <Label>API Key</Label>
-                <code className="bg-muted rounded px-2 py-1 font-mono text-xs break-all">
-                  {application.apiKey}
-                </code>
-              </div>
+              <Card>
+                <CardContent>
+                  <p className="mb-4 font-semibold">API Key</p>
+                  <Code>{application.apiKey}</Code>
+                </CardContent>
+              </Card>
             )}
           </div>
         </div>

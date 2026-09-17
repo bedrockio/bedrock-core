@@ -1,5 +1,7 @@
 import { Route, Routes } from '@bedrockio/router';
 
+import { UnsavedGuardProvider } from 'components/UnsavedGuard';
+
 import DashboardLayout from 'layouts/Dashboard';
 
 import Applications from 'screens/Applications';
@@ -19,7 +21,8 @@ import Users from 'screens/Users';
 export default function App() {
   return (
     <DashboardLayout>
-      <Routes>
+      <UnsavedGuardProvider>
+        <Routes>
         <Route path="/" render={Dashboard} exact />
         <Route path="/shops" render={Shops} />
         <Route path="/products" render={Products} />
@@ -32,8 +35,9 @@ export default function App() {
         <Route path="/audit-log" render={AuditLog} />
         <Route path="/accept-invite" render={AcceptInviteAuthenticated} exact />
         <Route path="/logout" render={Logout} exact />
-        <Route render={NotFound} />
-      </Routes>
+          <Route render={NotFound} />
+        </Routes>
+      </UnsavedGuardProvider>
     </DashboardLayout>
   );
 }

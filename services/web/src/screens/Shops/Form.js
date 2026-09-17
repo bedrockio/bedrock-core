@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import CancelButton from 'components/CancelButton';
+import { useRegisterDirty } from 'components/UnsavedGuard';
 import ErrorMessage from 'components/ErrorMessage';
 import SearchDropdown from 'components/SearchDropdown';
 import UploadsField from 'components/form-fields/Uploads';
@@ -101,6 +102,8 @@ export default function ShopForm({ shop, onSuccess = () => {} }) {
   async function onSubmit(values) {
     await editRequest.request({ body: values });
   }
+
+  useRegisterDirty(form.formState.isDirty);
 
   return (
     <Form {...form}>

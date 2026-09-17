@@ -1,9 +1,8 @@
 import { Link } from '@bedrockio/router';
-import React from 'react';
-import { Pencil } from 'lucide-react';
 
 import { usePage } from 'stores/page';
 
+import CloseButton from 'components/CloseButton';
 import PageHeader from 'components/PageHeader';
 import Protected from 'components/Protected';
 
@@ -13,64 +12,45 @@ import Actions from '../Actions';
 
 export default function TemplateMenu({ displayMode }) {
   const { template, reload } = usePage();
+  const isEditing = displayMode === 'edit';
 
   const items = [
-    {
-      title: 'Home',
-      href: '/',
-    },
-    {
-      title: 'Templates',
-      href: '/templates',
-    },
-    {
-      title: template.name,
-    },
+    { title: 'Home', href: '/' },
+    { title: 'Templates', href: '/templates' },
+    { title: template.name },
   ];
 
   const tabs = [
-    {
-      title: 'Overview',
-      href: `/templates/${template.id}`,
-    },
-    {
-      title: 'Content',
-      href: `/templates/${template.id}/content`,
-    },
+    { title: 'Overview', href: `/templates/${template.id}` },
+    { title: 'Content', href: `/templates/${template.id}/content` },
   ];
-
   if (template.channels.includes('email')) {
-    tabs.push({
-      title: 'Preview',
-      href: `/templates/${template.id}/preview`,
-    });
+    tabs.push({ title: 'Preview', href: `/templates/${template.id}/preview` });
   }
 
   return (
-    <React.Fragment>
-      <PageHeader
-        tabs={tabs}
-        title={template.name}
-        breadcrumbItems={items}
-        rightSection={
-          <React.Fragment>
+    <PageHeader
+      tabs={isEditing ? undefined : tabs}
+      title={template.name}
+      breadcrumbItems={items}
+      rightSection={
+        isEditing ? (
+          <CloseButton to={`/templates/${template.id}`} />
+        ) : (
+          <>
             <Protected endpoint="templates" permission="update">
               <Button variant="outline" asChild>
-                <Link to={`/templates/${template.id}/edit`}>
-                  Edit
-                  <Pencil />
-                </Link>
+                <Link to={`/templates/${template.id}/edit`}>Edit</Link>
               </Button>
             </Protected>
-
             <Actions
               displayMode={displayMode}
               template={template}
               reload={reload}
             />
-          </React.Fragment>
-        }
-      />
-    </React.Fragment>
+          </>
+        )
+      }
+    />
   );
 }

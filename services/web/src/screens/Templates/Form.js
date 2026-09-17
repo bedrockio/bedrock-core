@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import CancelButton from 'components/CancelButton';
+import { useRegisterDirty } from 'components/UnsavedGuard';
 import ErrorMessage from 'components/ErrorMessage';
 import ChipsField from 'components/form-fields/Chips';
 
@@ -94,6 +95,8 @@ export default function TemplateForm(props) {
   function onCancelClick() {
     navigate.back();
   }
+
+  useRegisterDirty(form.formState.isDirty);
 
   return (
     <Form {...form}>

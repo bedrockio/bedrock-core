@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import CancelButton from 'components/CancelButton';
+import { useRegisterDirty } from 'components/UnsavedGuard';
 import ErrorMessage from 'components/ErrorMessage';
 import SearchDropdown from 'components/SearchDropdown';
 import CurrencyField from 'components/form-fields/Currency';
@@ -98,6 +99,8 @@ export default function ProductForm({ product, shop, onSuccess = () => {} }) {
     setUploadError(null);
     await editRequest.request({ body: values });
   }
+
+  useRegisterDirty(form.formState.isDirty);
 
   return (
     <Form {...form}>

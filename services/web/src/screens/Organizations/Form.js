@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import CancelButton from 'components/CancelButton';
+import { useRegisterDirty } from 'components/UnsavedGuard';
 import ErrorMessage from 'components/ErrorMessage';
 
 import { Button } from '@/components/ui/button';
@@ -72,6 +73,8 @@ function OrganizationForm({ organization, onSuccess = () => {} }) {
   function onSubmit(values) {
     return editRequest.request({ body: values });
   }
+
+  useRegisterDirty(form.formState.isDirty);
 
   return (
     <Form {...form}>
