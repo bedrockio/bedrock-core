@@ -320,9 +320,13 @@ so generated and hand-built screens match.
   ground, so it follows the site theme), and a permanently **dark** manifesto
   panel on the right — the console's own dark mode as the pitch, headline +
   three check-marked facts, no card, no screenshot, no kicker. Stacks to a
-  single column under `lg`, form first. ConfirmCode, AcceptInvite, Logout, and
-  Lockout stay on the plain centered `BasicLayout`; they're transitional
-  screens, not entry points.
+  single column under `lg`, form first. ConfirmCode, AcceptInvite, and Logout
+  stay on the plain centered `BasicLayout`; they're transitional screens, not
+  entry points. **Lockout** (pending-approval) manages its own single-column
+  version of the same language: `logo-icon.svg` above one centered `Card` on
+  the `.auth-ground`, an `info`-tinted icon chip (pending is a wait, not an
+  error or a warning), heading + body, who's signed in, a divider, then the
+  one available action.
 
 - An at-a-glance overview that is also a launchpad: breadcrumb + "Dashboard"
   title (no greeting); a five-tile KPI strip (Products and Shops drill into

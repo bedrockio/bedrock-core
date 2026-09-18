@@ -48,7 +48,7 @@ export default function AuthApp() {
         render={withLayout(SplitAuthLayout, ResetPassword)}
         exact
       />
-      <Route path="*" render={withLayout(BasicLayout, Lockout)} exact />
+      <Route path="*" render={Lockout} exact />
     </Routes>
   );
 }
