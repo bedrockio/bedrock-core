@@ -7,7 +7,7 @@ const { validateBody } = require('../../utils/middleware/validate');
 const { authenticate } = require('../../utils/middleware/authenticate');
 
 const { createAuthToken, createAccessToken } = require('../../utils/tokens');
-const { login, verifyLoginAttempts } = require('../../utils/auth');
+const { login, verifyLoginAttempts, claimUnverifiedUser } = require('../../utils/auth');
 const { verifyPassword } = require('../../utils/auth/password');
 const { sendOtp } = require('../../utils/auth/otp');
 const { sendMail } = require('../../utils/messaging');
@@ -133,8 +133,8 @@ router
         ctx.throw(401, 'Token is not valid for password reset.');
       }
 
+      claimUnverifiedUser(authUser);
       authUser.password = password;
-      authUser.emailVerified = true;
       authUser.loginAttempts = 0;
 
       const token = createAuthToken(ctx, authUser);

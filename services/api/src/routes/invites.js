@@ -7,6 +7,7 @@ const { authenticate } = require('../utils/middleware/authenticate');
 const { requirePermissions } = require('../utils/middleware/permissions');
 
 const { createAuthToken } = require('../utils/tokens');
+const { claimUnverifiedUser } = require('../utils/auth');
 const { Invite, User, AuditEntry } = require('../models');
 
 const { sendMessage, sendMail } = require('../utils/messaging');
@@ -62,7 +63,7 @@ router
       });
 
       if (user) {
-        user.emailVerified = true;
+        claimUnverifiedUser(user);
         const token = createAuthToken(ctx, user);
         await user.save();
         ctx.body = {

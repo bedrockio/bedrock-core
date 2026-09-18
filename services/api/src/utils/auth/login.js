@@ -33,8 +33,9 @@ async function login(ctx, user, options = {}) {
   return token;
 }
 
-// Called when a provider has verified the email: credentials added before the
-// address was verified may belong to whoever signed up with it first.
+// Call once the user proves they own the email (OAuth, reset link, invite).
+// Until then anyone could have signed up with this address, so its existing
+// logins (password, passkeys, TOTP, sessions) are removed rather than trusted.
 function claimUnverifiedUser(user) {
   if (!user.emailVerified) {
     user.authenticators = [];
