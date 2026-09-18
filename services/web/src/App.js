@@ -2,7 +2,6 @@ import { Route, Routes } from '@bedrockio/router';
 
 import DashboardLayout from 'layouts/Dashboard';
 
-import Applications from 'screens/Applications';
 import AuditLog from 'screens/AuditLog';
 import AcceptInviteAuthenticated from 'screens/Auth/AcceptInviteAuthenticated';
 import Logout from 'screens/Auth/Logout';
@@ -28,7 +27,6 @@ export default function App() {
         <Route path="/users" render={Users} />
         <Route path="/organizations" render={Organizations} />
         <Route path="/templates" render={Templates} />
-        <Route path="/applications" render={Applications} />
         <Route path="/audit-log" render={AuditLog} />
         <Route path="/accept-invite" render={AcceptInviteAuthenticated} exact />
         <Route path="/logout" render={Logout} exact />
