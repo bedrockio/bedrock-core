@@ -258,6 +258,18 @@
 }
 
 /*
+ * Same aurora ground for a panel that shares the viewport with a sibling
+ * (e.g. the split-screen auth layout): the glow is painted as a background
+ * layer scoped to the panel's own box instead of `.app-ground`'s
+ * viewport-pinned pseudo-element, which would otherwise bleed across both
+ * panels.
+ */
+.auth-ground {
+  background-image: var(--app-aurora), var(--app-base);
+  background-repeat: no-repeat;
+}
+
+/*
  * Sidebar plane: a warm (light) / accent-tinted (dark) frosted surface, slightly
  * translucent so the app-ground bleeds through — part of the same soft-gloss world
  * as the cards, not a flat cool slab of chrome.

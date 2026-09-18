@@ -314,6 +314,15 @@ so generated and hand-built screens match.
   menu is hidden — the header offers only the ✕. Breadcrumbs read
   `Home / <Section> / New <Object>` (create) or `Home / <Section> / <Name>`
   (edit).
+- **Auth screens** (Login, Signup, Forgot Password, Reset Password) share
+  `SplitAuthLayout`: a **2/3 · 1/3** split, `logo-icon.svg` centered above a
+  regular `.card-soft` `Card` on the left (on the app's own light aurora
+  ground, so it follows the site theme), and a permanently **dark** manifesto
+  panel on the right — the console's own dark mode as the pitch, headline +
+  three check-marked facts, no card, no screenshot, no kicker. Stacks to a
+  single column under `lg`, form first. ConfirmCode, AcceptInvite, Logout, and
+  Lockout stay on the plain centered `BasicLayout`; they're transitional
+  screens, not entry points.
 
 - An at-a-glance overview that is also a launchpad: breadcrumb + "Dashboard"
   title (no greeting); a five-tile KPI strip (Products and Shops drill into
