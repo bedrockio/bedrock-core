@@ -2,7 +2,7 @@
 
 const readline = require('readline');
 const logger = require('@bedrockio/logger');
-const { capitalize, camelCase } = require('lodash');
+const { upperFirst, camelCase } = require('lodash');
 const models = require('../../src/models');
 const { initialize } = require('../../src/utils/database');
 
@@ -40,7 +40,7 @@ async function run() {
   }
   await initialize();
   for (let modelName of input) {
-    const name = capitalize(camelCase(modelName));
+    const name = upperFirst(camelCase(modelName));
     const model = models[name];
     logger.info(`Syncing indexes for ${name}.`);
     await model.syncIndexes();

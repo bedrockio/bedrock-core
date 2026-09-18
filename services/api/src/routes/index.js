@@ -15,7 +15,6 @@ const categories = require('./categories');
 const unsubscribe = require('./unsubscribe');
 const auditEntries = require('./audit-entries');
 const organizations = require('./organizations');
-const applications = require('./applications');
 
 const router = new Router({
   prefix: '/1',
@@ -36,6 +35,5 @@ router.use('/categories', categories.routes());
 router.use('/unsubscribe', unsubscribe.routes());
 router.use('/audit-entries', auditEntries.routes());
 router.use('/organizations', organizations.routes());
-router.use('/applications', applications.routes());
 
 module.exports = router.routes();

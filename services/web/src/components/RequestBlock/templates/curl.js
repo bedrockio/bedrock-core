@@ -1,7 +1,6 @@
 const FORM_TEMPLATE = `
 curl '%url%' \\
   -X '%method%' \\
-  -H 'Api-Key: %apiKey%' \\
   -H 'Authorization: Bearer <token>' \\
   -H 'Content-Type: application/json' \\
   -F 'file: <PATH_TO_FILE>' \\
@@ -11,7 +10,6 @@ curl '%url%' \\
 const JSON_TEMPLATE = `
 curl '%url%' \\
   -X '%method%' \\
-  -H 'Api-Key: <apiKey>' \\
   -H 'Authorization: Bearer <token>' \\
   -H 'Content-Type: application/json' \\
   --data-raw $'%body%'
