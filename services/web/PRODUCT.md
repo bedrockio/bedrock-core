@@ -32,7 +32,7 @@ A batteries-included, code-generator-backed starter that pairs a real API with a
 
 - Stack: React 19, Vite, Tailwind CSS v4, shadcn/ui (owned source copied into `src/components/ui`) on Radix UI primitives, Bedrock Router, Sentry error monitoring, WebAuthn (`@simplewebauthn`).
 - Design tokens centralized in `src/styles/globals.css` as CSS variables; brand color is a single knob (`--primary` / `--primary-foreground`, light + dark); default typeface is Geist (`@fontsource-variable/geist`).
-- Dark mode via a `.dark` class on `<html>`, toggled in the footer; defaults to light.
+- Dark mode via a `.dark` class on `<html>`, toggled from the user dropdown (Light / Dark / System); defaults to System, including on the logged-out auth screens, resolved before first paint to avoid a flash of the wrong theme.
 - Screens like Shops and Products are reference/example CRUD implementations meant to be adapted or replaced by adopters, not fixed product features.
 - Generated screens (via the schema-driven generator) must stay visually and structurally consistent with hand-built screens.
 
