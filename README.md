@@ -5,6 +5,7 @@ More documentation about specific services and components can be found in the fo
 - [deployment/](deployment/) - Provisioning, Deployment automation, how to's, playbooks and procedures
 - [services/api](services/api) - Data API and data model layer that powers all applications
 - [services/web](services/web) - Web application and administration dashboard
+- [bedrockio/ai](https://github.com/bedrockio/ai) - AI and LLM utilities (moved out of this repo)
 
 ## Quick Start
 
