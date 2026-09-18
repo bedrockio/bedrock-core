@@ -250,6 +250,9 @@ importers:
       marked:
         specifier: ^10.0.0
         version: 10.0.0
+      mime-types:
+        specifier: ^3.0.2
+        version: 3.0.2
       mongoose:
         specifier: ^9.2.0
         version: 9.9.5
