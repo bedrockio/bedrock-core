@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { PasswordInput } from '@/components/ui/password-input';
+import { Separator } from '@/components/ui/separator';
 
 import { request } from 'utils/api';
 import { AUTH_CHANNEL, AUTH_TYPE } from 'utils/env';
@@ -106,12 +107,17 @@ export default function PasswordLogin() {
   return (
     <React.Fragment>
       <Meta title="Login" />
-      <h1 className="mb-4 text-2xl font-bold tracking-tight">Login</h1>
+      <div className="mb-4 flex flex-col items-center gap-1 text-center">
+        <h1 className="text-2xl font-bold tracking-tight">Login</h1>
+        <p className="text-muted-foreground text-sm">
+          Sign in to access your dashboard.
+        </p>
+      </div>
       <ErrorMessage error={error} />
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col gap-3">
+          className="flex flex-col gap-4">
           <FormField
             control={form.control}
             name="email"
@@ -136,7 +142,15 @@ export default function PasswordLogin() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <div className="flex items-center justify-between">
+                    <FormLabel>Password</FormLabel>
+                    <Link
+                      className="text-muted-foreground hover:text-foreground text-xs no-underline hover:underline"
+                      tabIndex={3}
+                      to="/forgot-password">
+                      Forgot Password?
+                    </Link>
+                  </div>
                   <FormControl>
                     <PasswordInput
                       placeholder="Password"
@@ -144,14 +158,6 @@ export default function PasswordLogin() {
                       {...field}
                     />
                   </FormControl>
-                  <p className="text-muted-foreground mt-1 text-xs">
-                    <Link
-                      className="text-foreground no-underline hover:underline"
-                      tabIndex={3}
-                      to="/forgot-password">
-                      Forgot password
-                    </Link>
-                  </p>
                   <FormMessage />
                 </FormItem>
               )}
@@ -162,13 +168,15 @@ export default function PasswordLogin() {
             Login
           </Button>
 
-          <p className="text-muted-foreground text-xs">
+          <Separator />
+
+          <p className="text-muted-foreground text-center text-xs">
             Don&apos;t have an account?{' '}
             <Link
               className="text-foreground font-medium no-underline hover:underline"
               tabIndex={4}
               to="/signup">
-              Register
+              Sign up
             </Link>
           </p>
 

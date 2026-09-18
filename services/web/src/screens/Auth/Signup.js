@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { PasswordInput } from '@/components/ui/password-input';
+import { Separator } from '@/components/ui/separator';
 
 import { useRequest } from 'utils/api';
 import { AUTH_CHANNEL, AUTH_TYPE } from 'utils/env';
@@ -102,14 +103,17 @@ export default function SignupPassword() {
   return (
     <React.Fragment>
       <Meta title="Signup" />
-      <h1 className="mb-4 text-2xl font-bold tracking-tight">Signup</h1>
-      {signupRequest.error?.type !== 'validation' && (
-        <ErrorMessage error={signupRequest.error || error} />
-      )}
+      <div className="mb-4 flex flex-col items-center gap-1 text-center">
+        <h1 className="text-2xl font-bold tracking-tight">Signup</h1>
+        <p className="text-muted-foreground text-sm">
+          Create an account to get started.
+        </p>
+      </div>
+      <ErrorMessage error={signupRequest.error || error} />
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col gap-3">
+          className="flex flex-col gap-4">
           <FormField
             control={form.control}
             name="firstName"
@@ -210,7 +214,9 @@ export default function SignupPassword() {
             Signup
           </Button>
 
-          <p className="text-muted-foreground text-xs">
+          <Separator />
+
+          <p className="text-muted-foreground text-center text-xs">
             Already have an account?{' '}
             <Link
               className="text-foreground font-medium no-underline hover:underline"

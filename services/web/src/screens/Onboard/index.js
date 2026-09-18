@@ -99,7 +99,7 @@ export default function OnboardScreen() {
         <form onSubmit={form.handleSubmit(onSubmit)} noValidate>
           <Card className="p-4 shadow-sm">
             <CardContent className="flex flex-col gap-4 p-0">
-              {error?.type !== 'validation' && <ErrorMessage error={error} />}
+              <ErrorMessage error={error} />
               {!user.email && (
                 <FormField
                   control={form.control}

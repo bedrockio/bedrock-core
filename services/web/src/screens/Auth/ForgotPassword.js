@@ -18,6 +18,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
 
 import { request } from 'utils/api';
 
@@ -54,64 +55,78 @@ export default function ForgotPassword() {
   return (
     <React.Fragment>
       <Meta title="Forgot Password" />
-      <h1 className="mb-4 text-2xl font-bold tracking-tight">Forgot Password</h1>
+      <div className="mb-4 flex flex-col items-center gap-1 text-center">
+        <h1 className="text-2xl font-bold tracking-tight">Forgot Password</h1>
+        <p className="text-muted-foreground text-sm">
+          Enter your email and we&apos;ll send you a reset link.
+        </p>
+      </div>
 
-      {success ? (
-        <Alert variant="success">
-          <AlertTitle>Mail sent!</AlertTitle>
-          <AlertDescription>
-            Please follow the instructions in the email we sent to{' '}
-            <b>{email}</b>
-          </AlertDescription>
-        </Alert>
-      ) : (
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col gap-3">
-            {error && (
-              <Alert variant="destructive">
-                <AlertTitle>Error</AlertTitle>
-                <AlertDescription>
-                  {error.message || 'Something went wrong'}
-                </AlertDescription>
-              </Alert>
-            )}
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="Your email"
-                      autoComplete="email"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+      <div className="flex flex-col gap-4">
+        {success ? (
+          <Alert variant="success">
+            <AlertTitle>Mail sent!</AlertTitle>
+            <AlertDescription>
+              Please follow the instructions in the email we sent to{' '}
+              <b>{email}</b>
+            </AlertDescription>
+          </Alert>
+        ) : (
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="flex flex-col gap-4">
+              {error && (
+                <Alert variant="destructive">
+                  <AlertTitle>Error</AlertTitle>
+                  <AlertDescription>
+                    {error.message || 'Something went wrong'}
+                  </AlertDescription>
+                </Alert>
               )}
-            />
-            <Button className="w-full" type="submit" disabled={loading}>
-              {loading && <Loader2 className="size-4 animate-spin" />}
-              Reset Password
-            </Button>
-          </form>
-        </Form>
-      )}
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        placeholder="Your email"
+                        autoComplete="email"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button className="w-full" type="submit" disabled={loading}>
+                {loading && <Loader2 className="size-4 animate-spin" />}
+                Reset Password
+              </Button>
+            </form>
+          </Form>
+        )}
 
-      <div className="text-muted-foreground mt-4 flex justify-between text-xs">
-        <Link className="text-foreground no-underline hover:underline" to="/login">
-          Back to login
-        </Link>
-        <Link
-          className="text-foreground no-underline hover:underline"
-          to="/signup">
-          Don&apos;t have an account
-        </Link>
+        <Separator />
+
+        <div className="text-muted-foreground flex items-center justify-between text-xs">
+          <Link
+            className="text-foreground no-underline hover:underline"
+            to="/login">
+            Back to Login
+          </Link>
+          <p>
+            Don&apos;t have an account?{' '}
+            <Link
+              className="text-foreground font-medium no-underline hover:underline"
+              to="/signup">
+              Sign up
+            </Link>
+          </p>
+        </div>
       </div>
     </React.Fragment>
   );

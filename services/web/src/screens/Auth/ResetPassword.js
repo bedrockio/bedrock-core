@@ -68,13 +68,15 @@ export default function ResetPassword() {
     return (
       <React.Fragment>
         <Meta title="Reset Password" />
-        <h1 className="text-destructive mb-2 text-2xl font-bold tracking-tight">
-          No valid token found
-        </h1>
-        <p className="text-muted-foreground text-sm">
-          Please ensure you either click the email link in the email or copy
-          paste the link in full.
-        </p>
+        <div className="flex flex-col items-center gap-1 text-center">
+          <h1 className="text-destructive text-2xl font-bold tracking-tight">
+            No valid token found
+          </h1>
+          <p className="text-muted-foreground text-sm">
+            Please ensure you either click the email link in the email or copy
+            paste the link in full.
+          </p>
+        </div>
       </React.Fragment>
     );
   }
@@ -83,15 +85,19 @@ export default function ResetPassword() {
     return (
       <React.Fragment>
         <Meta title="Reset Password" />
-        <h1 className="text-info mb-2 text-2xl font-bold tracking-tight">
-          Your password has been changed!
-        </h1>
-        <p className="text-muted-foreground text-sm">
-          Click here to open the{' '}
-          <Link className="text-foreground no-underline hover:underline" to="/">
-            Dashboard
-          </Link>
-        </p>
+        <div className="flex flex-col items-center gap-1 text-center">
+          <h1 className="text-info text-2xl font-bold tracking-tight">
+            Your password has been changed!
+          </h1>
+          <p className="text-muted-foreground text-sm">
+            Click here to open the{' '}
+            <Link
+              className="text-foreground no-underline hover:underline"
+              to="/">
+              Dashboard
+            </Link>
+          </p>
+        </div>
       </React.Fragment>
     );
   }
@@ -99,7 +105,12 @@ export default function ResetPassword() {
   return (
     <React.Fragment>
       <Meta title="Reset Password" />
-      <h1 className="mb-4 text-2xl font-bold tracking-tight">Reset Password</h1>
+      <div className="mb-4 flex flex-col items-center gap-1 text-center">
+        <h1 className="text-2xl font-bold tracking-tight">Reset Password</h1>
+        <p className="text-muted-foreground text-sm">
+          Choose a new password for your account.
+        </p>
+      </div>
       <ErrorMessage error={error} />
       <Form {...form}>
         <form
