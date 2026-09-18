@@ -1,6 +1,5 @@
 import { loadModel } from '@bedrockio/model';
 
-import application from './definitions/application.json' with { type: 'json' };
 import category from './definitions/category.json' with { type: 'json' };
 import invite from './definitions/invite.json' with { type: 'json' };
 import notification from './definitions/notification.json' with { type: 'json' };
@@ -13,7 +12,6 @@ import upload from './definitions/upload.json' with { type: 'json' };
 export { default as User } from './user.js';
 export { default as AuditEntry } from './audit-entry.js';
 
-export const Application = loadModel(application, 'Application');
 export const Category = loadModel(category, 'Category');
 export const Invite = loadModel(invite, 'Invite');
 export const Notification = loadModel(notification, 'Notification');

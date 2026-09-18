@@ -7,7 +7,6 @@ import bodyMiddleware from './utils/middleware/body.js';
 import recordMiddleware from './utils/middleware/record.js';
 import serializeMiddleware from './utils/middleware/serialize.js';
 import organizationMiddleware from './utils/middleware/organization.js';
-import { applicationMiddleware } from './utils/middleware/application.js';
 import { loadDefinition } from './utils/openapi.js';
 import Sentry from '@sentry/node';
 import routes from './routes/index.js';
@@ -19,25 +18,6 @@ const ENV_NAME = config.get('ENV_NAME');
 const app = new Koa();
 
 app.use(corsMiddleware());
-
-// Application middleware must occur after serialization
-// as it will record a snapshot of the response body.
-if (['staging', 'development'].includes(ENV_NAME)) {
-  // has to be the added before any middleware that changes the ctx.body
-  app.use(
-    applicationMiddleware({
-      ignorePaths: [
-        '/',
-        '/openapi.json',
-        '/1/meta',
-        '/1/status',
-        '/1/status/mongodb',
-        /\/1\/applications/,
-        /\/1\/uploads\/[a-f0-9]{24}\/raw$/,
-      ],
-    })
-  );
-}
 
 app.use(serializeMiddleware);
 app.use(organizationMiddleware);

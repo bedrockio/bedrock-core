@@ -1,4 +1,4 @@
-import { API_KEY, API_URL } from 'utils/env';
+import { API_URL } from 'utils/env';
 import { getOrganization } from 'utils/organization';
 
 import { trackRequest } from '../analytics';
@@ -86,7 +86,6 @@ function getHeaders(options) {
   token ||= getToken();
   return {
     Accept: 'application/json',
-    'Api-Key': API_KEY,
     ...(token && {
       Authorization: `Bearer ${token}`,
     }),

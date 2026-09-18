@@ -18,13 +18,6 @@ Main production URL:
 
 <Code>{`${API_URL}/`}</Code>
 
-## API Key
-
-Each client using using the api must provide use an API key to identify itself.
-You can provide your API key via an header (`Api-Key: <apiKey>`):
-
-<Code language="bash">{`curl -H 'Api-Key: <apiKey>' ${API_URL}/`}</Code>
-
 ## Authentication
 
 JWT is used for all authentication. You can provide your API token in a standard
@@ -50,7 +43,6 @@ Example search:
   -X POST ${API_URL}/1/users/search \\
   -d '{"limit": 100, "skip": 0}' \\
   -H 'Authorization: Bearer <token>' \\
-  -H 'APIKey: <apikey>' \\
   -H 'Content-Type: application/json'`}
 </Code>
 

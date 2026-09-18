@@ -15,7 +15,6 @@ import categories from './categories.js';
 import unsubscribe from './unsubscribe.js';
 import auditEntries from './audit-entries.js';
 import organizations from './organizations.js';
-import applications from './applications.js';
 
 const router = new Router({
   prefix: '/1',
@@ -36,6 +35,5 @@ router.use('/categories', categories.routes());
 router.use('/unsubscribe', unsubscribe.routes());
 router.use('/audit-entries', auditEntries.routes());
 router.use('/organizations', organizations.routes());
-router.use('/applications', applications.routes());
 
 export default router.routes();
