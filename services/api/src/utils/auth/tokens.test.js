@@ -1,6 +1,6 @@
-const { User } = require('../../models');
-const { createAuthToken } = require('../tokens');
-const { context } = require('../testing');
+import { User } from '../../models/index.js';
+import { createAuthToken } from '../tokens.js';
+import { context } from '../testing/index.js';
 
 describe('createAuthToken', () => {
   it('should add an authToken', () => {

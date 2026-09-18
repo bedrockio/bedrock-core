@@ -28,4 +28,4 @@ const fixtures = {};
 for (let name of CATEGORIES) {
   fixtures[name] = { name };
 }
-module.exports = fixtures;
+export default fixtures;

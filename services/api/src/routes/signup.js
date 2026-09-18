@@ -1,12 +1,12 @@
-const Router = require('@koa/router');
-const yd = require('@bedrockio/yada');
+import Router from '@koa/router';
+import yd from '@bedrockio/yada';
 
-const { sendOtp } = require('../utils/auth/otp');
-const { sendMessage } = require('../utils/messaging');
-const { createAuthToken } = require('../utils/tokens');
-const { validateBody } = require('../utils/middleware/validate');
+import { sendOtp } from '../utils/auth/otp.js';
+import { sendMessage } from '../utils/messaging/index.js';
+import { createAuthToken } from '../utils/tokens.js';
+import { validateBody } from '../utils/middleware/validate.js';
 
-const { User, AuditEntry } = require('../models');
+import { User, AuditEntry } from '../models/index.js';
 
 const router = new Router();
 
@@ -91,4 +91,4 @@ router.post(
   },
 );
 
-module.exports = router;
+export default router;

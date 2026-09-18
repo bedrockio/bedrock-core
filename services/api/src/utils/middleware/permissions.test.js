@@ -1,6 +1,6 @@
-const { requirePermissions } = require('./permissions');
-const { createUser, context } = require('../testing');
-const { Organization } = require('../../models');
+import { requirePermissions } from './permissions.js';
+import { createUser, context } from '../testing/index.js';
+import { Organization } from '../../models/index.js';
 
 describe('requirePermissions', () => {
   it('should trigger an error if no auth user is set', async () => {

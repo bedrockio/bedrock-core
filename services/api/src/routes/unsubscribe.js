@@ -1,6 +1,6 @@
-const Router = require('@koa/router');
-const { authenticate } = require('../utils/middleware/authenticate');
-const { unsubscribe } = require('../utils/notifications');
+import Router from '@koa/router';
+import { authenticate } from '../utils/middleware/authenticate.js';
+import { unsubscribe } from '../utils/notifications.js';
 
 const router = new Router();
 
@@ -25,4 +25,4 @@ router.post('/', authenticate({ type: 'access' }), async (ctx) => {
   ctx.status = 204;
 });
 
-module.exports = router;
+export default router;

@@ -1,4 +1,4 @@
-const { request, createUser, createAdmin } = require('../utils/testing');
+import { request, createUser, createAdmin } from '../utils/testing/index.js';
 
 describe('/1/audit-entries', () => {
   describe('POST /search', () => {

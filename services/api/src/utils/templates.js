@@ -1,8 +1,8 @@
-const path = require('path');
-const config = require('@bedrockio/config');
-const { TemplateRenderer } = require('@bedrockio/templates');
-const { getImageUrl, getImageDimensions } = require('./images');
-const { Template } = require('../models');
+import path from 'path';
+import config from '@bedrockio/config';
+import { TemplateRenderer } from '@bedrockio/templates';
+import { getImageUrl, getImageDimensions } from './images.js';
+import { Template } from '../models/index.js';
 
 const APP_URL = config.get('APP_URL');
 
@@ -36,7 +36,7 @@ function resolveOptions(options) {
   let dir;
 
   if (channel) {
-    dir = path.resolve(__dirname, '../templates', channel);
+    dir = path.resolve(import.meta.dirname, '../templates', channel);
   }
 
   return {
@@ -139,7 +139,4 @@ function resolveUpload(arg) {
   return arg;
 }
 
-module.exports = {
-  renderTemplate,
-  resolveTemplate,
-};
+export { renderTemplate, resolveTemplate };

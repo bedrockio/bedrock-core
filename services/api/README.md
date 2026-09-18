@@ -226,8 +226,8 @@ The API is "multi tenant ready" and can be modified to accommodate specific tena
 Example Create API call with multi tenancy enabled:
 
 ```js
-const { authenticate } = require('../utils/middleware/authenticate');
-const { requirePermissions } = require('../utils/middleware/permissions');
+import { authenticate } from '../utils/middleware/authenticate.js';
+import { requirePermissions } from '../utils/middleware/permissions.js';
 
 router
   .use(authenticate())

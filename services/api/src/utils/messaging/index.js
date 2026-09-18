@@ -1,6 +1,6 @@
-const { sendSms } = require('./sms');
-const { sendPush } = require('./push');
-const { sendMail } = require('./mail');
+import { sendSms } from './sms.js';
+import { sendPush } from './push.js';
+import { sendMail } from './mail.js';
 
 async function sendMessage(options) {
   const { user, channel = getChannel(user) } = options;
@@ -26,9 +26,4 @@ function getChannel(user) {
   }
 }
 
-module.exports = {
-  sendSms,
-  sendMail,
-  sendPush,
-  sendMessage,
-};
+export { sendSms, sendMail, sendPush, sendMessage };

@@ -1,10 +1,10 @@
-const Router = require('@koa/router');
-const { kebabCase } = require('lodash');
-const { fetchByParam } = require('../utils/middleware/params');
-const { validateBody } = require('../utils/middleware/validate');
-const { authenticate } = require('../utils/middleware/authenticate');
-const { Application, AuditEntry } = require('../models');
-const { requirePermissions } = require('../utils/middleware/permissions');
+import Router from '@koa/router';
+import { kebabCase } from 'lodash-es';
+import { fetchByParam } from '../utils/middleware/params.js';
+import { validateBody } from '../utils/middleware/validate.js';
+import { authenticate } from '../utils/middleware/authenticate.js';
+import { Application, AuditEntry } from '../models/index.js';
+import { requirePermissions } from '../utils/middleware/permissions.js';
 
 const router = new Router();
 
@@ -77,4 +77,4 @@ router
     ctx.status = 204;
   });
 
-module.exports = router;
+export default router;

@@ -1,10 +1,12 @@
-process.env.UPLOADS_STORE = 'gcs';
+vi.hoisted(() => {
+  process.env.UPLOADS_STORE = 'gcs';
+});
 
-const { request, createUpload, createUser, createAdmin } = require('../utils/testing');
-const { assertFileStored, getResumableUploads } = require('@google-cloud/storage');
-const { Upload } = require('../models');
+import { request, createUpload, createUser, createAdmin } from '../utils/testing/index.js';
+import { assertFileStored, getResumableUploads } from '@google-cloud/storage';
+import { Upload } from '../models/index.js';
 
-const file = __dirname + '/__fixtures__/test.png';
+const file = import.meta.dirname + '/__fixtures__/test.png';
 
 describe('/1/uploads', () => {
   describe('GET /:id/url', () => {

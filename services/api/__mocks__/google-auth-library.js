@@ -30,7 +30,4 @@ function createCode(payload) {
   return JSON.stringify(payload);
 }
 
-module.exports = {
-  OAuth2Client: MockClient,
-  createCode,
-};
+export { MockClient as OAuth2Client, createCode };

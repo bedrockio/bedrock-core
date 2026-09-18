@@ -1,6 +1,6 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 
-const { verifyToken } = require('../tokens');
+import { verifyToken } from '../tokens.js';
 
 class TokenError extends Error {
   type = 'token';
@@ -63,6 +63,4 @@ function getToken(ctx) {
   return token;
 }
 
-module.exports = {
-  validateToken,
-};
+export { validateToken };

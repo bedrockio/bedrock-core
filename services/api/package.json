@@ -2,6 +2,7 @@
   "name": "bedrock-api",
   "description": "Bedrock API",
   "version": "0.0.1",
+  "type": "module",
   "license": "MIT",
   "engines": {
     "node": ">=24"
@@ -12,8 +13,8 @@
     "debug": "MONGO_DEBUG=true pnpm start",
     "start:production": "node src/index",
     "lint": "eslint",
-    "test": "jest",
-    "test:watch": "jest --watch -i",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "fixtures:load": "./scripts/fixtures/load",
     "fixtures:reload": "./scripts/fixtures/reload",
     "fixtures:export": "./scripts/fixtures/export",
@@ -46,7 +47,7 @@
     "koa": "^3.1.1",
     "koa-body": "^7.0.1",
     "koa-compose": "^4.1.0",
-    "lodash": "^4.17.21",
+    "lodash-es": "^4.18.1",
     "marked": "^10.0.0",
     "mime-types": "^3.0.2",
     "mongoose": "^9.2.0",
@@ -62,15 +63,12 @@
   "devDependencies": {
     "@bedrockio/eslint-plugin": "^1.6.0",
     "@bedrockio/prettier-config": "^1.1.1",
-    "@shelf/jest-mongodb": "^5.2.2",
     "@sinonjs/fake-timers": "^14.0.0",
-    "jest": "^30.0.5",
-    "jest-changed-files": "^30.0.5",
-    "jest-environment-node": "^30.0.5",
-    "jest-util": "^29.5.0",
     "mongodb": "^6.13.0",
+    "mongodb-memory-server": "^11.2.0",
     "prettier": "^3.5.1",
-    "supertest": "^7.1.4"
+    "supertest": "^7.1.4",
+    "vitest": "^5.0.0"
   },
   "volta": {
     "node": "26.3.0"

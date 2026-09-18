@@ -1,6 +1,6 @@
 // Records API requests/responses to OpenApi definition.
 
-const { recordRequest } = require('../openapi');
+import { recordRequest } from '../openapi.js';
 
 async function record(ctx, next) {
   if (ctx.get('Api-Record')) {
@@ -14,4 +14,4 @@ async function record(ctx, next) {
   }
 }
 
-module.exports = record;
+export default record;

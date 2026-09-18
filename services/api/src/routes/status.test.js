@@ -1,4 +1,4 @@
-const { request, createUser } = require('../utils/testing');
+import { request, createUser } from '../utils/testing/index.js';
 
 describe('/1/status', () => {
   describe('GET /', () => {

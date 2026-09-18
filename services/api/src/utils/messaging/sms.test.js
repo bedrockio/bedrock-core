@@ -1,14 +1,15 @@
-const path = require('path');
-const { sendSms } = require('./sms');
-const { assertSmsSent } = require('twilio');
-const { createUser, createTemplate } = require('../testing');
+import fs from 'fs';
+import path from 'path';
+import { sendSms } from './sms.js';
+import { assertSmsSent } from 'twilio';
+import { createUser, createTemplate, mockReadFileSync, restoreMocks } from '../testing/index.js';
 
 beforeEach(() => {
   mockFiles();
 });
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  restoreMocks();
 });
 
 const mocks = {
@@ -23,9 +24,8 @@ const mocks = {
 };
 
 function mockFiles() {
-  const fs = require('fs');
   const readFileSync = fs.readFileSync;
-  jest.spyOn(fs, 'readFileSync').mockImplementation((...args) => {
+  mockReadFileSync((...args) => {
     const filename = path.basename(args[0]);
     const value = mocks[filename];
     if (value) {

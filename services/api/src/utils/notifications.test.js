@@ -1,11 +1,11 @@
-const config = require('@bedrockio/config');
-const { assertMailSent, assertMailCount } = require('postmark');
-const { assertSmsCount, setTwilioUnsubscribed } = require('twilio');
-const { assertPushCount } = require('firebase-admin');
-const { createUser } = require('./testing');
-const { scheduleNotification, cancelNotification, sendNotifications, unsubscribe } = require('./notifications');
-const { mockTime, advanceTime } = require('./testing/time');
-const { User, Notification, Template } = require('../models');
+import config from '@bedrockio/config';
+import { assertMailSent, assertMailCount } from 'postmark';
+import { assertSmsCount, setTwilioUnsubscribed } from 'twilio';
+import { assertPushCount } from 'firebase-admin';
+import { createUser } from './testing/index.js';
+import { scheduleNotification, cancelNotification, sendNotifications, unsubscribe } from './notifications.js';
+import { mockTime, advanceTime } from './testing/time.js';
+import { User, Notification, Template } from '../models/index.js';
 
 const APP_URL = config.get('APP_URL');
 
@@ -19,7 +19,6 @@ async function createTemplate(attrs = {}) {
 }
 
 describe('scheduleNotification', () => {
-
   it('should create a pending notification with runAt defaulting to now', async () => {
     mockTime('2026-04-16T00:00:00.000Z');
 
@@ -155,7 +154,6 @@ describe('cancelNotification', () => {
 });
 
 describe('sendNotifications', () => {
-
   it('should send pending notifications whose runAt is in the past', async () => {
     mockTime('2026-04-16T00:00:00.000Z');
 

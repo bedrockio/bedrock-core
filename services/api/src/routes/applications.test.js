@@ -1,6 +1,6 @@
-const { request, createUser, createAdmin } = require('../utils/testing');
-const { uniqueId } = require('lodash');
-const { Application, AuditEntry } = require('../models');
+import { request, createUser, createAdmin } from '../utils/testing/index.js';
+import { uniqueId } from 'lodash-es';
+import { Application, AuditEntry } from '../models/index.js';
 
 describe('/1/applications', () => {
   describe('POST /search', () => {

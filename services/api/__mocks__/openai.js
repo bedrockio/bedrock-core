@@ -18,4 +18,4 @@ function setResponse(data) {
 
 OpenAI.setResponse = setResponse;
 
-module.exports = OpenAI;
+export default OpenAI;

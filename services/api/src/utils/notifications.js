@@ -1,11 +1,11 @@
-const config = require('@bedrockio/config');
-const logger = require('@bedrockio/logger');
-const { sendMail, sendSms, sendPush } = require('./messaging');
-const { UnsubscribedError } = require('./messaging/errors');
-const { createAccessToken } = require('./tokens');
-const { getDateTime } = require('./date');
-const { Notification } = require('../models');
-const { resolveTemplate } = require('./templates');
+import config from '@bedrockio/config';
+import logger from '@bedrockio/logger';
+import { sendMail, sendSms, sendPush } from './messaging/index.js';
+import { UnsubscribedError } from './messaging/errors.js';
+import { createAccessToken } from './tokens.js';
+import { getDateTime } from './date.js';
+import { Notification } from '../models/index.js';
+import { resolveTemplate } from './templates.js';
 
 const APP_URL = config.get('APP_URL');
 
@@ -199,9 +199,4 @@ function getUnsubscribeUrl(options) {
   return url.toString();
 }
 
-module.exports = {
-  sendNotifications,
-  scheduleNotification,
-  cancelNotification,
-  unsubscribe,
-};
+export { sendNotifications, scheduleNotification, cancelNotification, unsubscribe };

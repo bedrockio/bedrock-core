@@ -1,9 +1,9 @@
-const jwt = require('jsonwebtoken');
-const config = require('@bedrockio/config');
+import jwt from 'jsonwebtoken';
+import config from '@bedrockio/config';
 
-const { validateToken } = require('./tokens');
+import { validateToken } from './tokens.js';
 
-const { context } = require('../testing');
+import { context } from '../testing/index.js';
 
 describe('validateToken', () => {
   it('should trigger an error if jwt token can not be found', async () => {

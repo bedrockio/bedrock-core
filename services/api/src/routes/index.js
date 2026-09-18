@@ -1,21 +1,21 @@
-const Router = require('@koa/router');
+import Router from '@koa/router';
 
-const meta = require('./meta');
-const docs = require('./docs');
-const auth = require('./auth');
-const users = require('./users');
-const products = require('./products');
-const shops = require('./shops');
-const uploads = require('./uploads');
-const invites = require('./invites');
-const status = require('./status');
-const signup = require('./signup');
-const templates = require('./templates');
-const categories = require('./categories');
-const unsubscribe = require('./unsubscribe');
-const auditEntries = require('./audit-entries');
-const organizations = require('./organizations');
-const applications = require('./applications');
+import meta from './meta.js';
+import docs from './docs.js';
+import auth from './auth/index.js';
+import users from './users.js';
+import products from './products.js';
+import shops from './shops.js';
+import uploads from './uploads.js';
+import invites from './invites.js';
+import status from './status.js';
+import signup from './signup.js';
+import templates from './templates.js';
+import categories from './categories.js';
+import unsubscribe from './unsubscribe.js';
+import auditEntries from './audit-entries.js';
+import organizations from './organizations.js';
+import applications from './applications.js';
 
 const router = new Router({
   prefix: '/1',
@@ -38,4 +38,4 @@ router.use('/audit-entries', auditEntries.routes());
 router.use('/organizations', organizations.routes());
 router.use('/applications', applications.routes());
 
-module.exports = router.routes();
+export default router.routes();

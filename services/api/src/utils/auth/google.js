@@ -1,6 +1,6 @@
-const { OAuth2Client } = require('google-auth-library');
-const { clearAuthenticators, upsertAuthenticator } = require('./authenticators');
-const config = require('@bedrockio/config');
+import { OAuth2Client } from 'google-auth-library';
+import { clearAuthenticators, upsertAuthenticator } from './authenticators.js';
+import config from '@bedrockio/config';
 
 const GOOGLE_CLIENT_ID = config.get('GOOGLE_CLIENT_ID');
 const GOOGLE_CLIENT_SECRET = config.get('GOOGLE_CLIENT_SECRET');
@@ -40,8 +40,4 @@ function removeGoogleAuthenticator(user) {
   clearAuthenticators(user, 'google');
 }
 
-module.exports = {
-  verifyToken,
-  upsertGoogleAuthenticator,
-  removeGoogleAuthenticator,
-};
+export { verifyToken, upsertGoogleAuthenticator, removeGoogleAuthenticator };

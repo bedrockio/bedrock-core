@@ -1,7 +1,7 @@
-const Router = require('@koa/router');
-const { validateBody } = require('../utils/middleware/validate');
-const { authenticate } = require('../utils/middleware/authenticate');
-const { Category } = require('../models');
+import Router from '@koa/router';
+import { validateBody } from '../utils/middleware/validate.js';
+import { authenticate } from '../utils/middleware/authenticate.js';
+import { Category } from '../models/index.js';
 
 const router = new Router();
 
@@ -13,4 +13,4 @@ router.use(authenticate()).post('/search', validateBody(Category.getSearchValida
   };
 });
 
-module.exports = router;
+export default router;

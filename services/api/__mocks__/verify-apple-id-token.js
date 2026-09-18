@@ -12,7 +12,6 @@ function createToken(payload) {
   return JSON.stringify(payload);
 }
 
-module.exports = {
-  createToken,
-  default: verifyToken,
-};
+export { createToken };
+
+export default { default: verifyToken };

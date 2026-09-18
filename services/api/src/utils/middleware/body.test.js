@@ -1,10 +1,10 @@
-const Koa = require('koa');
-const Router = require('@koa/router');
+import Koa from 'koa';
+import Router from '@koa/router';
 
-const bodyMiddleware = require('./body');
-const { request } = require('../testing');
+import bodyMiddleware from './body.js';
+import { request } from '../testing/index.js';
 
-const file = __dirname + '/__fixtures__/test.png';
+const file = import.meta.dirname + '/__fixtures__/test.png';
 
 describe('bodyMiddleware', () => {
   it('should be able to send files and data in the same request', async () => {

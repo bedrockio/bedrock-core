@@ -1,5 +1,5 @@
-const config = require('@bedrockio/config');
-const { DateTime } = require('@bedrockio/chrono');
+import config from '@bedrockio/config';
+import { DateTime } from '@bedrockio/chrono';
 
 const DEFAULT_TIME_ZONE = config.get('DEFAULT_TIME_ZONE');
 
@@ -22,7 +22,4 @@ function getTimeZone(user) {
   return user.timeZone || DEFAULT_TIME_ZONE;
 }
 
-module.exports = {
-  getDateTime,
-  getTimeZone,
-};
+export { getDateTime, getTimeZone };

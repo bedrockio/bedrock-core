@@ -1,3 +1,1 @@
-module.exports = {
-  ...require('./login'),
-};
+export * from './login.js';

@@ -1,6 +1,6 @@
-const { applicationMiddleware } = require('./application');
-const { importFixtures } = require('../fixtures');
-const { context } = require('../testing');
+import { applicationMiddleware } from './application.js';
+import { importFixtures } from '../fixtures.js';
+import { context } from '../testing/index.js';
 
 describe('application', () => {
   it('should set an request id', async () => {

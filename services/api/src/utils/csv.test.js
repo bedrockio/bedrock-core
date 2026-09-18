@@ -1,9 +1,9 @@
-const mongoose = require('mongoose');
-const { kebabCase } = require('lodash');
-const { csvExport } = require('./csv');
-const { dedent: d } = require('./string');
-const { createAdmin } = require('./testing');
-const { createTestModel } = require('@bedrockio/model');
+import mongoose from 'mongoose';
+import { kebabCase } from 'lodash-es';
+import { csvExport } from './csv.js';
+import { dedent as d } from './string.js';
+import { createAdmin } from './testing/index.js';
+import { createTestModel } from '@bedrockio/model';
 
 const user = {
   firstName: 'John',

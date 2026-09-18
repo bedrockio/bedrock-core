@@ -1,5 +1,5 @@
-const { Application } = require('../../models');
-const { customAlphabet } = require('nanoid');
+import { Application } from '../../models/index.js';
+import { customAlphabet } from 'nanoid';
 
 const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 const nanoid = customAlphabet(alphabet, 16);
@@ -58,6 +58,4 @@ function applicationMiddleware({ ignorePaths = [] }) {
   };
 }
 
-module.exports = {
-  applicationMiddleware,
-};
+export { applicationMiddleware };
