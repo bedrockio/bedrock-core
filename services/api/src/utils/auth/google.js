@@ -25,6 +25,7 @@ async function verifyToken(code) {
   }
   return {
     email: payload.email,
+    emailVerified: true,
     firstName: payload.given_name,
     lastName: payload.family_name,
   };

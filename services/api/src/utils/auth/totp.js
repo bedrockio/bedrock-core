@@ -48,10 +48,8 @@ async function revokeTotp(user) {
 async function verifyTotp(user, code) {
   const authenticator = assertAuthenticator(user, 'totp');
   verifyCode(authenticator.secret, code);
-
-  if (authenticator.isMfa) {
-    await verifyRecentPassword(user);
-  }
+  // TOTP is only ever a second factor after password login.
+  verifyRecentPassword(user);
 
   authenticator.lastUsedAt = new Date();
 }

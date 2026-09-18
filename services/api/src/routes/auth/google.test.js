@@ -63,6 +63,27 @@ describe('/1/auth/google', () => {
       expect(lastUsedAt).toEqual(new Date('2020-01-01T00:00:01.000Z'));
     });
 
+    it('should remove credentials added before the email was verified', async () => {
+      let user = await createUser({
+        email: 'foo@bar.com',
+        password: 'attacker password',
+      });
+      const code = createCode({
+        email: 'foo@bar.com',
+      });
+
+      const response = await request('POST', '/1/auth/google', {
+        code,
+      });
+      expect(response).toHaveStatus(200);
+
+      user = await User.findById(user.id);
+      expect(user.emailVerified).toBe(true);
+      expect(hasAuthenticator(user, 'password')).toBe(false);
+      expect(hasAuthenticator(user, 'google')).toBe(true);
+      expect(user.authTokens).toHaveLength(1);
+    });
+
     it('should not be able to register with an unverified email', async () => {
       const code = createCode({
         givenName: 'Bob',

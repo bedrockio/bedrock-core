@@ -320,7 +320,7 @@ describe('/1/auth', () => {
       let user = await createUser();
       const password = 'very new password';
       const token = createAccessToken(user, {
-        action: 'reset',
+        action: 'reset-password',
         duration: '30m',
       });
       await user.save();
@@ -349,6 +349,17 @@ describe('/1/auth', () => {
       ]);
     });
 
+    it('should reject access tokens issued for other actions', async () => {
+      const user = await createUser();
+      const token = createAccessToken(user, {
+        action: 'unsubscribe',
+        channel: 'email',
+      });
+
+      const response = await request('POST', '/1/auth/password/update', { password: 'new password' }, { token });
+      expect(response).toHaveStatus(401);
+    });
+
     it('should error without user', async () => {
       const response = await request('POST', '/1/auth/password/update', {
         password: 'new password',
@@ -360,7 +371,7 @@ describe('/1/auth', () => {
       mockTime('2020-01-01T00:00:00.000Z');
       const user = await createUser();
       const token = createAccessToken(user, {
-        action: 'reset',
+        action: 'reset-password',
         duration: '30m',
       });
       await user.save();
@@ -419,7 +430,7 @@ describe('/1/auth', () => {
 
       const password = 'very new password';
       const token = createAccessToken(user, {
-        action: 'reset',
+        action: 'reset-password',
         duration: '30m',
       });
       await user.save();

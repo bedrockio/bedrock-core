@@ -33,6 +33,17 @@ async function login(ctx, user, options = {}) {
   return token;
 }
 
+// Called when a provider has verified the email: credentials added before the
+// address was verified may belong to whoever signed up with it first.
+function claimUnverifiedUser(user) {
+  if (!user.emailVerified) {
+    user.authenticators = [];
+    user.authTokens = [];
+    user.mfaMethod = 'none';
+    user.emailVerified = true;
+  }
+}
+
 async function verifyLoginAttempts(user, ctx) {
   let { loginAttempts = 0, lastLoginAttemptAt } = user;
 
@@ -65,5 +76,6 @@ async function verifyLoginAttempts(user, ctx) {
 
 module.exports = {
   login,
+  claimUnverifiedUser,
   verifyLoginAttempts,
 };
