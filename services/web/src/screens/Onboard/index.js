@@ -94,7 +94,7 @@ export default function OnboardScreen() {
   return (
     <div className="flex flex-col gap-4">
       <Meta title="Tell Us More" />
-      <Logo />
+      <Logo className="max-h-8" />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} noValidate>
           <Card className="p-4 shadow-sm">

@@ -23,9 +23,12 @@ function DefinitionList({ className, ...props }) {
 function DefinitionItem({ label, children, className }) {
   return (
     <div
-      className={cn('grid grid-cols-[180px_1fr] gap-4 px-6 py-3.5', className)}>
+      className={cn(
+        'flex flex-col gap-1 px-4 py-3.5 sm:grid sm:grid-cols-[180px_1fr] sm:items-baseline sm:gap-4 sm:px-6',
+        className,
+      )}>
       <dt className="text-muted-foreground font-medium">{label}</dt>
-      <dd className="text-foreground min-w-0">{children}</dd>
+      <dd className="text-foreground min-w-0 break-words">{children}</dd>
     </div>
   );
 }

@@ -66,7 +66,7 @@ export default function MenuItem(props) {
     isActive &&
       'bg-primary/12 text-primary hover:bg-primary/15 hover:text-primary',
     level > 1 && !collapsed && 'pl-9',
-    collapsed && 'justify-center px-2',
+    collapsed && 'justify-center px-px',
   );
 
   const content = (

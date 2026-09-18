@@ -54,7 +54,7 @@ export default function Unsubscribe() {
         )}
         <div className="flex w-[95vw] flex-col items-center sm:w-[480px]">
           <Meta title="Unsubscribe" />
-          <Logo className="max-w-[200px]" title="Unsubscribe" />
+          <Logo className="max-h-8 max-w-[200px]" title="Unsubscribe" />
           <ErrorMessage error={error} />
           {success && (
             <Alert>

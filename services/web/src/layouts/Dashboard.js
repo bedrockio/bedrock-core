@@ -40,6 +40,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
@@ -91,7 +94,7 @@ function getInitials(name) {
 
 export default function DashboardLayout({ children }) {
   const { user } = useSession();
-  const { theme, setTheme } = useTheme();
+  const { theme, resolvedTheme, setTheme } = useTheme();
   const navigate = useNavigate();
   const [opened, { toggle, close }] = useDisclosure();
   const isMobile = useMediaQuery('(max-width: 62em)', false);
@@ -179,7 +182,7 @@ export default function DashboardLayout({ children }) {
     return (
       <div
         className={cn(
-          'sidebar-soft text-sidebar-foreground border-sidebar-border flex h-full flex-col border-r transition-[width] duration-200',
+          'sidebar-soft text-sidebar-foreground border-sidebar-border group flex h-full flex-col border-r transition-[width] duration-200',
           isCollapsed ? 'w-[72px]' : 'w-[264px]',
         )}>
         <div
@@ -187,39 +190,50 @@ export default function DashboardLayout({ children }) {
             'border-sidebar-border flex flex-col gap-3 border-b pt-4 pb-3',
             isCollapsed ? 'items-center px-2' : 'px-3',
           )}>
-          <div
-            className={cn(
-              'flex items-center gap-1',
-              isCollapsed ? 'justify-center' : 'justify-between',
-            )}>
-            <NavLink
-              to="/"
-              className="flex items-center px-2 py-1 no-underline">
-              {isCollapsed ? (
+          {isCollapsed ? (
+            <div className="relative mx-auto flex size-9 items-center justify-center">
+              <NavLink
+                to="/"
+                aria-label={APP_NAME}
+                className="absolute inset-0 flex items-center justify-center no-underline opacity-100 transition-opacity group-hover:pointer-events-none group-hover:opacity-0">
                 <img src={logoIcon} alt={APP_NAME} className="size-6" />
-              ) : (
-                <Logo height={24} />
+              </NavLink>
+              {showToggle && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      onClick={toggleCollapsed}
+                      aria-label="Expand sidebar"
+                      className="hover:bg-sidebar-accent text-muted-foreground hover:text-foreground pointer-events-none absolute inset-0 inline-flex cursor-pointer appearance-none items-center justify-center rounded-md border-0 bg-transparent opacity-0 transition-opacity group-hover:pointer-events-auto group-hover:opacity-100 focus-visible:pointer-events-auto focus-visible:opacity-100">
+                      <PanelLeft className="size-4" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">Expand sidebar</TooltipContent>
+                </Tooltip>
               )}
-            </NavLink>
-            {showToggle && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    type="button"
-                    onClick={toggleCollapsed}
-                    aria-label={
-                      isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'
-                    }
-                    className="hover:bg-sidebar-accent text-muted-foreground hover:text-foreground inline-flex size-7 shrink-0 cursor-pointer appearance-none items-center justify-center rounded-md border-0 bg-transparent transition-colors">
-                    <PanelLeft className="size-4" />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent side={isCollapsed ? 'right' : 'bottom'}>
-                  {isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-                </TooltipContent>
-              </Tooltip>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div className="flex items-center justify-between">
+              <NavLink to="/" className="flex items-center px-2 no-underline">
+                <Logo height={32} />
+              </NavLink>
+              {showToggle && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      onClick={toggleCollapsed}
+                      aria-label="Collapse sidebar"
+                      className="hover:bg-sidebar-accent text-muted-foreground hover:text-foreground inline-flex size-7 shrink-0 cursor-pointer appearance-none items-center justify-center rounded-md border-0 bg-transparent transition-colors">
+                      <PanelLeft className="size-4" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">Collapse sidebar</TooltipContent>
+                </Tooltip>
+              )}
+            </div>
+          )}
           {userCanSwitchOrganizations(user) && (
             <OrganizationSelector collapsed={isCollapsed} />
           )}
@@ -314,21 +328,44 @@ export default function DashboardLayout({ children }) {
                 API Docs
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onSelect={() => setTheme('light')}>
-                <Sun />
-                Light Theme
-                {theme === 'light' && <Check className="ml-auto" />}
-              </DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => setTheme('dark')}>
-                <Moon />
-                Dark Theme
-                {theme === 'dark' && <Check className="ml-auto" />}
-              </DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => setTheme('system')}>
-                <Monitor />
-                System Theme
-                {theme === 'system' && <Check className="ml-auto" />}
-              </DropdownMenuItem>
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
+                  {theme === 'dark' ? (
+                    <Moon />
+                  ) : theme === 'light' ? (
+                    <Sun />
+                  ) : (
+                    <Monitor />
+                  )}
+                  <div className="flex flex-col gap-0.5">
+                    <span>Appearance</span>
+                    <span className="text-muted-foreground text-xs">
+                      {theme === 'system'
+                        ? `System (${resolvedTheme === 'dark' ? 'Dark' : 'Light'})`
+                        : theme === 'dark'
+                          ? 'Dark'
+                          : 'Light'}
+                    </span>
+                  </div>
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent>
+                  <DropdownMenuItem onSelect={() => setTheme('light')}>
+                    <Sun />
+                    Light
+                    {theme === 'light' && <Check className="ml-auto" />}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => setTheme('dark')}>
+                    <Moon />
+                    Dark
+                    {theme === 'dark' && <Check className="ml-auto" />}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => setTheme('system')}>
+                    <Monitor />
+                    System
+                    {theme === 'system' && <Check className="ml-auto" />}
+                  </DropdownMenuItem>
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
               <DropdownMenuSeparator />
               <DropdownMenuItem onSelect={() => navigate('/logout')}>
                 <LogOut />
@@ -370,17 +407,17 @@ export default function DashboardLayout({ children }) {
 
       <div className="flex min-w-0 flex-1 flex-col">
         {isMobile && (
-          <header className="bg-sidebar border-sidebar-border sticky top-0 z-30 flex h-[50px] items-center gap-3 border-b px-4">
+          <header className="bg-sidebar border-sidebar-border sticky top-0 z-30 flex h-[50px] items-center justify-between border-b px-4">
+            <Logo height={32} />
             <button
               type="button"
               onClick={toggle}
               aria-label="Toggle navigation"
               aria-expanded={opened}
               aria-controls="mobile-nav"
-              className="text-sidebar-foreground inline-flex size-9 cursor-pointer appearance-none items-center justify-center rounded-md border-0 bg-transparent hover:bg-sidebar-accent">
+              className="text-sidebar-foreground inline-flex size-9 shrink-0 cursor-pointer appearance-none items-center justify-center rounded-md border-0 bg-transparent hover:bg-sidebar-accent">
               <Menu className="size-5" />
             </button>
-            <Logo height={20} />
           </header>
         )}
 
