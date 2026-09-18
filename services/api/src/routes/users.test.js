@@ -1,7 +1,7 @@
-const { request, createUser, createAdmin } = require('../utils/testing');
-const { mockTime, advanceTime } = require('../utils/testing/time');
-const { User, Shop, AuditEntry } = require('../models');
-const { importFixtures } = require('../utils/fixtures');
+import { request, createUser, createAdmin } from '../utils/testing/index.js';
+import { mockTime, advanceTime } from '../utils/testing/time.js';
+import { User, Shop, AuditEntry } from '../models/index.js';
+import { importFixtures } from '../utils/fixtures.js';
 
 describe('/1/users', () => {
   describe('GET /me', () => {

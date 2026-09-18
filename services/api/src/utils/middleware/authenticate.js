@@ -1,7 +1,7 @@
-const { validateToken } = require('./tokens');
-const { User } = require('../../models');
-const compose = require('koa-compose');
-const config = require('@bedrockio/config');
+import { validateToken } from './tokens.js';
+import { User } from '../../models/index.js';
+import compose from 'koa-compose';
+import config from '@bedrockio/config';
 
 const ENV_NAME = config.get('ENV_NAME');
 
@@ -72,7 +72,4 @@ async function updateAuthToken(ctx, user, token) {
   }
 }
 
-module.exports = {
-  authenticate,
-  authorizeUser,
-};
+export { authenticate, authorizeUser };

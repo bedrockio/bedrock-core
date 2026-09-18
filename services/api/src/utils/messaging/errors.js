@@ -7,7 +7,4 @@ class TwilioError extends Error {
   }
 }
 
-module.exports = {
-  UnsubscribedError,
-  TwilioError,
-};
+export { UnsubscribedError, TwilioError };

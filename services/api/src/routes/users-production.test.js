@@ -1,6 +1,8 @@
-process.env.ENV_NAME = 'production';
+vi.hoisted(() => {
+  process.env.ENV_NAME = 'production';
+});
 
-const { request } = require('../utils/testing');
+import { request } from '../utils/testing/index.js';
 
 describe('/1/users', () => {
   it('should not suppress token error messages', async () => {

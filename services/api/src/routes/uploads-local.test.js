@@ -1,14 +1,16 @@
-process.env.UPLOADS_STORE = 'local';
+vi.hoisted(() => {
+  process.env.UPLOADS_STORE = 'local';
+});
 
-const fs = require('fs');
-const os = require('os');
-const { request, createUpload, createUser, createAdmin } = require('../utils/testing');
-const { mockTime, unmockTime, advanceTime } = require('../utils/testing/time');
-const { createUploadToken } = require('../utils/tokens');
-const { Upload } = require('../models');
-const { Blob } = require('node:buffer');
+import fs from 'fs';
+import os from 'os';
+import { request, createUpload, createUser, createAdmin } from '../utils/testing/index.js';
+import { mockTime, unmockTime, advanceTime } from '../utils/testing/time.js';
+import { createUploadToken, signToken, getAuthPayload } from '../utils/tokens.js';
+import { Upload } from '../models/index.js';
+import { Blob } from 'node:buffer';
 
-const file = __dirname + '/__fixtures__/test.png';
+const file = import.meta.dirname + '/__fixtures__/test.png';
 
 let createReadStream = fs.createReadStream;
 
@@ -185,7 +187,6 @@ describe('/1/uploads', () => {
         owner: user,
       });
       // Auth tokens have kid='user', not 'access' — should not grant upload access.
-      const { signToken, getAuthPayload } = require('../utils/tokens');
       const token = signToken({ ...getAuthPayload(user), upload: upload.id });
 
       const response = await request('GET', `/1/uploads/${upload.id}/raw`, { token }, {});

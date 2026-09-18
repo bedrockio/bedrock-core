@@ -59,20 +59,20 @@ function getLastMessage() {
   return sentMessages[sentMessages.length - 1];
 }
 
-module.exports = {
-  initializeApp() {
-    return {
-      messaging() {
-        return new MockMessaging();
-      },
-    };
-  },
-  credential: {
-    applicationDefault() {
-      return 'app';
+export function initializeApp() {
+  return {
+    messaging() {
+      return new MockMessaging();
     },
+  };
+}
+
+export const credential = {
+  applicationDefault() {
+    return 'app';
   },
-  assertPushSent,
-  assertPushCount,
-  getLastMessage,
 };
+
+export { assertPushSent, assertPushCount, getLastMessage };
+
+export default { initializeApp, credential };

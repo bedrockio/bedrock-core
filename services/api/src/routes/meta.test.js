@@ -1,6 +1,6 @@
-const { request, createUser } = require('../utils/testing');
+import { request, createUser } from '../utils/testing/index.js';
 
-const roles = require('../roles.json');
+import roles from '../roles.json' with { type: 'json' };
 
 describe('/1/meta', () => {
   describe('GET /', () => {

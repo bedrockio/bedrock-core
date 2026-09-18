@@ -1,10 +1,10 @@
-const { createToken } = require('verify-apple-id-token');
-const { request, createUser } = require('../../utils/testing');
-const { assertAuthToken } = require('../../utils/testing/tokens');
-const { hasAuthenticator } = require('../../utils/auth/authenticators');
-const { upsertAppleAuthenticator } = require('../../utils/auth/apple');
-const { mockTime } = require('../../utils/testing/time');
-const { User } = require('../../models');
+import { createToken } from 'verify-apple-id-token';
+import { request, createUser } from '../../utils/testing/index.js';
+import { assertAuthToken } from '../../utils/testing/tokens.js';
+import { hasAuthenticator } from '../../utils/auth/authenticators.js';
+import { upsertAppleAuthenticator } from '../../utils/auth/apple.js';
+import { mockTime } from '../../utils/testing/time.js';
+import { User } from '../../models/index.js';
 
 describe('/1/auth/apple', () => {
   describe('POST /', () => {

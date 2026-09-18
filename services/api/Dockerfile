@@ -1,7 +1,7 @@
 # Build stage: install production dependencies with pnpm.
 FROM node:26.3.0-alpine AS deps
 
-# devDependencies (jest, eslint, etc.) are run on the host, not in the image.
+# devDependencies (vitest, eslint, etc.) are run on the host, not in the image.
 ARG NODE_ENV=production
 
 # Install pnpm (Node 26 no longer bundles corepack)

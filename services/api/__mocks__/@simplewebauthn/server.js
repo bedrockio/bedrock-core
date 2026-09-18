@@ -83,7 +83,7 @@ function verifyRegistrationResponse(options) {
   }
 }
 
-module.exports = {
+export {
   generateAuthenticationOptions,
   verifyAuthenticationResponse,
   generateRegistrationOptions,

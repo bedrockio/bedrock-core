@@ -1,6 +1,6 @@
-const { loadFixtures, importFixtures, exportFixtures, isFixture, setOptions } = require('@bedrockio/fixtures');
-const { createUpload } = require('./uploads');
-const roles = require('../roles.json');
+import { loadFixtures, importFixtures, exportFixtures, isFixture, setOptions } from '@bedrockio/fixtures';
+import { createUpload } from './uploads.js';
+import roles from '../roles.json' with { type: 'json' };
 
 setOptions({
   roles,
@@ -8,9 +8,4 @@ setOptions({
   warnCircularReferences: true,
 });
 
-module.exports = {
-  isFixture,
-  loadFixtures,
-  importFixtures,
-  exportFixtures,
-};
+export { isFixture, loadFixtures, importFixtures, exportFixtures };

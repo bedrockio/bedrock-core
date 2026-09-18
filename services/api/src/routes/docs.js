@@ -1,9 +1,9 @@
-const yd = require('@bedrockio/yada');
-const Router = require('@koa/router');
-const { validateBody } = require('../utils/middleware/validate');
-const { set } = require('lodash');
+import yd from '@bedrockio/yada';
+import Router from '@koa/router';
+import { validateBody } from '../utils/middleware/validate.js';
+import { set } from 'lodash-es';
 
-const { loadDefinition, saveDefinition, generateDefinition } = require('../utils/openapi');
+import { loadDefinition, saveDefinition, generateDefinition } from '../utils/openapi.js';
 
 const router = new Router();
 
@@ -35,4 +35,4 @@ router
     };
   });
 
-module.exports = router;
+export default router;

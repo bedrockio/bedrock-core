@@ -1,4 +1,6 @@
-module.exports = {
-  ...require('@bedrockio/prettier-config'),
+import config from '@bedrockio/prettier-config';
+
+export default {
+  ...config,
   printWidth: 120,
 };

@@ -1,6 +1,6 @@
-const { request, createUser } = require('../utils/testing');
-const { createAccessToken } = require('../utils/tokens');
-const { User } = require('../models');
+import { request, createUser } from '../utils/testing/index.js';
+import { createAccessToken } from '../utils/tokens.js';
+import { User } from '../models/index.js';
 
 describe('/1/unsubscribe', () => {
   describe('POST /', () => {

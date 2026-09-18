@@ -1,10 +1,10 @@
-const twilio = require('twilio');
-const config = require('@bedrockio/config');
-const logger = require('@bedrockio/logger');
+import twilio from 'twilio';
+import config from '@bedrockio/config';
+import logger from '@bedrockio/logger';
 
-const { UnsubscribedError, TwilioError } = require('./errors');
+import { UnsubscribedError, TwilioError } from './errors.js';
 
-const { renderTemplate } = require('../templates');
+import { renderTemplate } from '../templates.js';
 
 const API_URL = config.get('API_URL');
 const ENV_NAME = config.get('ENV_NAME');
@@ -103,8 +103,4 @@ function getClient() {
   }
 }
 
-module.exports = {
-  sendSms,
-  getWebhookUrl,
-  validateSignature,
-};
+export { sendSms, getWebhookUrl, validateSignature };

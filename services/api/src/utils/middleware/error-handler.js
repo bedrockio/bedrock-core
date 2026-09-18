@@ -1,5 +1,5 @@
-const config = require('@bedrockio/config');
-const { isSchemaError } = require('@bedrockio/yada');
+import config from '@bedrockio/config';
+import { isSchemaError } from '@bedrockio/yada';
 const ENV_NAME = config.get('ENV_NAME');
 
 async function errorHandler(ctx, next) {
@@ -33,4 +33,4 @@ async function errorHandler(ctx, next) {
   }
 }
 
-module.exports = errorHandler;
+export default errorHandler;

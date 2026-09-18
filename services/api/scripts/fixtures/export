@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-const { initialize } = require('../../src/utils/database');
-const { exportFixtures } = require('../../src/utils/fixtures');
-const logger = require('@bedrockio/logger');
+import { initialize } from '../../src/utils/database.js';
+import { exportFixtures } from '../../src/utils/fixtures.js';
+import logger from '@bedrockio/logger';
 
 // Ensure models are loaded.
-require('../../src/models');
+import '../../src/models/index.js';
 
 (async () => {
   const options = {};

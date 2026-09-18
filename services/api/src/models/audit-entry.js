@@ -1,8 +1,8 @@
-const mongoose = require('mongoose');
-const { createSchema } = require('@bedrockio/model');
-const { isEmpty, get } = require('lodash');
+import mongoose from 'mongoose';
+import { createSchema } from '@bedrockio/model';
+import { isEmpty, get } from 'lodash-es';
 
-const definition = require('./definitions/audit-entry.json');
+import definition from './definitions/audit-entry.json' with { type: 'json' };
 
 const schema = createSchema(definition);
 
@@ -99,4 +99,4 @@ schema.index({ actor: 1, createdAt: 1 });
 schema.index({ ownerId: 1, createdAt: 1 });
 schema.index({ object: 1, createdAt: 1 });
 
-module.exports = mongoose.models.AuditEntry || mongoose.model('AuditEntry', schema);
+export default mongoose.models.AuditEntry || mongoose.model('AuditEntry', schema);

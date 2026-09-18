@@ -1,11 +1,11 @@
-const { PassThrough, Readable } = require('stream');
+import { PassThrough, Readable } from 'stream';
 
-const csv = require('fast-csv');
-const config = require('@bedrockio/config');
-const mongoose = require('mongoose');
-const { get, once, startCase } = require('lodash');
+import csv from 'fast-csv';
+import config from '@bedrockio/config';
+import mongoose from 'mongoose';
+import { get, once, startCase } from 'lodash-es';
 
-const { serializeObject } = require('./serialize');
+import { serializeObject } from './serialize.js';
 
 const formatter = Intl.NumberFormat('en-US');
 
@@ -318,7 +318,4 @@ function parseCsv(str) {
   };
 }
 
-module.exports = {
-  csvExport,
-  parseCsv,
-};
+export { csvExport, parseCsv };

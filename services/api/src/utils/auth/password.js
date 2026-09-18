@@ -1,6 +1,6 @@
-const bcrypt = require('bcryptjs');
+import bcrypt from 'bcryptjs';
 
-const { clearAuthenticators, addAuthenticator, assertAuthenticator } = require('./authenticators');
+import { clearAuthenticators, addAuthenticator, assertAuthenticator } from './authenticators.js';
 
 // 5 minutes
 const MFA_THRESHOLD = 5 * 60 * 1000;
@@ -45,8 +45,4 @@ async function setPassword(user, password) {
   });
 }
 
-module.exports = {
-  setPassword,
-  verifyPassword,
-  verifyRecentPassword,
-};
+export { setPassword, verifyPassword, verifyRecentPassword };

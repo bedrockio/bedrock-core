@@ -1,7 +1,7 @@
-const config = require('@bedrockio/config');
-const logger = require('@bedrockio/logger');
-const admin = require('firebase-admin');
-const { renderTemplate } = require('../templates');
+import config from '@bedrockio/config';
+import logger from '@bedrockio/logger';
+import admin from 'firebase-admin';
+import { renderTemplate } from '../templates.js';
 
 const ENV_NAME = config.get('ENV_NAME');
 const FIREBASE_DEV_TOKEN = config.get('FIREBASE_DEV_TOKEN');
@@ -87,6 +87,4 @@ function resolveTokens(options) {
   }
 }
 
-module.exports = {
-  sendPush,
-};
+export { sendPush };

@@ -1,7 +1,9 @@
-const crypto = require('crypto');
-const config = require('@bedrockio/config');
-const twilio = jest.requireActual('twilio');
+import crypto from 'crypto';
+import config from '@bedrockio/config';
 
+const { default: twilio } = await vi.importActual('twilio');
+
+const API_URL = config.get('API_URL');
 const AUTH_TOKEN = config.get('TWILIO_AUTH_TOKEN');
 
 let sentMessages;
@@ -98,8 +100,7 @@ function createClient() {
 }
 
 function signRequest(path, params) {
-  const { getWebhookUrl } = require('../src/utils/messaging/sms');
-  const url = getWebhookUrl(path);
+  const url = API_URL + path;
   const data = Object.keys(params)
     .sort()
     .reduce((acc, key) => acc + key + params[key], url);
@@ -111,14 +112,8 @@ function setTwilioUnsubscribed(phone) {
   unsubscribed.push(phone);
 }
 
-Object.assign(createClient, {
-  ...twilio,
-  signRequest,
-  getSentSms,
-  assertSmsSent,
-  assertSmsCount,
-  assertRoomCreated,
-  setTwilioUnsubscribed,
-});
+Object.assign(createClient, twilio);
 
-module.exports = createClient;
+export { signRequest, getSentSms, assertSmsSent, assertSmsCount, assertRoomCreated, setTwilioUnsubscribed };
+
+export default createClient;

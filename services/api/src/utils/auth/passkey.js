@@ -1,9 +1,9 @@
-const SimpleWebAuthn = require('@simplewebauthn/server');
-const config = require('@bedrockio/config');
+import * as SimpleWebAuthn from '@simplewebauthn/server';
+import config from '@bedrockio/config';
 
-const { getAuthenticators, removeAuthenticator, addAuthenticator } = require('./authenticators');
-const { createPasskeyToken, verifyToken } = require('../tokens');
-const { User } = require('../../models');
+import { getAuthenticators, removeAuthenticator, addAuthenticator } from './authenticators.js';
+import { createPasskeyToken, verifyToken } from '../tokens.js';
+import { User } from '../../models/index.js';
 
 const APP_NAME = config.get('APP_NAME');
 const APP_URL = config.get('APP_URL');
@@ -193,7 +193,7 @@ function getRootDomain() {
   return hostname.split('.').slice(-2).join('.');
 }
 
-module.exports = {
+export {
   generateRegistrationOptions,
   registerNewPasskey,
   generateAuthenticationOptions,

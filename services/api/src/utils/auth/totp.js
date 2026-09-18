@@ -1,8 +1,8 @@
-const speakeasy = require('speakeasy');
-const config = require('@bedrockio/config');
+import speakeasy from 'speakeasy';
+import config from '@bedrockio/config';
 
-const { clearAuthenticators, addAuthenticator, assertAuthenticator } = require('./authenticators');
-const { verifyRecentPassword } = require('./password');
+import { clearAuthenticators, addAuthenticator, assertAuthenticator } from './authenticators.js';
+import { verifyRecentPassword } from './password.js';
 
 const APP_NAME = config.get('APP_NAME');
 
@@ -67,11 +67,4 @@ function verifyCode(secret, code) {
   }
 }
 
-module.exports = {
-  verifyTotp,
-  enableTotp,
-  revokeTotp,
-  generateTotp,
-  createSecret,
-  verifyCode,
-};
+export { verifyTotp, enableTotp, revokeTotp, generateTotp, createSecret, verifyCode };

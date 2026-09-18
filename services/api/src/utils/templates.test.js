@@ -1,8 +1,8 @@
-const config = require('@bedrockio/config');
-const { Template } = require('../models');
-const { createUpload } = require('./testing');
-const { renderTemplate } = require('./templates');
-const { mockTime } = require('./testing/time');
+import config from '@bedrockio/config';
+import { Template } from '../models/index.js';
+import { createUpload, mockReadFileSync, restoreMocks } from './testing/index.js';
+import { renderTemplate } from './templates.js';
+import { mockTime } from './testing/time.js';
 
 const APP_NAME = config.get('APP_NAME');
 const API_URL = config.get('API_URL');
@@ -20,9 +20,7 @@ describe('renderTemplate', () => {
   });
 
   it('should render a template from file', async () => {
-    const fs = require('fs');
-
-    jest.spyOn(fs, 'readFileSync').mockImplementation((file) => {
+    mockReadFileSync((file) => {
       if (file.endsWith('mock.md')) {
         return 'Hello from mock, {{name}}';
       }
@@ -38,7 +36,7 @@ describe('renderTemplate', () => {
 
     expect(result.body).toBe('Hello from mock, Frank');
 
-    jest.restoreAllMocks();
+    restoreMocks();
   });
 
   it('should render a template from document', async () => {

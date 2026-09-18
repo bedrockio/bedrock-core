@@ -1,8 +1,8 @@
-const { request, createUser } = require('../../utils/testing');
-const { createPasskeyToken } = require('../../utils/tokens');
-const { assertAuthToken } = require('../../utils/testing/tokens');
-const { mockTime } = require('../../utils/testing/time');
-const { User } = require('../../models');
+import { request, createUser } from '../../utils/testing/index.js';
+import { createPasskeyToken } from '../../utils/tokens.js';
+import { assertAuthToken } from '../../utils/testing/tokens.js';
+import { mockTime } from '../../utils/testing/time.js';
+import { User } from '../../models/index.js';
 
 function getPasskey() {
   return {

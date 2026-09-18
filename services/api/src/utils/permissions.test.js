@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
-const { User } = require('../models');
-const { userHasAccess } = require('./permissions');
+import mongoose from 'mongoose';
+import { User } from '../models/index.js';
+import { userHasAccess } from './permissions.js';
 
 describe('userHasAccess', () => {
   it('should validate correctly for super admin', async () => {

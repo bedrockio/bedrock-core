@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
-const logger = require('@bedrockio/logger');
-const { initialize } = require('../../src/utils/database');
-const { loadFixtures } = require('../../src/utils/fixtures');
+import logger from '@bedrockio/logger';
+import { initialize } from '../../src/utils/database.js';
+import { loadFixtures } from '../../src/utils/fixtures.js';
 
 // Ensure models are loaded.
-require('../../src/models');
+import '../../src/models/index.js';
 
 (async () => {
   await initialize();

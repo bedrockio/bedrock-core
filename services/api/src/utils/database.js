@@ -1,13 +1,12 @@
-const mongoose = require('mongoose');
-const config = require('@bedrockio/config');
-const logger = require('@bedrockio/logger');
+import mongoose from 'mongoose';
+import config from '@bedrockio/config';
+import logger from '@bedrockio/logger';
 
 mongoose.Promise = Promise;
 
-const flags = {};
-exports.flags = flags;
+export const flags = {};
 
-exports.initialize = async function initialize() {
+export async function initialize() {
   mongoose.set('strictQuery', false);
   await mongoose.connect(config.get('MONGO_URI'), flags);
 
@@ -21,4 +20,4 @@ exports.initialize = async function initialize() {
     logger.error('connection error');
   });
   return db;
-};
+}

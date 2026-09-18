@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
-const { Stream } = require('stream');
-const { isPlainObject } = require('lodash');
+import mongoose from 'mongoose';
+import { Stream } from 'stream';
+import { isPlainObject } from 'lodash-es';
 
 function serializeDocument(doc, ctx) {
   const { authUser } = ctx.state || {};
@@ -30,7 +30,4 @@ function serializeObject(obj, ctx) {
   }
 }
 
-module.exports = {
-  serializeObject,
-  serializeDocument,
-};
+export { serializeObject, serializeDocument };

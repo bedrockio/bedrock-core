@@ -1,4 +1,4 @@
-const { serializeObject } = require('../serialize');
+import { serializeObject } from '../serialize.js';
 
 async function serialize(ctx, next) {
   await next();
@@ -9,4 +9,4 @@ async function serialize(ctx, next) {
   }
 }
 
-module.exports = serialize;
+export default serialize;

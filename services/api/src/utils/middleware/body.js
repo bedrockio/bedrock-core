@@ -1,5 +1,5 @@
-const compose = require('koa-compose');
-const { koaBody } = require('koa-body');
+import compose from 'koa-compose';
+import { koaBody } from 'koa-body';
 
 function composeMiddlewares() {
   return compose([
@@ -25,4 +25,4 @@ function parseMultipartBody() {
   };
 }
 
-module.exports = composeMiddlewares;
+export default composeMiddlewares;

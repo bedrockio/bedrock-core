@@ -1,5 +1,5 @@
-const { request, createUser, createAdmin, createTemplate } = require('../utils/testing');
-const { Template } = require('../models');
+import { request, createUser, createAdmin, createTemplate } from '../utils/testing/index.js';
+import { Template } from '../models/index.js';
 
 describe('/1/templates', () => {
   describe('POST /', () => {

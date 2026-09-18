@@ -1,8 +1,8 @@
-const mongoose = require('mongoose');
-const { createSchema } = require('@bedrockio/model');
-const { setPassword } = require('../utils/auth/password');
+import mongoose from 'mongoose';
+import { createSchema } from '@bedrockio/model';
+import { setPassword } from '../utils/auth/password.js';
 
-const definition = require('./definitions/user.json');
+import definition from './definitions/user.json' with { type: 'json' };
 
 const schema = createSchema(definition);
 
@@ -27,4 +27,4 @@ schema.pre('save', async function preSave() {
   }
 });
 
-module.exports = mongoose.models.User || mongoose.model('User', schema);
+export default mongoose.models.User || mongoose.model('User', schema);

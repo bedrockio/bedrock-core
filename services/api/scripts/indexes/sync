@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
-const readline = require('readline');
-const logger = require('@bedrockio/logger');
-const { upperFirst, camelCase } = require('lodash');
-const models = require('../../src/models');
-const { initialize } = require('../../src/utils/database');
+import readline from 'readline';
+import logger from '@bedrockio/logger';
+import { upperFirst, camelCase } from 'lodash-es';
+import * as models from '../../src/models/index.js';
+import { initialize } from '../../src/utils/database.js';
 
 const rl = readline.createInterface({
   input: process.stdin,

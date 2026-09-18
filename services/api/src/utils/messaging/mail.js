@@ -1,11 +1,11 @@
-const marked = require('marked');
-const postmark = require('postmark');
-const htmlToText = require('html-to-text');
+import { marked } from 'marked';
+import postmark from 'postmark';
+import * as htmlToText from 'html-to-text';
 
-const config = require('@bedrockio/config');
-const logger = require('@bedrockio/logger');
+import config from '@bedrockio/config';
+import logger from '@bedrockio/logger';
 
-const { renderTemplate } = require('../templates');
+import { renderTemplate } from '../templates.js';
 
 const ENV_NAME = config.get('ENV_NAME');
 const APP_NAME = config.get('APP_NAME');
@@ -164,8 +164,4 @@ function validateWebhookKey(ctx) {
   }
 }
 
-module.exports = {
-  sendMail,
-  getMailParams,
-  validateWebhookKey,
-};
+export { sendMail, getMailParams, validateWebhookKey };

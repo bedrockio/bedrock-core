@@ -1,8 +1,8 @@
-const { authenticate, authorizeUser } = require('./authenticate');
-const { getAuthPayload, signToken } = require('../tokens');
+import { authenticate, authorizeUser } from './authenticate.js';
+import { getAuthPayload, signToken } from '../tokens.js';
 
-const { context, createUser } = require('../testing');
-const { User } = require('../../models');
+import { context, createUser } from '../testing/index.js';
+import { User } from '../../models/index.js';
 
 describe('authenticate', () => {
   it('should authenticate the user with bearer', async () => {
