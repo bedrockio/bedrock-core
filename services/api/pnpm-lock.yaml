@@ -217,18 +217,12 @@ importers:
       firebase-admin:
         specifier: ^12.2.0
         version: 12.7.0(supports-color@9.4.0)
-      front-matter:
-        specifier: ^4.0.2
-        version: 4.0.2
       glob:
         specifier: ^11.0.0
         version: 11.1.0
       google-auth-library:
         specifier: ^9.2.0
         version: 9.15.1(supports-color@9.4.0)
-      handlebars:
-        specifier: ^4.7.8
-        version: 4.7.9
       html-to-text:
         specifier: ^9.0.5
         version: 9.0.5
@@ -259,9 +253,6 @@ importers:
       ms:
         specifier: ^2.1.3
         version: 2.1.3
-      mustache:
-        specifier: ^4.2.0
-        version: 4.2.0
       nanoid:
         specifier: 3.3.5
         version: 3.3.5
@@ -3693,10 +3684,6 @@ packages:
 
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
-
-  mustache@4.2.0:
-    resolution: {integrity: sha512-71ippSywq5Yb7/tVYyGbkBggbU8H3u5Rz56fH60jGFgr8uHwxs+aSKeqmluIVzM0m0kB7xQjKS6qPfd0b2ZoqQ==}
-    hasBin: true
 
   nanoid@3.3.5:
     resolution: {integrity: sha512-nvgaJGpIANf4+VWJAaDGORQyMzhFkze8aXVdrHq+BaSvzfpOuponEysaVFKV/0Bca5V+3SBiDvRabEPbpalEBg==}
@@ -9153,8 +9140,6 @@ snapshots:
   mquery@6.0.0: {}
 
   ms@2.1.3: {}
-
-  mustache@4.2.0: {}
 
   nanoid@3.3.5: {}
 
