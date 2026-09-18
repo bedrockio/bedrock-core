@@ -62,6 +62,7 @@ router
       });
 
       if (user) {
+        user.emailVerified = true;
         const token = createAuthToken(ctx, user);
         await user.save();
         ctx.body = {
@@ -74,6 +75,7 @@ router
         const user = new User({
           ...ctx.request.body,
           email,
+          emailVerified: true,
           ...(role && {
             roles: [
               {

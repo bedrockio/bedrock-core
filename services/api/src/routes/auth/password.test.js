@@ -341,6 +341,7 @@ describe('/1/auth', () => {
 
       user = await User.findById(user.id);
       await expect(verifyPassword(user, password)).resolves.not.toThrow();
+      expect(user.emailVerified).toBe(true);
 
       expect(user.authTokens).toEqual([
         expect.objectContaining({

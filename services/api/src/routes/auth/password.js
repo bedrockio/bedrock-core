@@ -134,6 +134,7 @@ router
       }
 
       authUser.password = password;
+      authUser.emailVerified = true;
       authUser.loginAttempts = 0;
 
       const token = createAuthToken(ctx, authUser);
