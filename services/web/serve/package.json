@@ -17,5 +17,10 @@
     "koa-mount": "^4.0.0",
     "koa-static": "^5.0.0",
     "node-mocks-http": "^1.16.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "protobufjs": "8.6.6"
+    }
   }
 }
