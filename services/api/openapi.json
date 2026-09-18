@@ -11,7 +11,9 @@
   ],
   "paths": {
     "/1/meta": {
-      "get": {}
+      "get": {
+        "security": []
+      }
     },
     "/1/docs": {
       "patch": {
@@ -34,11 +36,14 @@
               }
             }
           }
-        }
+        },
+        "security": []
       }
     },
     "/1/docs/generate": {
-      "post": {}
+      "post": {
+        "security": []
+      }
     },
     "/1/auth/otp/send": {
       "post": {
@@ -80,7 +85,8 @@
               }
             }
           }
-        }
+        },
+        "security": []
       }
     },
     "/1/auth/otp/login": {
@@ -112,7 +118,8 @@
               }
             }
           }
-        }
+        },
+        "security": []
       }
     },
     "/1/auth/totp/login": {
@@ -144,7 +151,8 @@
               }
             }
           }
-        }
+        },
+        "security": []
       }
     },
     "/1/auth/totp/request": {
@@ -221,7 +229,8 @@
               }
             }
           }
-        }
+        },
+        "security": []
       }
     },
     "/1/auth/apple/enable": {
@@ -279,7 +288,8 @@
               }
             }
           }
-        }
+        },
+        "security": []
       }
     },
     "/1/auth/google/disable": {
@@ -292,7 +302,9 @@
       }
     },
     "/1/auth/passkey/generate-login": {
-      "post": {}
+      "post": {
+        "security": []
+      }
     },
     "/1/auth/passkey/verify-login": {
       "post": {
@@ -317,7 +329,8 @@
               }
             }
           }
-        }
+        },
+        "security": []
       }
     },
     "/1/auth/passkey/generate-new": {
@@ -366,7 +379,10 @@
           {
             "name": "id",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "security": [
@@ -402,7 +418,8 @@
               }
             }
           }
-        }
+        },
+        "security": []
       }
     },
     "/1/auth/password/request": {
@@ -425,7 +442,8 @@
               }
             }
           }
-        }
+        },
+        "security": []
       }
     },
     "/1/auth/password/update": {
@@ -654,7 +672,10 @@
           {
             "name": "id",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "security": [
@@ -1095,7 +1116,10 @@
           {
             "name": "id",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "security": [
@@ -1231,7 +1255,10 @@
           {
             "name": "id",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "security": [
@@ -1251,7 +1278,10 @@
           {
             "name": "id",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "security": [
@@ -1444,7 +1474,10 @@
           {
             "name": "id",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "security": [
@@ -1519,7 +1552,10 @@
           {
             "name": "id",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "security": [
@@ -1535,7 +1571,10 @@
           {
             "name": "id",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "security": [
@@ -1930,7 +1969,10 @@
           {
             "name": "id",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "security": [
@@ -2093,7 +2135,10 @@
           {
             "name": "id",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "security": [
@@ -2109,7 +2154,10 @@
           {
             "name": "id",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "security": [
@@ -2582,7 +2630,10 @@
           {
             "name": "id",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "security": [
@@ -2599,7 +2650,10 @@
           {
             "name": "id",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "security": [
@@ -2615,7 +2669,10 @@
           {
             "name": "id",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "security": [
@@ -2632,7 +2689,10 @@
           {
             "name": "id",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "security": [
@@ -2754,7 +2814,9 @@
       }
     },
     "/1/invites/check": {
-      "post": {}
+      "post": {
+        "security": []
+      }
     },
     "/1/invites/accept": {
       "post": {
@@ -2785,7 +2847,8 @@
               }
             }
           }
-        }
+        },
+        "security": []
       }
     },
     "/1/invites/search": {
@@ -3038,7 +3101,10 @@
           {
             "name": "id",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "security": [
@@ -3060,7 +3126,10 @@
           {
             "name": "id",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "security": [
@@ -3075,10 +3144,14 @@
       }
     },
     "/1/status": {
-      "get": {}
+      "get": {
+        "security": []
+      }
     },
     "/1/status/mongodb": {
-      "get": {}
+      "get": {
+        "security": []
+      }
     },
     "/1/signup": {
       "post": {
@@ -3135,7 +3208,8 @@
               }
             }
           }
-        }
+        },
+        "security": []
       }
     },
     "/1/templates": {
@@ -3199,7 +3273,10 @@
           {
             "name": "id",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "security": [
@@ -3264,7 +3341,10 @@
           {
             "name": "id",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "security": [
@@ -3284,7 +3364,10 @@
           {
             "name": "id",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "security": [
@@ -3550,7 +3633,10 @@
           {
             "name": "id",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "security": [
@@ -3570,7 +3656,10 @@
           {
             "name": "id",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "security": [
@@ -3627,7 +3716,10 @@
           {
             "name": "id",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "security": [
@@ -4578,7 +4670,10 @@
           {
             "name": "id",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "security": [
@@ -4610,7 +4705,10 @@
           {
             "name": "id",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "security": [
@@ -4630,7 +4728,10 @@
           {
             "name": "id",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "security": [
@@ -5070,7 +5171,10 @@
           {
             "name": "id",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "security": [
@@ -5112,7 +5216,10 @@
           {
             "name": "id",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "security": [
@@ -5132,7 +5239,10 @@
           {
             "name": "id",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "security": [

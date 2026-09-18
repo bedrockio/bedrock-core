@@ -59,6 +59,7 @@
     "verify-apple-id-token": "^3.1.0"
   },
   "devDependencies": {
+    "@apidevtools/swagger-parser": "12.1.0",
     "@bedrockio/eslint-plugin": "^1.6.0",
     "@bedrockio/prettier-config": "^1.1.1",
     "@shelf/jest-mongodb": "^5.2.2",

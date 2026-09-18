@@ -138,6 +138,9 @@ function generatePaths(routes) {
         name,
         in: 'path',
         required,
+        schema: {
+          type: 'string',
+        },
       };
     });
 
@@ -198,6 +201,8 @@ function generatePaths(routes) {
       item['security'] = [{}, { bearerAuth: [] }];
     } else if (authentication === 'required') {
       item['security'] = [{ bearerAuth: [] }];
+    } else {
+      item['security'] = [];
     }
 
     // There is currently no way in OpenAPI 3.0 to describe role based permissions
