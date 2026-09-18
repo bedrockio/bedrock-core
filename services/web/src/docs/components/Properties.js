@@ -53,14 +53,14 @@ export default function DocsProperties(props) {
     }
   }
 
-  function isRequired(name, options = {}) {
-    const { type, required = [] } = options.parent || {};
+  function isRequired(desc, options = {}) {
+    const { type } = options.parent || {};
 
     if (type !== 'object') {
       return false;
     }
 
-    return required.includes(name);
+    return !!desc?.required;
   }
 
   function render() {
@@ -89,8 +89,8 @@ export default function DocsProperties(props) {
     let entries = Object.entries(data);
 
     entries.sort((a, b) => {
-      const aRequired = isRequired(a[0], options);
-      const bRequired = isRequired(b[0], options);
+      const aRequired = isRequired(a[1], options);
+      const bRequired = isRequired(b[1], options);
 
       if (aRequired !== bRequired) {
         return bRequired - aRequired;
@@ -151,7 +151,7 @@ export default function DocsProperties(props) {
     const { level } = options;
     const { description, default: defaultValue } = desc;
 
-    const required = isRequired(name, options);
+    const required = isRequired(desc, options);
 
     return (
       <div

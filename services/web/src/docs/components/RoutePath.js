@@ -16,7 +16,7 @@ export default class Route extends React.Component {
           <RequestBuilder
             route={route}
             trigger={
-              <Button variant="outline" size="icon">
+              <Button variant="outline" size="icon" className="text-foreground">
                 <Play />
               </Button>
             }

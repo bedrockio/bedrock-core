@@ -215,11 +215,15 @@ export default function RequestBuilder(props) {
 
   function renderSchema(schema, path, options) {
     schema = resolveRefs(docs, schema);
-    const { type, anyOf } = schema;
-    if (anyOf) {
+    const { type, anyOf, oneOf } = schema;
+    const alternatives = anyOf || oneOf;
+    if (alternatives) {
       return (
         <AnyOfSchema
-          schema={schema}
+          schema={{
+            ...schema,
+            anyOf: alternatives.map((alt) => resolveRefs(docs, alt)),
+          }}
           renderSchema={(schema) => {
             return renderSchema(schema, path, options);
           }}

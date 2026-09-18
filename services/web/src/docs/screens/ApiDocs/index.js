@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { useClass } from 'helpers/bem';
 import PortalLayout from 'layouts/Portal';
 
-import Footer from 'components/Footer';
 import { components as markdownComponents } from 'components/Markdown';
 import Meta from 'components/Meta';
 import EditButton from 'docs/components/EditButton';
@@ -126,7 +125,6 @@ export default function ApiDocs() {
       <div className={className}>
         <Meta title="API Docs" />
         <main className={getElementClass('page')}>{renderPage()}</main>
-        <Footer />
       </div>
     </PortalLayout>
   );
