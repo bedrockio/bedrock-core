@@ -23,27 +23,19 @@ router
       data: product,
     };
   })
-  .post(
-    '/search',
-    validateBody(
-      Product.getSearchValidation({
-        allowExport: true,
-      }),
-    ),
-    async (ctx) => {
-      const { format, filename, ...params } = ctx.request.body;
-      const { data, meta } = await Product.search(params);
+  .post('/search', validateBody(Product.getSearchValidation()), async (ctx) => {
+    const { format, filename, ...params } = ctx.request.body;
+    const { data, meta } = await Product.search(params);
 
-      if (format === 'csv') {
-        return csvExport(ctx, data, { filename });
-      }
+    if (format === 'csv') {
+      return csvExport(ctx, data, { filename });
+    }
 
-      ctx.body = {
-        data,
-        meta,
-      };
-    },
-  )
+    ctx.body = {
+      data,
+      meta,
+    };
+  })
   .patch('/:id', validateBody(Product.getUpdateValidation()), async (ctx) => {
     const { product } = ctx.state;
     product.assign(ctx.request.body);
