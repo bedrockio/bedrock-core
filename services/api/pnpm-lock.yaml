@@ -6,6 +6,9 @@ importers:
   .:
     configDependencies: {}
     packageManagerDependencies:
+      '@pnpm/exe':
+        specifier: 12.4.2
+        version: 12.4.2
       pnpm:
         specifier: 12.4.2
         version: 12.4.2
@@ -89,6 +92,11 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@pnpm/exe@12.4.2':
+    resolution: {integrity: sha512-cJZ6sFoyDvFD9cZbx0OYt2JtbCcc1fRXDYrnJNE5BB0cXwWGQpj7OZOWamtqiuu8xwPxTtOod5fqxdLLotftDg==}
+    engines: {node: '>=18.*'}
+    hasBin: true
+
   pnpm@12.4.2:
     resolution: {integrity: sha512-CK3GYTGAJ1x8ntraOdzwjJxhrU5+rzMKTzRh8QKw+QdCNFTRF/mOctR/7wYWBwZE17/8lzpqV/UJCm18NosHyQ==}
     engines: {node: '>=18.*'}
@@ -137,6 +145,23 @@ snapshots:
 
   '@pnpm/exe.win32-x64@12.4.2':
     optional: true
+
+  '@pnpm/exe@12.4.2':
+    optionalDependencies:
+      '@pnpm/exe.android-arm64': 12.4.2
+      '@pnpm/exe.android-x64': 12.4.2
+      '@pnpm/exe.darwin-arm64': 12.4.2
+      '@pnpm/exe.darwin-x64': 12.4.2
+      '@pnpm/exe.freebsd-x64': 12.4.2
+      '@pnpm/exe.linux-arm64': 12.4.2
+      '@pnpm/exe.linux-arm64-musl': 12.4.2
+      '@pnpm/exe.linux-ppc64': 12.4.2
+      '@pnpm/exe.linux-riscv64': 12.4.2
+      '@pnpm/exe.linux-s390x': 12.4.2
+      '@pnpm/exe.linux-x64': 12.4.2
+      '@pnpm/exe.linux-x64-musl': 12.4.2
+      '@pnpm/exe.win32-arm64': 12.4.2
+      '@pnpm/exe.win32-x64': 12.4.2
 
   pnpm@12.4.2:
     optionalDependencies:
@@ -217,18 +242,12 @@ importers:
       firebase-admin:
         specifier: ^12.2.0
         version: 12.7.0(supports-color@9.4.0)
-      front-matter:
-        specifier: ^4.0.2
-        version: 4.0.2
       glob:
         specifier: ^11.0.0
         version: 11.1.0
       google-auth-library:
         specifier: ^9.2.0
         version: 9.15.1(supports-color@9.4.0)
-      handlebars:
-        specifier: ^4.7.8
-        version: 4.7.9
       html-to-text:
         specifier: ^9.0.5
         version: 9.0.5
@@ -259,9 +278,6 @@ importers:
       ms:
         specifier: ^2.1.3
         version: 2.1.3
-      mustache:
-        specifier: ^4.2.0
-        version: 4.2.0
       nanoid:
         specifier: 3.3.5
         version: 3.3.5
@@ -3896,10 +3912,6 @@ packages:
 
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
-
-  mustache@4.2.0:
-    resolution: {integrity: sha512-71ippSywq5Yb7/tVYyGbkBggbU8H3u5Rz56fH60jGFgr8uHwxs+aSKeqmluIVzM0m0kB7xQjKS6qPfd0b2ZoqQ==}
-    hasBin: true
 
   nanoid@3.3.19:
     resolution: {integrity: sha512-Y2tUNy4ouw6tq5oDSKeQYGOyhkUBhNOcGV/02KC+6kd9eDGqdZd++mjMiIDilrBYvjEnCYvVtsuHCuP+okSfug==}
@@ -9745,8 +9757,6 @@ snapshots:
   mquery@6.0.0: {}
 
   ms@2.1.3: {}
-
-  mustache@4.2.0: {}
 
   nanoid@3.3.19: {}
 

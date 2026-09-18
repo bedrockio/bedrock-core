@@ -253,11 +253,11 @@ router
 
 ## Email Templates
 
-Email templates can be found in `emails`. There is a layout.html that contains the styling and default layout, and a
+Email templates can be found in `src/templates/email`. There is a layout.html that contains the styling and default layout, and a
 template for each email, that gets injected into the layout. Multiple layouts are supported, just make sure you specify
 what layout to use when calling `template({ layout: "other-layout.html", template: "..." })`
 
-You can either use markdown or full html templates. Both are run though https://mustache.github.io/ for templating
+You can either use markdown or full html templates. Both are run through [Handlebars](https://handlebarsjs.com/) for templating
 
 ### To create a button in markdown
 
@@ -275,7 +275,7 @@ This translates to
 
 ### Recall to unescape `APP_URL`
 
-We are using mustache for templating, it will attempt to escape the http:`//` which causes issues. So when using the the
+Handlebars will attempt to escape the http:`//` which causes issues. So when using the the
 `APP_URL` write `{{&APP_URL}}`
 
 ## Logging
