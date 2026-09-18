@@ -291,7 +291,17 @@ function generateModelSchemas() {
       continue;
     }
 
-    schemas[modelName] = model.getBaseSchema().toOpenApi();
+    const schema = model.getBaseSchema().toOpenApi();
+    schemas[modelName] = {
+      ...schema,
+      properties: {
+        id: {
+          $ref: '#/components/schemas/ObjectId',
+        },
+        ...schema.properties,
+      },
+      required: ['id', ...(schema.required || [])],
+    };
   }
   return schemas;
 }
@@ -306,7 +316,6 @@ function extractSchemas(definition) {
         title: value['x-title'],
         description: value['x-description'],
         default: undefined,
-        required: undefined,
         'x-title': undefined,
         'x-description': undefined,
         'x-schema': undefined,
@@ -315,7 +324,6 @@ function extractSchemas(definition) {
         $ref: `#/components/schemas/${schema}`,
         title: value.title,
         default: value.default,
-        required: value.required,
         description: value.description,
       });
       halt = true;
