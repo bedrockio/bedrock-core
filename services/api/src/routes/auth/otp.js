@@ -4,7 +4,7 @@ const { validateBody } = require('../../utils/middleware/validate');
 
 const { sendOtp } = require('../../utils/auth/otp');
 const { verifyOtp } = require('../../utils/auth/otp');
-const { login, verifyLoginAttempts } = require('../../utils/auth');
+const { login, verifyLoginAttempts, claimUnverifiedUser } = require('../../utils/auth');
 
 const { AuditEntry } = require('../../models');
 const { findUser } = require('./utils');
@@ -44,7 +44,7 @@ router
       phone: yd.string().phone(),
     }),
     async (ctx) => {
-      const { code, email, phone } = ctx.request.body;
+      const { code } = ctx.request.body;
       const user = await findUser(ctx);
 
       if (!user) {
@@ -58,8 +58,9 @@ router
         ctx.throw(401, error);
       }
 
+      let authenticator;
       try {
-        await verifyOtp(user, code);
+        authenticator = await verifyOtp(user, code);
       } catch (error) {
         await user.save();
         await AuditEntry.append('OTP Verification Failure', {
@@ -69,9 +70,15 @@ router
         ctx.throw(401, error);
       }
 
-      if (email) {
-        user.emailVerified = true;
-      } else if (phone) {
+      // Verify the channel the code was delivered to, not the one used to look up the user.
+      if (authenticator.channel === 'email') {
+        // An MFA code follows a password login, so this user already owns the account.
+        if (authenticator.isMfa) {
+          user.emailVerified = true;
+        } else {
+          claimUnverifiedUser(user);
+        }
+      } else if (authenticator.channel === 'sms') {
         user.phoneVerified = true;
       }
 

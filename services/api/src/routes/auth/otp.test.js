@@ -175,7 +175,7 @@ describe('/1/auth/otp', () => {
         const user = await createUser({
           email: 'foo@bar.com',
         });
-        const code = await createOtp(user);
+        const code = await createOtp(user, { channel: 'email' });
         const response = await request('POST', '/1/auth/otp/login', {
           email: user.email,
           code,
@@ -188,7 +188,7 @@ describe('/1/auth/otp', () => {
         const user = await createUser({
           phone: '+12223456789',
         });
-        const code = await createOtp(user);
+        const code = await createOtp(user, { channel: 'sms' });
         const response = await request('POST', '/1/auth/otp/login', {
           phone: user.phone,
           code,
@@ -279,6 +279,22 @@ describe('/1/auth/otp', () => {
         });
 
         user = await User.findById(user.id);
+        expect(user.phoneVerified).toBe(true);
+      });
+
+      it('should not verify email when the code was sent by sms', async () => {
+        let user = await createUser({
+          email: 'foo@bar.com',
+          phone: '+12223456789',
+        });
+        const code = await createOtp(user, { channel: 'sms' });
+        await request('POST', '/1/auth/otp/login', {
+          email: user.email,
+          code,
+        });
+
+        user = await User.findById(user.id);
+        expect(user.emailVerified).toBe(false);
         expect(user.phoneVerified).toBe(true);
       });
 

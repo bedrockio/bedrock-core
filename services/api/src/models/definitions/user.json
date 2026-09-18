@@ -162,6 +162,10 @@
               "type": "Boolean",
               "readAccess": "none"
             },
+            "channel": {
+              "type": "String",
+              "readAccess": "none"
+            },
             "info": {
               "type": "Object",
               "readAccess": "none"
