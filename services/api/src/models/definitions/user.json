@@ -16,6 +16,12 @@
       "writeAccess": [
         "admin",
         "superAdmin"
+      ],
+      "readAccess": [
+        "self",
+        "viewer",
+        "admin",
+        "superAdmin"
       ]
     },
     "emailVerified": {
@@ -28,6 +34,12 @@
       "validate": "phone",
       "unique": true,
       "writeAccess": [
+        "admin",
+        "superAdmin"
+      ],
+      "readAccess": [
+        "self",
+        "viewer",
         "admin",
         "superAdmin"
       ]
@@ -71,29 +83,44 @@
         }
       }
     ],
-    "roles": [
-      {
-        "role": {
-          "type": "String",
-          "required": true
-        },
-        "scope": {
-          "type": "String",
-          "required": true,
-          "enum": [
-            "global",
-            "organization"
-          ]
-        },
-        "scopeRef": {
-          "type": "ObjectId",
-          "ref": "Organization"
+    "$staff": {
+      "type": "Scope",
+      "readAccess": [
+        "self",
+        "viewer",
+        "admin",
+        "superAdmin"
+      ],
+      "writeAccess": [
+        "admin",
+        "superAdmin"
+      ],
+      "attributes": {
+        "roles": [
+          {
+            "role": {
+              "type": "String",
+              "required": true
+            },
+            "scope": {
+              "type": "String",
+              "required": true,
+              "enum": [
+                "global",
+                "organization"
+              ]
+            },
+            "scopeRef": {
+              "type": "ObjectId",
+              "ref": "Organization"
+            }
+          }
+        ],
+        "isTester": {
+          "type": "Boolean",
+          "default": false
         }
       }
-    ],
-    "isTester": {
-      "type": "Boolean",
-      "default": false
     },
     "$readOnly": {
       "type": "Scope",

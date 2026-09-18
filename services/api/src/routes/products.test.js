@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
-const { request, createUser } = require('../utils/testing');
+const { request, createUser, createAdmin } = require('../utils/testing');
 const { Product } = require('../models');
 
 describe('/1/products', () => {
   describe('POST /', () => {
     it('should be able to create product', async () => {
-      const user = await createUser();
+      const user = await createAdmin();
       const response = await request(
         'POST',
         '/1/products',
@@ -19,6 +19,16 @@ describe('/1/products', () => {
       const data = response.body.data;
       expect(response).toHaveStatus(200);
       expect(data.name).toBe('some other product');
+    });
+
+    it('should deny access to non-admins', async () => {
+      const user = await createUser();
+      const product = await Product.create({
+        name: 'test 1',
+        shop: new mongoose.Types.ObjectId(),
+      });
+      const response = await request('POST', '/1/products', { name: 'x', shop: product.shop }, { user });
+      expect(response).toHaveStatus(403);
     });
   });
 
@@ -74,7 +84,7 @@ describe('/1/products', () => {
 
   describe('PATCH /:product', () => {
     it('admins should be able to update product', async () => {
-      const user = await createUser();
+      const user = await createAdmin();
       const product = await Product.create({
         name: 'test 1',
         description: 'Some description',
@@ -86,11 +96,21 @@ describe('/1/products', () => {
       const dbProduct = await Product.findById(product.id);
       expect(dbProduct.name).toEqual('new name');
     });
+
+    it('should deny access to non-admins', async () => {
+      const user = await createUser();
+      const product = await Product.create({
+        name: 'test 1',
+        shop: new mongoose.Types.ObjectId(),
+      });
+      const response = await request('PATCH', `/1/products/${product.id}`, { name: 'new name' }, { user });
+      expect(response).toHaveStatus(403);
+    });
   });
 
   describe('DELETE /:product', () => {
     it('should be able to delete product', async () => {
-      const user = await createUser();
+      const user = await createAdmin();
       const product = await Product.create({
         name: 'test 1',
         description: 'Some description',
@@ -100,6 +120,16 @@ describe('/1/products', () => {
       expect(response).toHaveStatus(204);
       const dbProduct = await Product.findByIdDeleted(product.id);
       expect(dbProduct.deletedAt).toBeDefined();
+    });
+
+    it('should deny access to non-admins', async () => {
+      const user = await createUser();
+      const product = await Product.create({
+        name: 'test 1',
+        shop: new mongoose.Types.ObjectId(),
+      });
+      const response = await request('DELETE', `/1/products/${product.id}`, {}, { user });
+      expect(response).toHaveStatus(403);
     });
   });
 });

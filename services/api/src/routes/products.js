@@ -2,6 +2,7 @@ const Router = require('@koa/router');
 const { fetchByParam } = require('../utils/middleware/params');
 const { validateBody } = require('../utils/middleware/validate');
 const { authenticate } = require('../utils/middleware/authenticate');
+const { requirePermissions } = require('../utils/middleware/permissions');
 const { csvExport } = require('../utils/csv');
 const { Product } = require('../models');
 
@@ -10,7 +11,7 @@ const router = new Router();
 router
   .use(authenticate())
   .param('id', fetchByParam(Product))
-  .post('/', validateBody(Product.getCreateValidation()), async (ctx) => {
+  .post('/', requirePermissions('products.write'), validateBody(Product.getCreateValidation()), async (ctx) => {
     const product = await Product.create(ctx.request.body);
 
     ctx.body = {
@@ -44,7 +45,7 @@ router
       };
     },
   )
-  .patch('/:id', validateBody(Product.getUpdateValidation()), async (ctx) => {
+  .patch('/:id', requirePermissions('products.write'), validateBody(Product.getUpdateValidation()), async (ctx) => {
     const { product } = ctx.state;
     product.assign(ctx.request.body);
 
@@ -54,7 +55,7 @@ router
       data: product,
     };
   })
-  .delete('/:id', async (ctx) => {
+  .delete('/:id', requirePermissions('products.write'), async (ctx) => {
     const { product } = ctx.state;
     await product.delete();
     ctx.status = 204;

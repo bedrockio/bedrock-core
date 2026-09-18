@@ -77,6 +77,29 @@ describe('/1/users', () => {
       user = await User.findById(user._id);
       expect(user.deviceToken).toBe('new-token');
     });
+
+    it('should not allow changing own roles', async () => {
+      let user = await createUser();
+      const response = await request(
+        'PATCH',
+        '/1/users/me',
+        {
+          roles: [{ role: 'superAdmin', scope: 'global' }],
+        },
+        { user },
+      );
+      expect(response).toHaveStatus(400);
+      user = await User.findById(user._id);
+      expect(user.roles).toHaveLength(0);
+    });
+
+    it('should not allow setting tester flag', async () => {
+      let user = await createUser();
+      const response = await request('PATCH', '/1/users/me', { isTester: true }, { user });
+      expect(response).toHaveStatus(400);
+      user = await User.findById(user._id);
+      expect(user.isTester).toBe(false);
+    });
   });
 
   describe('POST /', () => {
