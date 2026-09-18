@@ -21,6 +21,11 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Spinner } from '@/components/ui/spinner';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
 import { request } from 'utils/api';
@@ -42,7 +47,7 @@ function OrgIcon({ name }) {
   );
 }
 
-export default function OrganizationSelector() {
+export default function OrganizationSelector({ collapsed = false }) {
   const { user, organization } = useSession();
 
   const [open, setOpen] = useState(false);
@@ -90,19 +95,35 @@ export default function OrganizationSelector() {
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          className="w-full justify-start gap-2 font-medium">
-          <OrgIcon name={organization?.name} />
-          <span className="flex-1 truncate text-left">
+      {collapsed ? (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="icon" className="mx-auto">
+                <OrgIcon name={organization?.name} />
+              </Button>
+            </PopoverTrigger>
+          </TooltipTrigger>
+          <TooltipContent side="right">
             {organization?.name || 'All Organizations'}
-          </span>
-          <ChevronsUpDown className="size-4 shrink-0 opacity-60" />
-        </Button>
-      </PopoverTrigger>
+          </TooltipContent>
+        </Tooltip>
+      ) : (
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            className="w-full justify-start gap-2 font-medium">
+            <OrgIcon name={organization?.name} />
+            <span className="flex-1 truncate text-left">
+              {organization?.name || 'All Organizations'}
+            </span>
+            <ChevronsUpDown className="size-4 shrink-0 opacity-60" />
+          </Button>
+        </PopoverTrigger>
+      )}
       <PopoverContent
-        className="w-[var(--radix-popover-trigger-width)] p-0"
+        className={collapsed ? 'w-72 p-0' : 'w-[var(--radix-popover-trigger-width)] p-0'}
+        side={collapsed ? 'right' : 'bottom'}
         align="start">
         <Command shouldFilter={false}>
           <CommandInput

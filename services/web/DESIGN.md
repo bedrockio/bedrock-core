@@ -298,6 +298,15 @@ so generated and hand-built screens match.
   **Active item** = tinted pill (`bg-primary/12`) + accent text and icon. There
   is no app footer — theme lives in the user dropdown, and the old density
   toggle and "powered by" logo are gone.
+  **Collapsible:** a `PanelLeft` icon at the end of the logo row toggles the
+  desktop sidebar between 264px (labels) and a 72px icon rail, persisted in
+  `localStorage`. Collapsed, every icon-only control — nav items, the org
+  switcher, the user block — carries a `Tooltip` with its label; a nav item
+  with children (e.g. Users → Invites) opens a `Popover` flyout on hover
+  instead of a tooltip, since a plain CSS hover panel would clip against the
+  nav's own scroll container. The mobile drawer always renders expanded (no
+  toggle shown there) — collapsing is a desktop information-density feature,
+  not a mobile one.
 - **Settings areas** share one shell (`SettingsShell`): a page-level breadcrumb
   above a persistent **vertical** secondary nav (left) and the section content
   (right). **My Settings** (Details, Security, Notifications) and **Organization

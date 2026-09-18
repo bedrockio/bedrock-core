@@ -11,13 +11,14 @@ import {
   Menu,
   Monitor,
   Moon,
+  PanelLeft,
   Settings,
   Store,
   Sun,
   Tag,
   User,
 } from 'lucide-react';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useSession } from 'stores/session';
 
@@ -41,6 +42,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { cn } from '@/lib/utils';
+
+import { APP_NAME } from 'utils/env';
+
+import logoIcon from 'assets/logo-icon.svg';
 
 const navSections = [
   {
@@ -65,6 +76,8 @@ const navSections = [
   },
 ];
 
+const SIDEBAR_COLLAPSED_KEY = 'sidebarCollapsed';
+
 function getInitials(name) {
   if (!name) return 'U';
   return name
@@ -84,6 +97,26 @@ export default function DashboardLayout({ children }) {
   const isMobile = useMediaQuery('(max-width: 62em)', false);
   const location = useLocation();
   const drawerRef = useRef(null);
+
+  const [collapsed, setCollapsed] = useState(() => {
+    try {
+      return window.localStorage.getItem(SIDEBAR_COLLAPSED_KEY) === '1';
+    } catch {
+      return false;
+    }
+  });
+
+  function toggleCollapsed() {
+    setCollapsed((prev) => {
+      const next = !prev;
+      try {
+        window.localStorage.setItem(SIDEBAR_COLLAPSED_KEY, next ? '1' : '0');
+      } catch {
+        // ignore (private mode / disabled storage)
+      }
+      return next;
+    });
+  }
 
   useEffect(() => {
     close();
@@ -142,40 +175,120 @@ export default function DashboardLayout({ children }) {
     };
   }, [isMobile, opened, close]);
 
-  const sidebar = (
-    <div className="sidebar-soft text-sidebar-foreground border-sidebar-border flex h-full w-[264px] flex-col border-r">
-      <div className="border-sidebar-border flex flex-col gap-3 border-b px-3 pt-4 pb-3">
-        <NavLink to="/" className="flex items-center px-2 py-1 no-underline">
-          <Logo height={24} />
-        </NavLink>
-        {userCanSwitchOrganizations(user) && <OrganizationSelector />}
-      </div>
-
-      <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-2 pb-2">
-        {navSections.map((section) => (
-          <div key={section.label} className="flex flex-col gap-0.5">
-            <div className="text-muted-foreground px-3 pt-4 pb-1.5 text-xs font-semibold tracking-wider uppercase">
-              {section.label}
-            </div>
-            {section.items.map((item) => (
-              <MenuItem key={item.label} {...item} />
-            ))}
+  function renderSidebar(isCollapsed, { showToggle = true } = {}) {
+    return (
+      <div
+        className={cn(
+          'sidebar-soft text-sidebar-foreground border-sidebar-border flex h-full flex-col border-r transition-[width] duration-200',
+          isCollapsed ? 'w-[72px]' : 'w-[264px]',
+        )}>
+        <div
+          className={cn(
+            'border-sidebar-border flex flex-col gap-3 border-b pt-4 pb-3',
+            isCollapsed ? 'items-center px-2' : 'px-3',
+          )}>
+          <div
+            className={cn(
+              'flex items-center gap-1',
+              isCollapsed ? 'justify-center' : 'justify-between',
+            )}>
+            <NavLink
+              to="/"
+              className="flex items-center px-2 py-1 no-underline">
+              {isCollapsed ? (
+                <img src={logoIcon} alt={APP_NAME} className="size-6" />
+              ) : (
+                <Logo height={24} />
+              )}
+            </NavLink>
+            {showToggle && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    onClick={toggleCollapsed}
+                    aria-label={
+                      isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'
+                    }
+                    className="hover:bg-sidebar-accent text-muted-foreground hover:text-foreground inline-flex size-7 shrink-0 cursor-pointer appearance-none items-center justify-center rounded-md border-0 bg-transparent transition-colors">
+                    <PanelLeft className="size-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side={isCollapsed ? 'right' : 'bottom'}>
+                  {isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+                </TooltipContent>
+              </Tooltip>
+            )}
           </div>
-        ))}
-      </nav>
+          {userCanSwitchOrganizations(user) && (
+            <OrganizationSelector collapsed={isCollapsed} />
+          )}
+        </div>
 
-      <div className="border-sidebar-border border-t p-2">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button
-              type="button"
-              className="hover:bg-sidebar-accent flex w-full cursor-pointer appearance-none items-center gap-3 rounded-md border-0 bg-transparent px-2 py-2 text-left transition-colors">
-              <Avatar className="size-8">
-                <AvatarFallback className="bg-primary text-primary-foreground text-xs font-semibold">
-                  {getInitials(user?.name)}
-                </AvatarFallback>
-              </Avatar>
-              <div className="min-w-0 flex-1">
+        <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-2 pb-2">
+          {navSections.map((section) => (
+            <div key={section.label} className="flex flex-col gap-0.5">
+              {!isCollapsed && (
+                <div className="text-muted-foreground px-3 pt-4 pb-1.5 text-xs font-semibold tracking-wider uppercase">
+                  {section.label}
+                </div>
+              )}
+              {isCollapsed && <div className="pt-2" />}
+              {section.items.map((item) => (
+                <MenuItem key={item.label} {...item} collapsed={isCollapsed} />
+              ))}
+            </div>
+          ))}
+        </nav>
+
+        <div className="border-sidebar-border border-t p-2">
+          <DropdownMenu>
+            {isCollapsed ? (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      type="button"
+                      className="hover:bg-sidebar-accent mx-auto flex size-9 cursor-pointer appearance-none items-center justify-center rounded-md border-0 bg-transparent p-0 transition-colors">
+                      <Avatar className="size-8">
+                        <AvatarFallback className="bg-primary text-primary-foreground text-xs font-semibold">
+                          {getInitials(user?.name)}
+                        </AvatarFallback>
+                      </Avatar>
+                    </button>
+                  </DropdownMenuTrigger>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  {user?.name || 'Account'}
+                </TooltipContent>
+              </Tooltip>
+            ) : (
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className="hover:bg-sidebar-accent flex w-full cursor-pointer appearance-none items-center gap-3 rounded-md border-0 bg-transparent px-2 py-2 text-left transition-colors">
+                  <Avatar className="size-8">
+                    <AvatarFallback className="bg-primary text-primary-foreground text-xs font-semibold">
+                      {getInitials(user?.name)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate text-sm font-semibold">
+                      {user?.name || 'Account'}
+                    </div>
+                    <div className="text-muted-foreground truncate text-xs">
+                      {user?.email}
+                    </div>
+                  </div>
+                  <Ellipsis className="size-4 shrink-0 opacity-60" />
+                </button>
+              </DropdownMenuTrigger>
+            )}
+            <DropdownMenuContent
+              side={isCollapsed ? 'right' : 'top'}
+              align="start"
+              className="w-[240px]">
+              <div className="px-2 py-1.5">
                 <div className="truncate text-sm font-semibold">
                   {user?.name || 'Account'}
                 </div>
@@ -183,66 +296,57 @@ export default function DashboardLayout({ children }) {
                   {user?.email}
                 </div>
               </div>
-              <Ellipsis className="size-4 shrink-0 opacity-60" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent side="top" align="start" className="w-[240px]">
-            <div className="px-2 py-1.5">
-              <div className="truncate text-sm font-semibold">
-                {user?.name || 'Account'}
-              </div>
-              <div className="text-muted-foreground truncate text-xs">
-                {user?.email}
-              </div>
-            </div>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onSelect={() => navigate('/settings')}>
-              <Settings />
-              My Settings
-            </DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => navigate('/organization')}>
-              <Building2 />
-              Organization Settings
-            </DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => navigate('/organizations')}>
-              <LayoutGrid />
-              Organizations
-            </DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => navigate('/docs')}>
-              <Book />
-              API Docs
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onSelect={() => setTheme('light')}>
-              <Sun />
-              Light Theme
-              {theme === 'light' && <Check className="ml-auto" />}
-            </DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => setTheme('dark')}>
-              <Moon />
-              Dark Theme
-              {theme === 'dark' && <Check className="ml-auto" />}
-            </DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => setTheme('system')}>
-              <Monitor />
-              System Theme
-              {theme === 'system' && <Check className="ml-auto" />}
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onSelect={() => navigate('/logout')}>
-              <LogOut />
-              Log Out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onSelect={() => navigate('/settings')}>
+                <Settings />
+                My Settings
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => navigate('/organization')}>
+                <Building2 />
+                Organization Settings
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => navigate('/organizations')}>
+                <LayoutGrid />
+                Organizations
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => navigate('/docs')}>
+                <Book />
+                API Docs
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onSelect={() => setTheme('light')}>
+                <Sun />
+                Light Theme
+                {theme === 'light' && <Check className="ml-auto" />}
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setTheme('dark')}>
+                <Moon />
+                Dark Theme
+                {theme === 'dark' && <Check className="ml-auto" />}
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setTheme('system')}>
+                <Monitor />
+                System Theme
+                {theme === 'system' && <Check className="ml-auto" />}
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onSelect={() => navigate('/logout')}>
+                <LogOut />
+                Log Out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 
   return (
     <div className="app-ground flex min-h-screen w-full">
       {!isMobile && (
-        <aside className="sticky top-0 h-screen shrink-0">{sidebar}</aside>
+        <aside className="sticky top-0 h-screen shrink-0">
+          {renderSidebar(collapsed)}
+        </aside>
       )}
 
       {isMobile && opened && (
@@ -259,7 +363,7 @@ export default function DashboardLayout({ children }) {
             aria-modal="true"
             aria-label="Navigation"
             className="relative z-10 h-full">
-            {sidebar}
+            {renderSidebar(false, { showToggle: false })}
           </div>
         </div>
       )}
