@@ -5,6 +5,7 @@ More documentation about specific services and components can be found in the fo
 - [deployment/](deployment/) - Provisioning, Deployment automation, how to's, playbooks and procedures
 - [services/api](services/api) - Data API and data model layer that powers all applications
 - [services/web](services/web) - Web application and administration dashboard
+- [bedrockio/ai](https://github.com/bedrockio/ai) - AI and LLM utilities (moved out of this repo)
 
 ## Quick Start
 
@@ -48,12 +49,9 @@ Worktrees work out of the box — pnpm shares the global content-addressable sto
 worktrees via hardlinks, so each worktree's `pnpm install` is fast and disk-cheap.
 
 pnpm also has a [global virtual store](https://pnpm.io/git-worktrees) that would additionally
-share the `.pnpm` symlink farm across worktrees. It is **not enabled** here: it requires the
-isolated (symlinked) `node_modules` layout, which conflicts with the `nodeLinker: hoisted` we
-commit for self-contained Docker/CI builds (hoisted has no virtual store to share). Because
-the committed `hoisted` wins over global pnpm config, turning the virtual store on would mean
-dropping `hoisted` from `pnpm-workspace.yaml` — so we leave it off and rely on the shared
-content store above, which already makes worktree installs fast and cheap.
+share the `.pnpm` symlink farm across worktrees. It is **not enabled** here; the shared content
+store above already makes worktree installs fast and cheap. It can be turned on per machine via
+global pnpm config if wanted, since these packages use pnpm's default `node_modules` layout.
 
 ### API Documentation
 

@@ -3,7 +3,6 @@ import SettingsShell from 'components/SettingsShell';
 const SECTIONS = [
   { label: 'General', url: '/organization', exact: true },
   { label: 'Templates', url: '/organization/templates' },
-  { label: 'Applications', url: '/organization/applications' },
   { label: 'Audit Log', url: '/organization/audit-log' },
 ];
 

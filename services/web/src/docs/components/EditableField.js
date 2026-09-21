@@ -1,6 +1,6 @@
 import { get, startCase } from 'lodash';
 import PropTypes from 'prop-types';
-import { useContext } from 'react';
+import { use } from 'react';
 
 import { useClass } from 'helpers/bem';
 
@@ -13,7 +13,7 @@ import { DocsContext, useDocs } from '../utils/context';
 
 export default function DocsEditableField(props) {
   const { type, path, onClick, modelPath } = props;
-  const context = useContext(DocsContext);
+  const context = use(DocsContext);
 
   const { mode, docs } = useDocs();
 

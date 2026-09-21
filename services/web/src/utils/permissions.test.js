@@ -17,7 +17,6 @@ const superAdmin = {
         name: 'Super Admin',
         allowScopes: ['global'],
         permissions: {
-          applications: 'all',
           auditEntries: 'all',
           organizations: 'all',
           products: 'all',
@@ -45,7 +44,6 @@ const admin = {
         allowScopes: ['organization'],
         permissions: {
           auditEntries: 'read',
-          applications: 'all',
           products: 'all',
           roles: 'all',
           shops: 'all',
@@ -69,7 +67,6 @@ const viewer = {
         name: 'Viewer',
         allowScopes: ['organization'],
         permissions: {
-          applications: 'read',
           auditEntries: 'read',
           products: 'read',
           shops: 'read',

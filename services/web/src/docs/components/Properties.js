@@ -53,14 +53,14 @@ export default function DocsProperties(props) {
     }
   }
 
-  function isRequired(desc, options = {}) {
-    const { type } = options.parent || {};
+  function isRequired(name, options = {}) {
+    const { type, required = [] } = options.parent || {};
 
     if (type !== 'object') {
       return false;
     }
 
-    return !!desc?.required;
+    return required.includes(name);
   }
 
   function render() {
@@ -74,11 +74,13 @@ export default function DocsProperties(props) {
       return null;
     }
     const params = data.properties || data;
+    const parent =
+      path?.at(-1) === 'properties' ? get(docs, path.slice(0, -1)) : data;
 
     return (
       <div className={className}>
         {renderParams(params, path, {
-          parent: data,
+          parent,
         })}
       </div>
     );
@@ -89,8 +91,8 @@ export default function DocsProperties(props) {
     let entries = Object.entries(data);
 
     entries.sort((a, b) => {
-      const aRequired = isRequired(a[1], options);
-      const bRequired = isRequired(b[1], options);
+      const aRequired = isRequired(a[0], options);
+      const bRequired = isRequired(b[0], options);
 
       if (aRequired !== bRequired) {
         return bRequired - aRequired;
@@ -133,7 +135,7 @@ export default function DocsProperties(props) {
                 {renderParams(desc.items.properties, [...path, name], {
                   ...options,
                   level: level + 1,
-                  parent: desc,
+                  parent: desc.items,
                 })}
               </div>
             </React.Fragment>
@@ -151,7 +153,7 @@ export default function DocsProperties(props) {
     const { level } = options;
     const { description, default: defaultValue } = desc;
 
-    const required = isRequired(desc, options);
+    const required = isRequired(name, options);
 
     return (
       <div
@@ -188,13 +190,14 @@ export default function DocsProperties(props) {
   }
 
   function renderTypes(desc, isArray = false) {
-    const { type, $ref, oneOf, format, enum: allowed } = desc;
-    if (oneOf) {
-      if (isArrayVariant(oneOf)) {
+    const { type, $ref, oneOf, anyOf, format, enum: allowed } = desc;
+    const variants = oneOf || anyOf;
+    if (variants) {
+      if (isArrayVariant(variants)) {
         if (props.query) {
           return (
             <React.Fragment>
-              {renderTypes(oneOf[0])}
+              {renderTypes(variants[0])}
               <span
                 title="May pass multiple parameters in query."
                 className={getElementClass('note')}>
@@ -205,7 +208,7 @@ export default function DocsProperties(props) {
         } else {
           return (
             <React.Fragment>
-              {renderTypes(oneOf[0])}
+              {renderTypes(variants[0])}
               <Tooltip>
                 <TooltipTrigger asChild>
                   <span className={getElementClass('note')}>*</span>
@@ -217,11 +220,11 @@ export default function DocsProperties(props) {
             </React.Fragment>
           );
         }
-      } else if (isRangeVariant(oneOf)) {
-        visitedComponents.add(oneOf[2].$ref);
+      } else if (isRangeVariant(variants)) {
+        visitedComponents.add(variants[2].$ref);
         return (
           <React.Fragment>
-            {renderTypes(oneOf[0])}
+            {renderTypes(variants[0])}
             <span
               title="May also be an array or range (see below)."
               className={getElementClass('note')}>
@@ -230,7 +233,7 @@ export default function DocsProperties(props) {
           </React.Fragment>
         );
       } else {
-        return oneOf.map((entry, i) => {
+        return variants.map((entry, i) => {
           const comma = i > 0 ? ', ' : '';
           return (
             <React.Fragment key={i}>

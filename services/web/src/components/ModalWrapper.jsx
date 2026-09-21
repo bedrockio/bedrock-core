@@ -1,4 +1,4 @@
-import { cloneElement, createContext, isValidElement, useContext, useState } from 'react';
+import { cloneElement, createContext, isValidElement, use, useState } from 'react';
 
 import {
   Dialog,
@@ -15,7 +15,7 @@ const ModalContext = createContext({
 
 // Hook for components to use within the modal
 export function useModalContext() {
-  return useContext(ModalContext);
+  return use(ModalContext);
 }
 
 const SIZES = {
@@ -77,9 +77,9 @@ export default function ModalWrapper({
             <DialogTitle>{title}</DialogTitle>
           </DialogHeader>
           <div className="-mr-3 max-h-[70vh] overflow-y-auto pr-3">
-            <ModalContext.Provider value={{ close: handleClose }}>
+            <ModalContext value={{ close: handleClose }}>
               {component ? component : children}
-            </ModalContext.Provider>
+            </ModalContext>
           </div>
         </DialogContent>
       </Dialog>

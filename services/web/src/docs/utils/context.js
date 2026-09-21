@@ -1,5 +1,5 @@
 import { set, unset } from 'lodash';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 
 import { request } from 'utils/api';
 import { ENV_NAME } from 'utils/env';
@@ -79,7 +79,7 @@ export function DocsProvider(props) {
   }, []);
 
   return (
-    <DocsContext.Provider
+    <DocsContext
       value={{
         mode,
         docs,
@@ -95,10 +95,10 @@ export function DocsProvider(props) {
         canEditDocs,
       }}>
       {props.children}
-    </DocsContext.Provider>
+    </DocsContext>
   );
 }
 
 export function useDocs() {
-  return useContext(DocsContext);
+  return use(DocsContext);
 }

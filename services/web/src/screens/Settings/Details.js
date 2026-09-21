@@ -58,10 +58,6 @@ function Profile() {
     },
   });
 
-  if (!user) {
-    return null;
-  }
-
   const saveRequest = useRequest({
     method: 'PATCH',
     path: `/1/users/me`,
@@ -74,6 +70,10 @@ function Profile() {
       });
     },
   });
+
+  if (!user) {
+    return null;
+  }
 
   function onSubmit(values) {
     saveRequest.request({

@@ -124,7 +124,9 @@ export default function useSearchOptions(props) {
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [options, setOptions] = useState(mapOptions(getPopulated()));
+  const [options, setOptions] = useState(() => {
+    return mapOptions(getPopulated());
+  });
 
   useEffect(() => {
     loadInitial();

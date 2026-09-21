@@ -4,8 +4,7 @@
 // required to the innermost component to apply the context. To achieve this,
 // attach the reference with WrappedComponent. This pattern is followed by
 // react-router, allowing interop there as well. Function based components
-// don't need to worry about this and should instead be provided a hook with
-// useContext.
+// don't need to worry about this and should instead be provided a hook.
 
 export function wrapContext(context) {
   return (Component) => {

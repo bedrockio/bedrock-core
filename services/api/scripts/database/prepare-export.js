@@ -178,19 +178,28 @@ async function runSanitizations(connection, sanitizations) {
       throw new Error('"pipeline" required in sanitization.');
     }
 
-    const sanitizedName = `${collection}_sanitized`;
+    const sanitizedName = getSanitizedName(collection);
 
-    try {
-      await connection.createCollection(sanitizedName, {
-        viewOn: collection,
-        pipeline,
-      });
-    } catch (error) {
-      if (error.codeName !== 'NamespaceExists') {
-        throw error;
-      }
-    }
+    await dropSanitizedViewSafe(connection, sanitizedName);
+    await connection.createCollection(sanitizedName, {
+      viewOn: collection,
+      pipeline,
+    });
   }
+}
+
+async function dropSanitizedViewSafe(connection, name) {
+  if (!name.endsWith('_sanitized')) {
+    throw new Error(`Refusing to drop "${name}": not a sanitized view name.`);
+  }
+  const [existing] = await connection.db.listCollections({ name }).toArray();
+  if (!existing) {
+    return;
+  }
+  if (existing.type !== 'view') {
+    throw new Error(`Refusing to drop "${name}": it is a ${existing.type}, not a view.`);
+  }
+  await connection.db.dropCollection(name);
 }
 
 function getSanitizedName(collection) {

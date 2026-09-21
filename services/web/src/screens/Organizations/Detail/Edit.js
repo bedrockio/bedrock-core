@@ -1,5 +1,5 @@
 import { useNavigate } from '@bedrockio/router';
-import { useContext } from 'react';
+import { use } from 'react';
 
 import { PageContext } from 'stores/page';
 
@@ -7,7 +7,7 @@ import Form from '../Form';
 import Menu from './Menu';
 
 export default function OrganizationOverview() {
-  const { organization, reload } = useContext(PageContext);
+  const { organization, reload } = use(PageContext);
   const navigate = useNavigate();
 
   return (

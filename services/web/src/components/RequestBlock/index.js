@@ -54,7 +54,6 @@ function RequestBlock(props) {
     template = 'curl',
     baseUrl = API_URL,
     authToken,
-    apiKey,
     request,
   } = props;
 
@@ -62,7 +61,6 @@ function RequestBlock(props) {
 
   function getDefaultHeaders() {
     const headers = {
-      'Api-Key': `${apiKey || '<apiKey>'}`,
       ...props.headers,
     };
     if (authToken) {
@@ -120,7 +118,6 @@ function RequestBlock(props) {
 
 RequestBlock.propTypes = {
   height: PropTypes.string,
-  apiKey: PropTypes.string,
   authToken: PropTypes.string,
   baseUrl: PropTypes.string,
   header: PropTypes.bool,

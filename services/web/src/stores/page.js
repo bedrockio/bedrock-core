@@ -1,26 +1,18 @@
 import { useLocation, useParams } from '@bedrockio/router';
+import { createContext, useCallback, use, useEffect, useState } from 'react';
 
 import { Spinner } from '@/components/ui/spinner';
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
 
 import ErrorMessage from 'components/ErrorMessage';
 
 export const PageContext = createContext();
 
 export function PageProvider(props) {
-  return (
-    <PageContext.Provider value={{}}>{props.children}</PageContext.Provider>
-  );
+  return <PageContext value={{}}>{props.children}</PageContext>;
 }
 
 export function usePage() {
-  return useContext(PageContext);
+  return use(PageContext);
 }
 
 export function usePageLoader(fn) {
@@ -95,7 +87,7 @@ function useLoader(names, params, fn) {
       }
 
       return (
-        <PageContext.Provider
+        <PageContext
           value={{
             ...parent,
             ...state,
@@ -103,7 +95,7 @@ function useLoader(names, params, fn) {
             reload: loadPage,
           }}>
           {props.children}
-        </PageContext.Provider>
+        </PageContext>
       );
     },
     [loading, error],
