@@ -17,9 +17,7 @@ generated from a schema must look and behave identically to hand-built ones.
 
 - Package manager **pnpm**; Node **>= 26**. Full stack locally via `docker compose up`.
 - **Design/UI**: the visual standard lives in `services/web` — `PRODUCT.md` (who/why), `DESIGN.md`
-  (visual system), `.impeccable/design.json` (sidecar), and `src/styles/globals.css` (tokens). Brand is
+  (visual system), `THEME.md` (branding + theming), and `src/styles/globals.css` (tokens). Brand is
   a single white-label knob (`--primary`, Indigo by default). Never hard-code brand colours.
-- **Design tooling**: the `impeccable` skill (`.github/skills/impeccable`) governs design work; a
-  detector hook runs after UI edits — act on its findings.
 
 Work inside the relevant service; prefer its own AGENTS.md and existing patterns over global assumptions.

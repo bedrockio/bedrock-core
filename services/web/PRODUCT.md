@@ -10,7 +10,7 @@ web
 
 Two audiences, in order of who this design work optimizes for right now:
 
-1. **End operators (primary focus for current work)** — internal staff/admins using an app built on Bedrock day to day: managing organizations, products, shops, applications, invites, users, and reviewing the audit log. Their job is fast, accurate CRUD and oversight, not exploration.
+1. **End operators (primary focus for current work)** — internal staff/admins using an app built on Bedrock day to day: working record lists, drilling into details, editing through forms and reviewing history. Their job is fast, accurate CRUD and oversight, not exploration.
 2. **Adopting developers** — engineers evaluating or scaffolding a new admin dashboard/SaaS backend from this boilerplate (`services/api` + `services/web`, plus the `generator` for schema-driven CRUD scaffolding). Their first impression of the default UI shapes whether they trust and keep it.
 
 ## Product Purpose
@@ -25,14 +25,13 @@ A batteries-included, code-generator-backed starter that pairs a real API with a
 
 - Local dev via `docker compose up` or `pnpm start`; admin dashboard served at `http://localhost:2200`.
 - Auth flows: login, signup, invite acceptance, forgot/reset password, lockout.
-- Core entities/screens: Organizations, Products, Shops, Applications, Invites, Audit Log, Settings, Onboard.
+- Core screens: Organizations, Users, Invites, Templates, Audit Log, Settings, Onboard, plus Shops and Products as replaceable CRUD demos.
 - API documentation portal generated from Markdown + OpenAPI helpers (`src/docs`).
 
 ## Capabilities and Constraints
 
-- Stack: React 19, Vite, Tailwind CSS v4, shadcn/ui (owned source copied into `src/components/ui`) on Radix UI primitives, Bedrock Router, Sentry error monitoring, WebAuthn (`@simplewebauthn`).
-- Design tokens centralized in `src/styles/globals.css` as CSS variables; brand color is a single knob (`--primary` / `--primary-foreground`, light + dark); default typeface is Geist (`@fontsource-variable/geist`).
-- Dark mode via a `.dark` class on `<html>`, toggled from the user dropdown (Light / Dark / System); defaults to System, including on the logged-out auth screens, resolved before first paint to avoid a flash of the wrong theme.
+- Stack and theming are documented where they're maintained, not restated here: [README.md](README.md) for the stack and setup, [THEME.md](THEME.md) for branding and dark mode, [DESIGN.md](DESIGN.md) for the visual system.
+- Brand is a single white-label knob, so visual identity stays swappable per adopter rather than baked into components.
 - Screens like Shops and Products are reference/example CRUD implementations meant to be adapted or replaced by adopters, not fixed product features.
 - Generated screens (via the schema-driven generator) must stay visually and structurally consistent with hand-built screens.
 
@@ -50,7 +49,4 @@ None. No real customer content, testimonials, or case studies exist in this repo
 - Production-credible defaults: the out-of-the-box look should read as a real, finished admin product, not a scaffold demo — it's also the first impression for adopting developers.
 - Rebrandable by design: visual identity stays a thin, swappable layer (one primary-color token, one swappable font stack), never hard-baked into components.
 - Consistency across generated and hand-built screens: the generator's schema-driven CRUD output must match hand-built UI patterns exactly.
-
-## Accessibility & Inclusion
-
-Built on Radix UI primitives, which are accessible by default. No additional product-specific accessibility requirement has been established beyond that baseline.
+- Accessible by default: built on Radix primitives, with no product-specific requirement established beyond that baseline.

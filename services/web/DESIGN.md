@@ -91,8 +91,10 @@ components:
 
 **Creative North Star: "The Operator's Console"**
 
-Bedrock's admin is a console for operators who live in data all day — managing
-organizations, shops, products, users, and reviewing the audit log. Data leads;
+Bedrock's admin is a console for operators who live in data all day — working
+dense record lists, drilling into detail views, editing through forms and
+reviewing history. Whatever entities an adopter ships, the shapes are the same.
+Data leads;
 chrome recedes. The surface is a calm, near-white field over which **borderless
 cards float on their own light**, a single brand accent does all the pointing,
 and dense tables read at a glance. It should read as a finished, precise,
@@ -298,9 +300,11 @@ so generated and hand-built screens match.
   **Active item** = tinted pill (`bg-primary/12`) + accent text and icon. There
   is no app footer — theme lives in the user dropdown, and the old density
   toggle and "powered by" logo are gone.
-  **Collapsible:** a `PanelLeft` icon at the end of the logo row toggles the
-  desktop sidebar between 264px (labels) and a 72px icon rail, persisted in
-  `localStorage`. Collapsed, every icon-only control — nav items, the org
+  **Collapsible:** a `PanelLeft` icon toggles the desktop sidebar between 264px
+  (labels) and a 72px icon rail, persisted in `localStorage`. Expanded, it sits
+  at the end of the logo row; collapsed, the rail is too narrow for both, so the
+  app icon swaps to the toggle on hover and the icon alone is shown at rest.
+  Collapsed, every icon-only control — nav items, the org
   switcher, the user block — carries a `Tooltip` with its label; a nav item
   with children (e.g. Users → Invites) opens a `Popover` flyout on hover
   instead of a tooltip, since a plain CSS hover panel would clip against the
@@ -310,8 +314,8 @@ so generated and hand-built screens match.
 - **Settings areas** share one shell (`SettingsShell`): a page-level breadcrumb
   above a persistent **vertical** secondary nav (left) and the section content
   (right). **My Settings** (Details, Security, Notifications) and **Organization
-  Settings** (General plus the org-level admin sections — Templates,
-  Applications, Audit Log — under `/organization/*`) both use it, so they read
+  Settings** (General plus the org-level admin sections — Templates and
+  Audit Log — under `/organization/*`) both use it, so they read
   identically. Section forms keep the primary action **below** the card, never
   inside it.
 - **Header:** page title (Bricolage) + breadcrumb, with search and the primary
@@ -337,7 +341,9 @@ so generated and hand-built screens match.
   error or a warning), heading + body, who's signed in, a divider, then the
   one available action.
 
-- An at-a-glance overview that is also a launchpad: breadcrumb + "Dashboard"
+- An at-a-glance overview that is also a launchpad. The shipped Dashboard is a
+  reference implementation over the demo entities — an adopter swaps the
+  metrics, keeps the shape: breadcrumb + "Dashboard"
   title (no greeting); a five-tile KPI strip (Products and Shops drill into
   their sections, plus Featured, Expiring-soon, and Catalog value); a **Top
   shops** row of three storefront cards (stats + a share-of-catalog-value bar,

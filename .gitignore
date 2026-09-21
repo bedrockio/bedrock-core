@@ -17,3 +17,9 @@ globalConfig.json
 .claude
 secrets
 .env.*
+
+# Local design-tooling state (impeccable). Generated per-machine, not shared.
+.impeccable/
+.github/skills/
+.github/agents/
+.github/hooks/
