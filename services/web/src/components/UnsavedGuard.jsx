@@ -1,7 +1,7 @@
 import {
   createContext,
+  use,
   useCallback,
-  useContext,
   useEffect,
   useRef,
   useState,
@@ -32,7 +32,7 @@ const UnsavedGuardContext = createContext({
 });
 
 export function useUnsavedGuard() {
-  return useContext(UnsavedGuardContext);
+  return use(UnsavedGuardContext);
 }
 
 /**
@@ -79,7 +79,7 @@ export function UnsavedGuardProvider({ children }) {
   }
 
   return (
-    <UnsavedGuardContext.Provider value={{ setDirty, guard }}>
+    <UnsavedGuardContext value={{ setDirty, guard }}>
       {children}
       <Dialog
         open={open}
@@ -103,6 +103,6 @@ export function UnsavedGuardProvider({ children }) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </UnsavedGuardContext.Provider>
+    </UnsavedGuardContext>
   );
 }

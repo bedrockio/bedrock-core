@@ -5,7 +5,6 @@
 import { useEffect } from 'react';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { cn } from '@/lib/utils';
 
 import { ApiError } from 'utils/api';
 import { CustomError } from 'utils/error';

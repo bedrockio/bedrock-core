@@ -16,17 +16,17 @@ const FormFieldContext = React.createContext({});
 
 function FormField({ ...props }) {
   return (
-    <FormFieldContext.Provider value={{ name: props.name }}>
+    <FormFieldContext value={{ name: props.name }}>
       <Controller {...props} />
-    </FormFieldContext.Provider>
+    </FormFieldContext>
   );
 }
 
 const FormItemContext = React.createContext({});
 
 function useFormField() {
-  const fieldContext = React.useContext(FormFieldContext);
-  const itemContext = React.useContext(FormItemContext);
+  const fieldContext = React.use(FormFieldContext);
+  const itemContext = React.use(FormItemContext);
   const { getFieldState } = useFormContext();
   const formState = useFormState({ name: fieldContext.name });
   const fieldState = getFieldState(fieldContext.name, formState);
@@ -50,13 +50,13 @@ function useFormField() {
 function FormItem({ className, ...props }) {
   const id = React.useId();
   return (
-    <FormItemContext.Provider value={{ id }}>
+    <FormItemContext value={{ id }}>
       <div
         data-slot="form-item"
         className={cn('grid gap-2', className)}
         {...props}
       />
-    </FormItemContext.Provider>
+    </FormItemContext>
   );
 }
 
