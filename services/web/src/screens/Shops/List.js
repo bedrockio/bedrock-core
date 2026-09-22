@@ -1,21 +1,22 @@
 import { Link } from '@bedrockio/router';
 
-import {
-  Anchor,
-  Button,
-  Group,
-  Image,
-  Loader,
-  Stack,
-  Table,
-  Text,
-} from '@mantine/core';
-
 import ErrorMessage from 'components/ErrorMessage';
+import ListStats from 'components/ListStats';
+import ListToolbar from 'components/ListToolbar';
 import PageHeader from 'components/PageHeader';
 import Protected from 'components/Protected';
 import Search from 'components/Search';
 import SearchFilters from 'components/Search/Filters';
+import Thumbnail from 'components/Thumbnail';
+
+import { Button } from '@/components/ui/button';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 
 import { request } from 'utils/api';
 import allCountries from 'utils/countries';
@@ -58,141 +59,126 @@ export default function ShopList() {
   }
 
   return (
-    <>
-      <Search.Provider onDataNeeded={onDataNeeded}>
-        {({ items: shops, reload, error, loading }) => {
-          return (
-            <Stack>
-              <PageHeader
-                title="Shops"
-                breadcrumbItems={[
-                  {
-                    href: '/',
-                    title: 'Home',
-                  },
-                  {
-                    title: 'Shops',
-                  },
-                ]}
-                rightSection={
-                  <>
-                    <Search.Export filename="shops" />
-                    <Protected endpoint="shops" permission="create">
-                      <Button
-                        component={Link}
-                        variant="primary"
-                        to="/shops/new">
-                        New Shop
-                      </Button>
-                    </Protected>
-                  </>
-                }
+    <Search.Provider onDataNeeded={onDataNeeded}>
+      {({ items: shops, reload, error }) => {
+        return (
+          <div className="flex flex-col gap-4">
+            <PageHeader
+              title="Shops"
+              breadcrumbItems={[
+                { href: '/', title: 'Home' },
+                { title: 'Shops' },
+              ]}
+              rightSection={
+                <>
+                  <Search.Export filename="shops" />
+                  <Protected endpoint="shops" permission="create">
+                    <Button asChild>
+                      <Link to="/shops/new">New Shop</Link>
+                    </Button>
+                  </Protected>
+                </>
+              }
+            />
+
+            <ListStats resource="shops" label="Shops" />
+
+            <ListToolbar>
+              <SearchFilters.Select
+                data={countries}
+                search
+                name="country"
+                label="Country"
               />
+              <SearchFilters.Select
+                search
+                onDataNeeded={fetchOwners}
+                name="owner"
+                label="Owner"
+              />
+              <SearchFilters.Select
+                search
+                multiple
+                onDataNeeded={fetchCategories}
+                name="categories"
+                label="Categories"
+              />
+              <SearchFilters.DateRange label="Created At" name="createdAt" />
+            </ListToolbar>
 
-              <Group justify="space-between">
-                <SearchFilters.Modal>
-                  <SearchFilters.Select
-                    data={countries}
-                    search
-                    name="country"
-                    label="Country"
-                  />
-                  <SearchFilters.Select
-                    search
-                    onDataNeeded={fetchOwners}
-                    name="owner"
-                    label="Owner"
-                  />
-                  <SearchFilters.Select
-                    search
-                    multiple
-                    onDataNeeded={fetchCategories}
-                    name="categories"
-                    label="Categories"
-                  />
-                  <SearchFilters.DateRange
-                    label="Created At"
-                    name="createdAt"
-                  />
-                </SearchFilters.Modal>
-                {loading && <Loader size={'sm'} />}
+            <ErrorMessage error={error} />
 
-                <Group>
-                  <Search.Status />
-                  <SearchFilters.Keyword />
-                </Group>
-              </Group>
-
-              <ErrorMessage error={error} />
-
-              <Table stickyHeader striped>
-                <Table.Thead>
-                  <Table.Tr>
-                    <Search.Header name="name">Name</Search.Header>
-                    <Search.Header width={60}>Image</Search.Header>
-                    <Search.Header name="createdAt" width={280}>
-                      Created
-                    </Search.Header>
-                    <Search.Header
-                      width={100}
-                      style={{
-                        textAlign: 'right',
-                      }}>
-                      Actions
-                    </Search.Header>
-                  </Table.Tr>
-                </Table.Thead>
-                <Table.Tbody>
-                  <Search.EmptyMessage>
-                    <Table.Tr>
-                      <Table.Td colSpan={5}>
-                        <Text p="md" fw="bold" ta="center">
-                          No shops found.
-                        </Text>
-                      </Table.Td>
-                    </Table.Tr>
-                  </Search.EmptyMessage>
-                  {shops.map((shop) => {
-                    return (
-                      <Table.Tr key={shop.id}>
-                        <Table.Td>
-                          <Anchor
-                            size="sm"
-                            component={Link}
-                            to={`/shops/${shop.id}`}>
-                            {shop.name}
-                          </Anchor>
-                        </Table.Td>
-                        <Table.Td>
-                          {shop.images.length > 0 && (
-                            <Image
-                              radius={4}
-                              h={40}
-                              w={40}
-                              fit
-                              src={urlForUpload(shop.images[0], true)}
-                            />
-                          )}
-                        </Table.Td>
-                        <Table.Td>{formatDateTime(shop.createdAt)}</Table.Td>
-                        <Table.Td justify="flex-end">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <Search.Header name="name">Name</Search.Header>
+                  <Search.Header width={60}>Image</Search.Header>
+                  <Search.Header name="createdAt" width={280}>
+                    Created
+                  </Search.Header>
+                  <Search.Header width={100} className="text-center">
+                    Actions
+                  </Search.Header>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <Search.Loading columns={5} />
+                <Search.EmptyMessage>
+                  <TableRow>
+                    <TableCell colSpan={5}>
+                      <div className="text-muted-foreground flex flex-col items-center gap-1 py-12 text-center">
+                        <p className="text-foreground font-semibold">
+                          No shops yet
+                        </p>
+                        <p className="text-sm">
+                          Create your first shop to get started.
+                        </p>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                </Search.EmptyMessage>
+                {shops.map((shop) => {
+                  return (
+                    <TableRow key={shop.id}>
+                      <TableCell>
+                        <Link
+                          className="text-foreground no-underline hover:underline"
+                          to={`/shops/${shop.id}`}>
+                          {shop.name}
+                        </Link>
+                      </TableCell>
+                      <TableCell>
+                        {shop.images.length > 0 && (
+                          <Thumbnail
+                            className="size-10"
+                            src={urlForUpload(shop.images[0], true)}
+                            alt={shop.name}
+                          />
+                        )}
+                      </TableCell>
+                      <TableCell className="text-muted-foreground font-mono text-xs">
+                        {formatDateTime(shop.createdAt)}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex justify-center">
                           <Actions
                             compact
                             shop={shop}
                             reload={reload}
                             displayMode="list"
                           />
-                        </Table.Td>
-                      </Table.Tr>
-                    );
-                  })}
-                </Table.Tbody>
-              </Table>
-              <Search.Pagination />
-            </Stack>
-          );
-        }}
-      </Search.Provider>
-    </>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+
+            <Search.Pagination />
+          </div>
+        );
+      }}
+    </Search.Provider>
   );
 }

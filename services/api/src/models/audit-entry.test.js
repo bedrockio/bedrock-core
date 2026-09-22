@@ -1,12 +1,12 @@
-const AuditEntry = require('./audit-entry');
-const User = require('./user');
+import AuditEntry from './audit-entry.js';
+import User from './user.js';
 
-const Koa = require('koa');
-const Router = require('@koa/router');
-const request = require('supertest');
-const { createTestModel } = require('@bedrockio/model');
+import Koa from 'koa';
+import Router from '@koa/router';
+import request from 'supertest';
+import { createTestModel } from '@bedrockio/model';
 
-const { createUser } = require('../utils/testing');
+import { createUser } from '../utils/testing/index.js';
 
 async function getContext(user) {
   const app = new Koa();

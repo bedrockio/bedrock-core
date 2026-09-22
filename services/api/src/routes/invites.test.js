@@ -1,8 +1,8 @@
-const jwt = require('jsonwebtoken');
-const { assertMailSent } = require('postmark');
-const { createInviteToken } = require('../utils/tokens');
-const { request, createUser, createAdmin } = require('../utils/testing');
-const { User, Invite } = require('../models');
+import jwt from 'jsonwebtoken';
+import { assertMailSent } from 'postmark';
+import { createInviteToken } from '../utils/tokens.js';
+import { request, createUser, createAdmin } from '../utils/testing/index.js';
+import { User, Invite } from '../models/index.js';
 
 describe('/1/invites', () => {
   describe('POST /check', () => {

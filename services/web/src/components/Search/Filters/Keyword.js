@@ -1,15 +1,24 @@
-import { TextInput } from '@mantine/core';
+import { Search as SearchIcon, X } from 'lucide-react';
 import { useState } from 'react';
-import { PiMagnifyingGlass, PiXBold } from 'react-icons/pi';
+
+import { Input } from '@/components/ui/input';
 
 import { useDebounce } from 'hooks/debounce';
 
 import { useSearch } from '../Context';
 
-export default function KeywordFilter(props) {
+export default function KeywordFilter() {
   const { loading, filters, setFilters } = useSearch();
 
   const [keyword, setKeyword] = useState(filters.keyword || '');
+
+  const setFilterDeferred = useDebounce({
+    run(newKeyword) {
+      setFilters({ keyword: newKeyword });
+    },
+    timeout: 500,
+    deps: [setFilters],
+  });
 
   function onChange(evt) {
     const { value } = evt.currentTarget;
@@ -20,57 +29,34 @@ export default function KeywordFilter(props) {
   function onKeyDown(evt) {
     if (evt.key === 'Enter') {
       evt.preventDefault();
-      setFilters({
-        keyword,
-      });
+      setFilters({ keyword });
       setFilterDeferred.cancel();
     }
   }
 
   function onClearClick() {
     setKeyword('');
-    setFilters({
-      keyword: '',
-    });
+    setFilters({ keyword: '' });
   }
 
-  const setFilterDeferred = useDebounce({
-    run(newKeyword) {
-      setFilters({
-        keyword: newKeyword,
-      });
-    },
-    timeout: 500,
-    deps: [setFilters],
-  });
-
-  function render() {
-    return (
-      <TextInput
-        {...props}
+  return (
+    <div className="relative min-w-[220px]">
+      <Input
         disabled={loading}
         type="search"
-        style={{ minWidth: '220px' }}
         placeholder="Search by keyword"
-        rightSection={renderIcon()}
+        className="pr-9 [&::-webkit-search-cancel-button]:appearance-none"
         value={keyword}
         onChange={onChange}
         onKeyDown={onKeyDown}
       />
-    );
-  }
-
-  function renderIcon() {
-    if (keyword) {
-      return <PiXBold onClick={onClearClick} />;
-    } else {
-      return <PiMagnifyingGlass />;
-    }
-  }
-
-  return render();
+      <span className="text-muted-foreground absolute inset-y-0 right-0 flex items-center pr-3">
+        {keyword ? (
+          <X className="size-4 cursor-pointer" onClick={onClearClick} />
+        ) : (
+          <SearchIcon className="size-4" />
+        )}
+      </span>
+    </div>
+  );
 }
-
-KeywordFilter.propTypes = {
-  ...TextInput.propTypes,
-};

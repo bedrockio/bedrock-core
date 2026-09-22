@@ -80,8 +80,10 @@ object `window.__env_conf`.
 
 ## Frameworks Used
 
-- [Mantine](https://mantine.dev/)
-- [React Icons](https://react-icons.github.io/react-icons/)
+- [shadcn/ui](https://ui.shadcn.com/) — UI components (owned source, copied into `src/components/ui`)
+- [Radix UI](https://www.radix-ui.com/) — accessible primitives behind shadcn/ui
+- [Tailwind CSS v4](https://tailwindcss.com/) — styling
+- [Lucide](https://lucide.dev/) — icons
 - [Vite](https://vite.dev/)
 - [React](https://facebook.github.io/react/)
 - [Bedrock Router](https://github.com/bedrockio/router)
@@ -92,7 +94,7 @@ object `window.__env_conf`.
 ## Other Features
 
 - Full login/signup flow with separate dashboard and homepage router
-- Uses Mantine as a rich UI element base
+- Uses shadcn/ui (Radix UI + Tailwind CSS v4) as the UI component base
 - Uses ES6 style React components
 - Code hotswapping
 - Static server
@@ -129,6 +131,9 @@ Markdown:
 callParams({ method: 'POST', path: '/1/auth/login' });
 ```
 
-## Updating Styles
+## Theming
 
-see [Mantine's Theming](https://mantine.dev/theming/theme-object)
+The UI is built on [shadcn/ui](https://ui.shadcn.com/) + Tailwind CSS v4, with
+all design tokens in `src/styles/globals.css`. See **[THEME.md](THEME.md)** for
+how to change the brand colour, swap the font, work with dark mode and add
+shadcn components — and [DESIGN.md](DESIGN.md) for the visual system itself.

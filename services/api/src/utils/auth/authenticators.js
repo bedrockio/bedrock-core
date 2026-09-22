@@ -56,7 +56,7 @@ function clearAuthenticators(user, type) {
   });
 }
 
-module.exports = {
+export {
   addAuthenticator,
   getAuthenticator,
   hasAuthenticator,

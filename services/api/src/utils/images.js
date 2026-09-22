@@ -1,5 +1,5 @@
-const config = require('@bedrockio/config');
-const { pick } = require('lodash');
+import config from '@bedrockio/config';
+import { pick } from 'lodash-es';
 
 const API_URL = config.get('API_URL');
 const ENV_NAME = config.get('ENV_NAME');
@@ -75,7 +75,4 @@ function resolveParams(options = {}) {
   };
 }
 
-module.exports = {
-  getImageUrl,
-  getImageDimensions,
-};
+export { getImageUrl, getImageDimensions };

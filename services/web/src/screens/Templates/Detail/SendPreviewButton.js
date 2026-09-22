@@ -1,15 +1,22 @@
-import { Button } from '@mantine/core';
-import { PiPaperPlaneTiltBold } from 'react-icons/pi';
+import { Send } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
 
 import SendPreviewModal from './SendPreviewModal';
 
-export default function SendPreviewButton(props) {
+export default function SendPreviewButton({
+  variant = 'outline',
+  size,
+  label = 'Test',
+  ...props
+}) {
   return (
     <SendPreviewModal
       {...props}
       trigger={
-        <Button variant="default" leftSection={<PiPaperPlaneTiltBold />}>
-          Test
+        <Button variant={variant} size={size}>
+          <Send />
+          {label}
         </Button>
       }
     />

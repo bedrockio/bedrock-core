@@ -1,7 +1,8 @@
 // Component for use with private uploads.
 
-import { Image } from '@mantine/core';
 import { useEffect, useState } from 'react';
+
+import Thumbnail from 'components/Thumbnail';
 
 import { request } from 'utils/api';
 
@@ -24,7 +25,7 @@ export default function PrivateImage(props) {
 
   return (
     <ExternalLink href={src}>
-      <Image {...rest} src={src} />
+      <Thumbnail {...rest} src={src} />
     </ExternalLink>
   );
 }

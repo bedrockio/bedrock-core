@@ -1,10 +1,10 @@
-const request = require('supertest');
-const rootApp = require('../../app');
-const qs = require('querystring');
-const { Blob } = require('node:buffer');
-const { getAuthPayload, signToken } = require('../tokens');
+import request from 'supertest';
+import rootApp from '../../app.js';
+import qs from 'querystring';
+import { Blob } from 'node:buffer';
+import { getAuthPayload, signToken } from '../tokens.js';
 
-module.exports = async function handleRequest(httpMethod, url, bodyOrQuery = {}, options = {}) {
+export default async function handleRequest(httpMethod, url, bodyOrQuery = {}, options = {}) {
   const headers = options.headers || {};
   if (options.user) {
     const { user } = options;
@@ -79,4 +79,4 @@ module.exports = async function handleRequest(httpMethod, url, bodyOrQuery = {},
   }
 
   return chain;
-};
+}

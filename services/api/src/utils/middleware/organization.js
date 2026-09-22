@@ -1,5 +1,5 @@
-const { Organization } = require('../../models');
-const config = require('@bedrockio/config');
+import { Organization } from '../../models/index.js';
+import config from '@bedrockio/config';
 
 const DEFAULT_ORGANIZATION_NAME = config.get('DEFAULT_ORGANIZATION_NAME');
 
@@ -26,4 +26,4 @@ async function organization(ctx, next) {
   return next();
 }
 
-module.exports = organization;
+export default organization;

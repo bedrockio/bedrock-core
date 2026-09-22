@@ -1,5 +1,5 @@
-const { AuditEntry } = require('../../models');
-const { createAuthToken, removeExpiredTokens } = require('../tokens');
+import { AuditEntry } from '../../models/index.js';
+import { createAuthToken, removeExpiredTokens } from '../tokens.js';
 
 const LOGIN_TIMEOUT_RULES = [
   {
@@ -75,8 +75,4 @@ async function verifyLoginAttempts(user, ctx) {
   }
 }
 
-module.exports = {
-  login,
-  claimUnverifiedUser,
-  verifyLoginAttempts,
-};
+export { login, claimUnverifiedUser, verifyLoginAttempts };

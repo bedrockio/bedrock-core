@@ -1,8 +1,8 @@
-const { customAlphabet } = require('nanoid');
-const { sendMessage } = require('../messaging');
+import { customAlphabet } from 'nanoid';
+import { sendMessage } from '../messaging/index.js';
 
-const { clearAuthenticators, addAuthenticator, assertAuthenticator } = require('./authenticators');
-const { verifyRecentPassword } = require('./password');
+import { clearAuthenticators, addAuthenticator, assertAuthenticator } from './authenticators.js';
+import { verifyRecentPassword } from './password.js';
 
 const generateCode = customAlphabet('1234567890', 6);
 
@@ -89,8 +89,4 @@ async function verifyOtp(user, code) {
   return authenticator;
 }
 
-module.exports = {
-  sendOtp,
-  createOtp,
-  verifyOtp,
-};
+export { sendOtp, createOtp, verifyOtp };

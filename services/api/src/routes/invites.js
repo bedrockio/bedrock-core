@@ -1,17 +1,17 @@
-const Router = require('@koa/router');
-const yd = require('@bedrockio/yada');
-const { fetchByParam } = require('../utils/middleware/params');
-const { validateBody } = require('../utils/middleware/validate');
-const { validateToken } = require('../utils/middleware/tokens');
-const { authenticate } = require('../utils/middleware/authenticate');
-const { requirePermissions } = require('../utils/middleware/permissions');
+import Router from '@koa/router';
+import yd from '@bedrockio/yada';
+import { fetchByParam } from '../utils/middleware/params.js';
+import { validateBody } from '../utils/middleware/validate.js';
+import { validateToken } from '../utils/middleware/tokens.js';
+import { authenticate } from '../utils/middleware/authenticate.js';
+import { requirePermissions } from '../utils/middleware/permissions.js';
 
-const { createAuthToken } = require('../utils/tokens');
-const { claimUnverifiedUser } = require('../utils/auth');
-const { Invite, User, AuditEntry } = require('../models');
+import { createAuthToken } from '../utils/tokens.js';
+import { claimUnverifiedUser } from '../utils/auth/index.js';
+import { Invite, User, AuditEntry } from '../models/index.js';
 
-const { sendMessage, sendMail } = require('../utils/messaging');
-const { createInviteToken } = require('../utils/tokens');
+import { sendMessage, sendMail } from '../utils/messaging/index.js';
+import { createInviteToken } from '../utils/tokens.js';
 
 const router = new Router();
 
@@ -168,4 +168,4 @@ router
     ctx.status = 204;
   });
 
-module.exports = router;
+export default router;

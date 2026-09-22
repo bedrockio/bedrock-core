@@ -1,5 +1,5 @@
-import { Chip, Group, Text } from '@mantine/core';
-import React from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Label } from '@/components/ui/label';
 
 export default function ChipsField(props) {
   const { name, value: values = [], label, options } = props;
@@ -17,25 +17,27 @@ export default function ChipsField(props) {
   }
 
   return (
-    <React.Fragment>
-      <Text size="sm" fw="500">
-        {label}
-      </Text>
-      <Group gap="1em">
+    <div className="flex flex-col gap-2">
+      {label && <Label>{label}</Label>}
+      <div className="flex flex-wrap items-center gap-2">
         {options.map((option) => {
           const { label, value } = option;
+          const checked = values.includes(value);
           return (
-            <Chip
+            <Badge
               key={value}
-              checked={values.includes(value)}
-              onChange={(checked) => {
-                onChange(value, checked);
+              role="checkbox"
+              aria-checked={checked}
+              variant={checked ? 'default' : 'outline'}
+              className="cursor-pointer"
+              onClick={() => {
+                onChange(value, !checked);
               }}>
               {label}
-            </Chip>
+            </Badge>
           );
         })}
-      </Group>
-    </React.Fragment>
+      </div>
+    </div>
   );
 }

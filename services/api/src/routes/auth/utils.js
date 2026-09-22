@@ -1,5 +1,5 @@
-const yd = require('@bedrockio/yada');
-const { User } = require('../../models');
+import yd from '@bedrockio/yada';
+import { User } from '../../models/index.js';
 
 // Identify the account by exactly one of email or phone, so the channel a code
 // is sent to is never ambiguous.
@@ -16,7 +16,4 @@ async function findUser(ctx) {
   return await User.findOne(phone ? { phone } : { email });
 }
 
-module.exports = {
-  findUser,
-  validateIdentity,
-};
+export { findUser, validateIdentity };

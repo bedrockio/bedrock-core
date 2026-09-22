@@ -1,12 +1,14 @@
-const mongoose = require('mongoose');
-const logger = require('@bedrockio/logger');
+import crypto from 'crypto';
+import { inject } from 'vitest';
+import mongoose from 'mongoose';
+import logger from '@bedrockio/logger';
 
 async function setupDb() {
   try {
     mongoose.set('strictQuery', false);
-    await mongoose.connect(global.__MONGO_URI__, {
+    await mongoose.connect(inject('mongoUri'), {
       // Databases are unique per test file.
-      dbName: global.__MONGO_DB_NAME__,
+      dbName: crypto.randomUUID(),
     });
   } catch (err) {
     logger.error(err);

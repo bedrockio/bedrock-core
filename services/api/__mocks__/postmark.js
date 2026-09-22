@@ -60,9 +60,6 @@ function getLastSent() {
   return sentMessages[sentMessages.length - 1];
 }
 
-module.exports = {
-  ServerClient,
-  assertMailSent,
-  assertMailCount,
-  getLastSent,
-};
+export { ServerClient, assertMailSent, assertMailCount, getLastSent };
+
+export default { ServerClient };

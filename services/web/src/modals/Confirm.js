@@ -1,18 +1,20 @@
-import { Button } from '@mantine/core';
 import React, { useState } from 'react';
+
+import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 
 import ErrorMessage from 'components/ErrorMessage';
 import ModalWrapper, { useModalContext } from 'components/ModalWrapper';
 import Actions from 'components/form-fields/Actions';
 
 /**
- * Confirm dialog component using Mantine Modal.
+ * Confirm dialog component using shadcn Dialog.
  *
  * @param {object} props
  * @param {React.ReactNode} props.title - Title.
  * @param {React.ReactNode} props.content - Content.
  * @param {string} [props.confirmButton] - Confirm button label.
- * @param {boolean} [props.negative] - If true, confirm button is red.
+ * @param {boolean} [props.negative] - If true, confirm button is destructive.
  * @param {function} [props.onConfirm] - Async function called on confirm.
  * @returns {JSX.Element}
  */
@@ -47,10 +49,14 @@ function Confirm(props) {
       <ErrorMessage error={error} />
       {content}
       <Actions>
-        <Button variant="default" onClick={close} disabled={loading}>
+        <Button variant="outline" onClick={close} disabled={loading}>
           Cancel
         </Button>
-        <Button color={negative && 'red'} loading={loading} onClick={onConfirm}>
+        <Button
+          variant={negative ? 'destructive' : 'default'}
+          disabled={loading}
+          onClick={onConfirm}>
+          {loading && <Spinner />}
           {confirmButton}
         </Button>
       </Actions>

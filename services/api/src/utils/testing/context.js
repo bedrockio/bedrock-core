@@ -1,7 +1,7 @@
-const Stream = require('stream');
-const Koa = require('koa');
+import Stream from 'stream';
+import Koa from 'koa';
 
-module.exports = (req, res, app) => {
+function context(req, res, app) {
   const socket = new Stream.Duplex();
   req = Object.assign({ headers: {}, socket }, Stream.Readable.prototype, req, {
     url: 'http://localhost',
@@ -13,8 +13,10 @@ module.exports = (req, res, app) => {
   res.setHeader = (k, v) => (res._headers[k.toLowerCase()] = v);
   res.removeHeader = (k) => delete res._headers[k.toLowerCase()];
   return app.createContext(req, res);
-};
+}
 
-module.exports.request = (req, res, app) => module.exports(req, res, app).request;
+context.request = (req, res, app) => context(req, res, app).request;
 
-module.exports.response = (req, res, app) => module.exports(req, res, app).response;
+context.response = (req, res, app) => context(req, res, app).response;
+
+export default context;

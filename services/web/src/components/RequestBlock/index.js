@@ -1,8 +1,15 @@
-import { Group, Select, Title } from '@mantine/core';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 
 import Code from 'components/Code';
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 import { API_URL } from 'utils/env';
 
@@ -47,7 +54,6 @@ function RequestBlock(props) {
     template = 'curl',
     baseUrl = API_URL,
     authToken,
-    apiKey,
     request,
   } = props;
 
@@ -55,7 +61,6 @@ function RequestBlock(props) {
 
   function getDefaultHeaders() {
     const headers = {
-      'Api-Key': `${apiKey || '<apiKey>'}`,
       ...props.headers,
     };
     if (authToken) {
@@ -84,21 +89,27 @@ function RequestBlock(props) {
   return (
     <>
       {(header || selector) && (
-        <Group justify="space-between" align="center" mb="xs">
+        <div className="mb-2 flex items-center justify-between gap-2">
           {header && (
-            <Title order={4} m={0}>
+            <h4 className="m-0 text-base font-semibold">
               {method} {path}
-            </Title>
+            </h4>
           )}
           {selector && (
-            <Select
-              onChange={setCurrent}
-              data={OPTIONS}
-              value={current}
-              w={150}
-            />
+            <Select value={current} onValueChange={setCurrent}>
+              <SelectTrigger className="w-[150px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {OPTIONS.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           )}
-        </Group>
+        </div>
       )}
       <Code language={option.language}>{templateFunction(getData())}</Code>
     </>
@@ -107,7 +118,6 @@ function RequestBlock(props) {
 
 RequestBlock.propTypes = {
   height: PropTypes.string,
-  apiKey: PropTypes.string,
   authToken: PropTypes.string,
   baseUrl: PropTypes.string,
   header: PropTypes.bool,

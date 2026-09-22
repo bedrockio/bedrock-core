@@ -1,9 +1,10 @@
-const path = require('path');
-const config = require('@bedrockio/config');
-const { assertMailSent, assertMailCount } = require('postmark');
-const { createUser, createUpload, createTemplate } = require('../testing');
-const { getImageUrl } = require('../images');
-const { sendMail } = require('./mail');
+import fs from 'fs';
+import path from 'path';
+import config from '@bedrockio/config';
+import { assertMailSent, assertMailCount } from 'postmark';
+import { createUser, createUpload, createTemplate, mockReadFileSync, restoreMocks } from '../testing/index.js';
+import { getImageUrl } from '../images.js';
+import { sendMail } from './mail.js';
 
 const APP_NAME = config.get('APP_NAME');
 
@@ -12,7 +13,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  restoreMocks();
 });
 
 const mocks = {
@@ -35,9 +36,8 @@ Welcome!
 };
 
 function mockFiles() {
-  const fs = require('fs');
   const readFileSync = fs.readFileSync;
-  jest.spyOn(fs, 'readFileSync').mockImplementation((...args) => {
+  mockReadFileSync((...args) => {
     const filename = path.basename(args[0]);
     const value = mocks[filename];
     if (value) {

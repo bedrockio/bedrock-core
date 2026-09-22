@@ -1,4 +1,4 @@
-const { userHasAccess } = require('./../permissions');
+import { userHasAccess } from '../permissions.js';
 
 // This can be changed to "organization" to quickly enable
 // multi-tenancy. Be sure when doing this to lock down global
@@ -70,6 +70,4 @@ function resolveOptions(args) {
   };
 }
 
-module.exports = {
-  requirePermissions,
-};
+export { requirePermissions };

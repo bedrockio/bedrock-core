@@ -1,6 +1,6 @@
-const { isEqual } = require('@bedrockio/model');
-const roleDefinitions = require('../roles.json');
-const { serializeDocument } = require('./serialize');
+import { isEqual } from '@bedrockio/model';
+import roleDefinitions from '../roles.json' with { type: 'json' };
+import { serializeDocument } from './serialize.js';
 
 const VALID_SCOPES = ['global', 'organization'];
 
@@ -72,8 +72,4 @@ function expandRoles(user, ctx) {
   };
 }
 
-module.exports = {
-  expandRoles,
-  userHasAccess,
-  validateUserRoles,
-};
+export { expandRoles, userHasAccess, validateUserRoles };

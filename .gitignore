@@ -11,9 +11,14 @@ tmp
 /data
 services/api/data
 .terraform/
-globalConfig.json
 .eslintcache
 .vscode
 .claude
 secrets
 .env.*
+
+# Local design-tooling state (impeccable). Generated per-machine, not shared.
+.impeccable/
+.github/skills/
+.github/agents/
+.github/hooks/

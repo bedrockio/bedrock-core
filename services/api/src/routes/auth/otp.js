@@ -1,13 +1,13 @@
-const Router = require('@koa/router');
-const yd = require('@bedrockio/yada');
-const { validateBody } = require('../../utils/middleware/validate');
+import Router from '@koa/router';
+import yd from '@bedrockio/yada';
+import { validateBody } from '../../utils/middleware/validate.js';
 
-const { sendOtp } = require('../../utils/auth/otp');
-const { verifyOtp } = require('../../utils/auth/otp');
-const { login, verifyLoginAttempts, claimUnverifiedUser } = require('../../utils/auth');
+import { sendOtp } from '../../utils/auth/otp.js';
+import { verifyOtp } from '../../utils/auth/otp.js';
+import { login, verifyLoginAttempts, claimUnverifiedUser } from '../../utils/auth/index.js';
 
-const { AuditEntry } = require('../../models');
-const { findUser, validateIdentity } = require('./utils');
+import { AuditEntry } from '../../models/index.js';
+import { findUser, validateIdentity } from './utils.js';
 
 const router = new Router();
 
@@ -96,4 +96,4 @@ router
     },
   );
 
-module.exports = router;
+export default router;

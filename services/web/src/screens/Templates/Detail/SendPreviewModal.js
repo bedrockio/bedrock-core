@@ -1,7 +1,5 @@
-import { Alert, Button, Stack } from '@mantine/core';
 import { useState } from 'react';
 
-import { showSuccessNotification } from 'helpers/notifications';
 import { useSession } from 'stores/session';
 
 import ErrorMessage from 'components/ErrorMessage';
@@ -10,7 +8,12 @@ import SearchDropdown from 'components/SearchDropdown';
 import EmailField from 'components/form-fields/Email';
 import PhoneField from 'components/form-fields/Phone';
 
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
+
 import { request } from 'utils/api';
+import { notifySuccess } from 'utils/notify';
 
 function SendPreviewModal(props) {
   const { channel, template } = props;
@@ -30,7 +33,7 @@ function SendPreviewModal(props) {
     }
   });
 
-  function setField(evt, { name, value }) {
+  function setField(name, value) {
     setFields({
       ...fields,
       [name]: value,
@@ -52,7 +55,7 @@ function SendPreviewModal(props) {
         },
       });
       setLoading(false);
-      showSuccessNotification({
+      notifySuccess({
         message: 'Test message sent.',
       });
 
@@ -79,7 +82,7 @@ function SendPreviewModal(props) {
         name="email"
         label="Email"
         value={fields.email || ''}
-        onChange={setField}
+        onChange={(evt) => setField('email', evt.target.value)}
       />
     );
   }
@@ -100,24 +103,30 @@ function SendPreviewModal(props) {
       <SearchDropdown
         label="User"
         name="userId"
+        objectMode={false}
         value={fields.userId || ''}
         searchPath="/1/templates/push-users/search"
         placeholder="Search Users"
-        onChange={setField}
+        onChange={(value) => setField('userId', value)}
       />
     );
   }
 
   return (
     <form onSubmit={onSubmit}>
-      <Stack spacing="md">
+      <div className="flex flex-col gap-4">
         <ErrorMessage error={error} />
         {renderField()}
-        <Alert color="blue">Dummy data will be used to populate objects.</Alert>
-        <Button type="submit" loading={loading} disabled={loading}>
+        <Alert variant="info">
+          <AlertDescription>
+            Dummy data will be used to populate objects.
+          </AlertDescription>
+        </Alert>
+        <Button type="submit" disabled={loading}>
+          {loading && <Spinner className="text-current" />}
           Send
         </Button>
-      </Stack>
+      </div>
     </form>
   );
 }

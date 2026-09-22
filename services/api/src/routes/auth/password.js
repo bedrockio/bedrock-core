@@ -1,17 +1,17 @@
-const Router = require('@koa/router');
-const config = require('@bedrockio/config');
-const logger = require('@bedrockio/logger');
-const yd = require('@bedrockio/yada');
+import Router from '@koa/router';
+import config from '@bedrockio/config';
+import logger from '@bedrockio/logger';
+import yd from '@bedrockio/yada';
 
-const { validateBody } = require('../../utils/middleware/validate');
-const { authenticate } = require('../../utils/middleware/authenticate');
+import { validateBody } from '../../utils/middleware/validate.js';
+import { authenticate } from '../../utils/middleware/authenticate.js';
 
-const { createAuthToken, createAccessToken } = require('../../utils/tokens');
-const { login, verifyLoginAttempts, claimUnverifiedUser } = require('../../utils/auth');
-const { verifyPassword } = require('../../utils/auth/password');
-const { sendOtp } = require('../../utils/auth/otp');
-const { sendMail } = require('../../utils/messaging');
-const { User, AuditEntry } = require('../../models');
+import { createAuthToken, createAccessToken } from '../../utils/tokens.js';
+import { login, verifyLoginAttempts, claimUnverifiedUser } from '../../utils/auth/index.js';
+import { verifyPassword } from '../../utils/auth/password.js';
+import { sendOtp } from '../../utils/auth/otp.js';
+import { sendMail } from '../../utils/messaging/index.js';
+import { User, AuditEntry } from '../../models/index.js';
 
 const APP_URL = config.get('APP_URL');
 
@@ -153,4 +153,4 @@ router
     },
   );
 
-module.exports = router;
+export default router;

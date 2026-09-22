@@ -1,28 +1,30 @@
-import { ActionIcon, Menu, Text } from '@mantine/core';
-import { notifications, showNotification } from '@mantine/notifications';
-
-import {
-  PiDotsThreeOutlineVerticalBold,
-  PiRepeatBold,
-  PiTrashBold,
-} from 'react-icons/pi';
+import { EllipsisVertical, Repeat, Trash2 } from 'lucide-react';
 
 import Confirm from 'modals/Confirm';
 
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+
 import { request, useRequest } from 'utils/api';
+import { notify } from 'utils/notify';
 
 export default function InviteActions({ invite, reload }) {
   const resentRequest = useRequest({
     method: 'POST',
     path: `/1/invites/${invite.id}/resend`,
     onSuccess: () => {
-      showNotification({
+      notify({
         title: 'Invite re-sent',
         color: 'green',
       });
     },
     onError: (error) => {
-      notifications.show({
+      notify({
         title: 'Failed to re-send invite',
         message: error.message,
         color: 'red',
@@ -31,21 +33,21 @@ export default function InviteActions({ invite, reload }) {
   });
 
   return (
-    <Menu shadow="md" keepMounted>
-      <Menu.Target>
-        <ActionIcon variant="default">
-          <PiDotsThreeOutlineVerticalBold />
-        </ActionIcon>
-      </Menu.Target>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="icon">
+          <EllipsisVertical />
+        </Button>
+      </DropdownMenuTrigger>
 
-      <Menu.Dropdown>
-        <Menu.Item
-          onClick={() => {
+      <DropdownMenuContent>
+        <DropdownMenuItem
+          onSelect={() => {
             resentRequest.request();
-          }}
-          leftSection={<PiRepeatBold />}>
+          }}>
+          <Repeat />
           Resend Invite
-        </Menu.Item>
+        </DropdownMenuItem>
 
         <Confirm
           title="Delete Invite"
@@ -59,17 +61,20 @@ export default function InviteActions({ invite, reload }) {
           }}
           confirmButton="Delete"
           content={
-            <Text>
+            <p className="text-sm">
               Are you sure you want to delete <strong>{invite.email}</strong>?
-            </Text>
+            </p>
           }
           trigger={
-            <Menu.Item color="red" leftSection={<PiTrashBold />}>
+            <DropdownMenuItem
+              variant="destructive"
+              onSelect={(e) => e.preventDefault()}>
+              <Trash2 />
               Delete
-            </Menu.Item>
+            </DropdownMenuItem>
           }
         />
-      </Menu.Dropdown>
-    </Menu>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

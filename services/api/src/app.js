@@ -1,43 +1,23 @@
-const Router = require('@koa/router');
-const Koa = require('koa');
-const { version } = require('../package.json');
-const errorHandler = require('./utils/middleware/error-handler');
-const corsMiddleware = require('./utils/middleware/cors');
-const bodyMiddleware = require('./utils/middleware/body');
-const recordMiddleware = require('./utils/middleware/record');
-const serializeMiddleware = require('./utils/middleware/serialize');
-const organizationMiddleware = require('./utils/middleware/organization');
-const { applicationMiddleware } = require('./utils/middleware/application');
-const { loadDefinition } = require('./utils/openapi');
-const Sentry = require('@sentry/node');
-const routes = require('./routes');
-const config = require('@bedrockio/config');
-const logger = require('@bedrockio/logger');
+import Router from '@koa/router';
+import Koa from 'koa';
+import packageJson from '../package.json' with { type: 'json' };
+import errorHandler from './utils/middleware/error-handler.js';
+import corsMiddleware from './utils/middleware/cors.js';
+import bodyMiddleware from './utils/middleware/body.js';
+import recordMiddleware from './utils/middleware/record.js';
+import serializeMiddleware from './utils/middleware/serialize.js';
+import organizationMiddleware from './utils/middleware/organization.js';
+import { loadDefinition } from './utils/openapi.js';
+import Sentry from '@sentry/node';
+import routes from './routes/index.js';
+import config from '@bedrockio/config';
+import logger from '@bedrockio/logger';
 
 const ENV_NAME = config.get('ENV_NAME');
 
 const app = new Koa();
 
 app.use(corsMiddleware());
-
-// Application middleware must occur after serialization
-// as it will record a snapshot of the response body.
-if (['staging', 'development'].includes(ENV_NAME)) {
-  // has to be the added before any middleware that changes the ctx.body
-  app.use(
-    applicationMiddleware({
-      ignorePaths: [
-        '/',
-        '/openapi.json',
-        '/1/meta',
-        '/1/status',
-        '/1/status/mongodb',
-        /\/1\/applications/,
-        /\/1\/uploads\/[a-f0-9]{24}\/raw$/,
-      ],
-    })
-  );
-}
 
 app.use(serializeMiddleware);
 app.use(organizationMiddleware);
@@ -86,7 +66,7 @@ const router = new Router();
 
 router.get('/', (ctx) => {
   ctx.body = {
-    version,
+    version: packageJson.version,
     environment: ENV_NAME,
     openapiPath: '/openapi.json',
     servedAt: new Date(),
@@ -104,4 +84,4 @@ router.use(routes);
 app.use(router.routes());
 app.use(router.allowedMethods());
 
-module.exports = app;
+export default app;

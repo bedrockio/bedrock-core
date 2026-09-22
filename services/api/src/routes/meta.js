@@ -1,7 +1,7 @@
-const Router = require('@koa/router');
-const types = require('../lib/notifications/types');
+import Router from '@koa/router';
+import types from '../lib/notifications/types.js';
 
-const roles = require('../roles.json');
+import roles from '../roles.json' with { type: 'json' };
 
 const router = new Router();
 
@@ -14,4 +14,4 @@ router.get('/', async (ctx) => {
   };
 });
 
-module.exports = router;
+export default router;

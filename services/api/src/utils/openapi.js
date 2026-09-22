@@ -1,16 +1,17 @@
-const fs = require('fs/promises');
-const path = require('path');
-const crypto = require('crypto');
-const { Stream } = require('stream');
-const mongoose = require('mongoose');
-const config = require('@bedrockio/config');
+import fs from 'fs/promises';
+import path from 'path';
+import crypto from 'crypto';
+import { Stream } from 'stream';
+import mongoose from 'mongoose';
+import config from '@bedrockio/config';
+import Router from '@koa/router';
 
-const { get, set, merge, isEmpty, without, camelCase, kebabCase, startCase } = require('lodash');
+import { get, set, merge, isEmpty, without, camelCase, kebabCase, startCase } from 'lodash-es';
+import packageJson from '../../package.json' with { type: 'json' };
 
 const pluralize = mongoose.pluralize();
 
-const PACKAGE_FILE = path.resolve(__dirname, '../../package.json');
-const DEFINITION_FILE = path.resolve(__dirname, '../../openapi.json');
+const DEFINITION_FILE = path.resolve(import.meta.dirname, '../../openapi.json');
 
 const EDITABLE_FIELDS = ['title', 'summary', 'description'];
 
@@ -54,7 +55,8 @@ async function updateDefinitionPath(path, value) {
 // Generation
 
 async function generateDefinition() {
-  const { version, description } = require(PACKAGE_FILE);
+  const { version, description } = packageJson;
+  const { default: routes } = await import('../routes/index.js');
   const definition = {
     openapi: '3.1.0',
     info: {
@@ -66,7 +68,7 @@ async function generateDefinition() {
         url: config.get('API_URL'),
       },
     ],
-    paths: generatePaths(require('../routes')),
+    paths: generatePaths(routes),
     components: {
       schemas: generateModelSchemas(),
       // Describes JWT tokens by Bearer
@@ -138,6 +140,9 @@ function generatePaths(routes) {
         name,
         in: 'path',
         required,
+        schema: {
+          type: 'string',
+        },
       };
     });
 
@@ -198,6 +203,8 @@ function generatePaths(routes) {
       item['security'] = [{}, { bearerAuth: [] }];
     } else if (authentication === 'required') {
       item['security'] = [{ bearerAuth: [] }];
+    } else {
+      item['security'] = [];
     }
 
     // There is currently no way in OpenAPI 3.0 to describe role based permissions
@@ -291,7 +298,17 @@ function generateModelSchemas() {
       continue;
     }
 
-    schemas[modelName] = model.getBaseSchema().toOpenApi();
+    const schema = model.getBaseSchema().toOpenApi();
+    schemas[modelName] = {
+      ...schema,
+      properties: {
+        id: {
+          $ref: '#/components/schemas/ObjectId',
+        },
+        ...schema.properties,
+      },
+      required: ['id', ...(schema.required || [])],
+    };
   }
   return schemas;
 }
@@ -306,7 +323,6 @@ function extractSchemas(definition) {
         title: value['x-title'],
         description: value['x-description'],
         default: undefined,
-        required: undefined,
         'x-title': undefined,
         'x-description': undefined,
         'x-schema': undefined,
@@ -315,7 +331,6 @@ function extractSchemas(definition) {
         $ref: `#/components/schemas/${schema}`,
         title: value.title,
         default: value.default,
-        required: value.required,
         description: value.description,
       });
       halt = true;
@@ -508,7 +523,6 @@ function copyField(target, source, path, field) {
 // applied when generating docs using this script and
 // don't affect actual router functionality.
 function applyRouterHack() {
-  const Router = require('@koa/router');
   const routerUse = Router.prototype.use;
 
   Router.prototype.use = function (arg1, arg2) {
@@ -521,11 +535,4 @@ function applyRouterHack() {
   };
 }
 
-module.exports = {
-  DEFINITION_FILE,
-  loadDefinition,
-  generateDefinition,
-  updateDefinitionPath,
-  recordRequest,
-  saveDefinition,
-};
+export { DEFINITION_FILE, loadDefinition, generateDefinition, updateDefinitionPath, recordRequest, saveDefinition };

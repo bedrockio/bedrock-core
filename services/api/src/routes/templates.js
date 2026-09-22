@@ -1,12 +1,12 @@
-const yd = require('@bedrockio/yada');
-const Router = require('@koa/router');
-const { fetchByParam } = require('../utils/middleware/params');
-const { authenticate } = require('../utils/middleware/authenticate');
-const { requirePermissions } = require('../utils/middleware/permissions');
-const { validateBody, validateDelete } = require('../utils/middleware/validate');
-const { sendMessage } = require('../utils/messaging');
-const { getMailParams } = require('../utils/messaging/mail');
-const { Template, User, AuditEntry } = require('../models');
+import yd from '@bedrockio/yada';
+import Router from '@koa/router';
+import { fetchByParam } from '../utils/middleware/params.js';
+import { authenticate } from '../utils/middleware/authenticate.js';
+import { requirePermissions } from '../utils/middleware/permissions.js';
+import { validateBody, validateDelete } from '../utils/middleware/validate.js';
+import { sendMessage } from '../utils/messaging/index.js';
+import { getMailParams } from '../utils/messaging/mail.js';
+import { Template, User, AuditEntry } from '../models/index.js';
 
 const router = new Router();
 
@@ -163,4 +163,4 @@ router
     ctx.status = 204;
   });
 
-module.exports = router;
+export default router;

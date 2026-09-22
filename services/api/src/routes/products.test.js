@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-const { request, createUser, createAdmin } = require('../utils/testing');
-const { Product } = require('../models');
+import { request, createUser, createAdmin } from '../utils/testing/index.js';
+import { Product } from '../models/index.js';
 
 describe('/1/products', () => {
   describe('POST /', () => {

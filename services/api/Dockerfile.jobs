@@ -1,6 +1,6 @@
 FROM node:26.3.0-alpine
 
-# Install production dependencies only; devDependencies (jest, eslint, etc.) are
+# Install production dependencies only; devDependencies (vitest, eslint, etc.) are
 # run on the host, not in the image.
 ARG NODE_ENV=production
 

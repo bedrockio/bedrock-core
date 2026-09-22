@@ -1,15 +1,15 @@
-const logger = require('@bedrockio/logger');
-const config = require('@bedrockio/config');
+import logger from '@bedrockio/logger';
+import config from '@bedrockio/config';
 
-const { initialize } = require('./utils/database');
-const { loadFixtures } = require('./utils/fixtures');
-const app = require('./app');
+import { initialize } from './utils/database.js';
+import { loadFixtures } from './utils/fixtures.js';
+import app from './app.js';
 
 const ENV_NAME = config.get('ENV_NAME');
 const PORT = config.get('SERVER_PORT', 'number');
 const HOST = config.get('SERVER_HOST');
 
-module.exports = (async () => {
+export default (async () => {
   await initialize();
   if (ENV_NAME === 'development') {
     await loadFixtures();

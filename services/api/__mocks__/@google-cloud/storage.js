@@ -68,8 +68,4 @@ function getResumableUploads() {
   return resumableUploads;
 }
 
-module.exports = {
-  Storage,
-  assertFileStored,
-  getResumableUploads,
-};
+export { Storage, assertFileStored, getResumableUploads };

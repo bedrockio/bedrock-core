@@ -1,4 +1,4 @@
-const { createClock, timers } = require('@sinonjs/fake-timers');
+import { createClock, timers } from '@sinonjs/fake-timers';
 
 let clock;
 
@@ -33,9 +33,4 @@ afterEach(() => {
   unmockTime();
 });
 
-module.exports = {
-  setTime,
-  mockTime,
-  unmockTime,
-  advanceTime,
-};
+export { setTime, mockTime, unmockTime, advanceTime };

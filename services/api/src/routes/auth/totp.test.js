@@ -1,9 +1,9 @@
-const speakeasy = require('speakeasy');
-const { request, createUser } = require('../../utils/testing');
-const { assertAuthToken } = require('../../utils/testing/tokens');
-const { mockTime, advanceTime } = require('../../utils/testing/time');
-const { createSecret, enableTotp } = require('../../utils/auth/totp');
-const { User } = require('../../models');
+import speakeasy from 'speakeasy';
+import { request, createUser } from '../../utils/testing/index.js';
+import { assertAuthToken } from '../../utils/testing/tokens.js';
+import { mockTime, advanceTime } from '../../utils/testing/time.js';
+import { createSecret, enableTotp } from '../../utils/auth/totp.js';
+import { User } from '../../models/index.js';
 
 describe('/1/auth/totp', () => {
   describe('POST /login', () => {

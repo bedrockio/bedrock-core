@@ -1,31 +1,28 @@
-import {
-  Button,
-  Group,
-  Paper,
-  SegmentedControl,
-  Space,
-  Textarea,
-} from '@mantine/core';
-
 import React, { useState } from 'react';
 
 import {
-  PiChatCircleBold,
-  PiCodeBold,
-  PiDeviceMobileBold,
-  PiEnvelopeBold,
-  PiQuestionBold,
-} from 'react-icons/pi';
+  CircleHelp,
+  Code,
+  Mail,
+  MessageCircle,
+  Smartphone,
+} from 'lucide-react';
 
-import { showSuccessNotification } from 'helpers/notifications';
 import { usePage } from 'stores/page';
 
 import ErrorMessage from 'components/ErrorMessage';
-import Actions from 'components/form-fields/Actions';
 import { useFields } from 'hooks/forms';
 import { useRequest } from 'hooks/request';
 
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Spinner } from '@/components/ui/spinner';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
+
 import { request } from 'utils/api';
+import { notifySuccess } from 'utils/notify';
 
 import HelpModal from './HelpModal';
 import Menu from './Menu';
@@ -33,9 +30,9 @@ import ParamsModal from './ParamsModal';
 import SendPreviewButton from './SendPreviewButton';
 
 const CHANNEL_ICONS = {
-  email: PiEnvelopeBold,
-  sms: PiChatCircleBold,
-  push: PiDeviceMobileBold,
+  email: Mail,
+  sms: MessageCircle,
+  push: Smartphone,
 };
 
 const CHANNEL_LABELS = {
@@ -62,7 +59,7 @@ export default function Content() {
       template: data,
     });
 
-    showSuccessNotification({
+    notifySuccess({
       message: 'Updated Content',
     });
   });
@@ -74,31 +71,33 @@ export default function Content() {
 
   function render() {
     return (
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} className="flex flex-col gap-4">
         <Menu />
-        <Paper p="md" withBorder>
+        <Card className="gap-0 p-4">
           <ErrorMessage error={error} />
           {renderChannelSelector()}
 
-          <Textarea
-            key={channel}
-            name={channel}
-            label={CHANNEL_LABELS[channel]}
-            value={fields[channel]}
-            onChange={setField}
-            rows={15}
-            resize
-          />
+          <div className="flex flex-col gap-2">
+            <Label htmlFor={`template-${channel}`}>
+              {CHANNEL_LABELS[channel]}
+            </Label>
+            <Textarea
+              key={channel}
+              id={`template-${channel}`}
+              name={channel}
+              value={fields[channel]}
+              onChange={setField}
+              rows={15}
+            />
+          </div>
 
-          <Space h="md" />
+          <div className="mt-4" />
 
-          <Group gap="md">
+          <div className="flex flex-wrap gap-4">
             <HelpModal
               trigger={
-                <Button
-                  size="sm"
-                  variant="default"
-                  leftSection={<PiQuestionBold />}>
+                <Button size="sm" variant="outline">
+                  <CircleHelp />
                   Help
                 </Button>
               }
@@ -107,23 +106,26 @@ export default function Content() {
             <ParamsModal
               template={template}
               trigger={
-                <Button
-                  variant="default"
-                  size="sm"
-                  leftSection={<PiCodeBold />}>
+                <Button variant="outline" size="sm">
+                  <Code />
                   Params
                 </Button>
               }
             />
-            <SendPreviewButton channel={channel} template={template} />
-          </Group>
-        </Paper>
+            <SendPreviewButton
+              channel={channel}
+              template={template}
+              size="sm"
+            />
+          </div>
+        </Card>
 
-        <Actions>
-          <Button type="submit" loading={loading} disabled={loading}>
-            Save
+        <div className="flex items-center gap-3">
+          <Button type="submit" disabled={loading}>
+            {loading && <Spinner className="text-current" />}
+            Save Content
           </Button>
-        </Actions>
+        </div>
       </form>
     );
   }
@@ -132,18 +134,19 @@ export default function Content() {
     if (template.channels.length > 1) {
       return (
         <React.Fragment>
-          <SegmentedControl
-            value={channel}
-            onChange={setChannel}
-            data={template.channels.map((channel) => {
-              const Icon = CHANNEL_ICONS[channel];
-              return {
-                value: channel,
-                label: <Icon />,
-              };
-            })}
-          />
-          <Space h="md" />
+          <Tabs value={channel} onValueChange={setChannel}>
+            <TabsList>
+              {template.channels.map((channel) => {
+                const Icon = CHANNEL_ICONS[channel];
+                return (
+                  <TabsTrigger key={channel} value={channel}>
+                    <Icon />
+                  </TabsTrigger>
+                );
+              })}
+            </TabsList>
+          </Tabs>
+          <div className="mt-4" />
         </React.Fragment>
       );
     }

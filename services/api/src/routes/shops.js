@@ -1,9 +1,9 @@
-const Router = require('@koa/router');
-const { fetchByParam } = require('../utils/middleware/params');
-const { validateBody, validateDelete } = require('../utils/middleware/validate');
-const { authenticate } = require('../utils/middleware/authenticate');
-const { Shop, AuditEntry } = require('../models');
-const { csvExport } = require('../utils/csv');
+import Router from '@koa/router';
+import { fetchByParam } from '../utils/middleware/params.js';
+import { validateBody, validateDelete } from '../utils/middleware/validate.js';
+import { authenticate } from '../utils/middleware/authenticate.js';
+import { Shop, AuditEntry } from '../models/index.js';
+import { csvExport } from '../utils/csv.js';
 
 const router = new Router();
 
@@ -86,4 +86,4 @@ router
     ctx.status = 204;
   });
 
-module.exports = router;
+export default router;

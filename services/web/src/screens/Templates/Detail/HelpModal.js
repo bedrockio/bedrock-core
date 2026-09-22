@@ -1,77 +1,80 @@
-import { Alert, Tabs, Text, Typography } from '@mantine/core';
-
 import Code from 'components/Code';
 import ModalWrapper from 'components/ModalWrapper';
+
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 function HelpModal() {
   function render() {
     return (
       <Tabs defaultValue="markdown">
-        <Tabs.List>
-          <Tabs.Tab value="markdown">Markdown</Tabs.Tab>
-          <Tabs.Tab value="helpers">Helpers</Tabs.Tab>
-        </Tabs.List>
-        <Tabs.Panel value="markdown">{renderMarkdown()}</Tabs.Panel>
-        <Tabs.Panel value="helpers">{renderHelpers()}</Tabs.Panel>
+        <TabsList>
+          <TabsTrigger value="markdown">Markdown</TabsTrigger>
+          <TabsTrigger value="helpers">Helpers</TabsTrigger>
+        </TabsList>
+        <TabsContent value="markdown">{renderMarkdown()}</TabsContent>
+        <TabsContent value="helpers">{renderHelpers()}</TabsContent>
       </Tabs>
     );
   }
 
   function renderMarkdown() {
     return (
-      <Typography>
-        <h5>Emphasis</h5>
+      <div className="flex flex-col gap-2">
+        <h5 className="font-semibold">Emphasis</h5>
         <Code>{Markdown.Emphasis}</Code>
-        <h5>Lists</h5>
+        <h5 className="font-semibold">Lists</h5>
         <Code>{Markdown.Lists}</Code>
-        <h5>Headings</h5>
+        <h5 className="font-semibold">Headings</h5>
         <Code>{Markdown.Headings}</Code>
-        <h5>Line Break</h5>
+        <h5 className="font-semibold">Line Break</h5>
         <Code>{Markdown.LineBreak}</Code>
-      </Typography>
+      </div>
     );
   }
 
   function renderHelpers() {
     return (
-      <Typography>
-        <h5>Link Helpers</h5>
+      <div className="flex flex-col gap-2">
+        <h5 className="font-semibold">Link Helpers</h5>
         <Code>{Helpers.Link}</Code>
 
-        <h5>Button Helpers</h5>
+        <h5 className="font-semibold">Button Helpers</h5>
         <Code>{Helpers.Button}</Code>
 
-        <h5>Image Helpers</h5>
+        <h5 className="font-semibold">Image Helpers</h5>
         <Code>{Helpers.Image}</Code>
 
-        <h5>Date/Time Helpers</h5>
+        <h5 className="font-semibold">Date/Time Helpers</h5>
         <Code>{Helpers.Date}</Code>
 
-        <h5>Relative Time Helpers</h5>
+        <h5 className="font-semibold">Relative Time Helpers</h5>
         <Code>{Helpers.Relative}</Code>
 
-        <h5>Metadata</h5>
+        <h5 className="font-semibold">Metadata</h5>
         <Code>{Helpers.Metadata}</Code>
 
-        <Alert color="yellow">
-          <Text>
-            Note that quotes are optional except when the value starts with{' '}
-            <code>{'{{'}</code>
-          </Text>
+        <Alert variant="warning">
+          <AlertDescription>
+            <p>
+              Note that quotes are optional except when the value starts with{' '}
+              <code>{'{{'}</code>
+            </p>
+          </AlertDescription>
         </Alert>
 
-        <h5>Conditional Rendering</h5>
+        <h5 className="font-semibold">Conditional Rendering</h5>
         <Code>{Helpers.Conditional}</Code>
 
-        <h5>Looping (Simple)</h5>
+        <h5 className="font-semibold">Looping (Simple)</h5>
         <Code>{Helpers.LoopingSimple}</Code>
 
-        <h5>Looping (List)</h5>
+        <h5 className="font-semibold">Looping (List)</h5>
         <Code>{Helpers.LoopingList}</Code>
 
-        <h5>Looping (Table)</h5>
+        <h5 className="font-semibold">Looping (Table)</h5>
         <Code>{Helpers.LoopingTable}</Code>
-      </Typography>
+      </div>
     );
   }
 

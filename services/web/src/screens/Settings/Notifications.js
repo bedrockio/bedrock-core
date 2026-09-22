@@ -1,16 +1,28 @@
-import { Button, Chip, Fieldset, Group, Stack, Text } from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { notifications } from '@mantine/notifications';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { pick } from 'lodash';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 import { useSession } from 'stores/session';
 
 import ErrorMessage from 'components/ErrorMessage';
-import Meta from 'components/Meta';
+import PageHeader from 'components/PageHeader';
+
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
+import { Spinner } from '@/components/ui/spinner';
 
 import { useRequest } from 'utils/api';
+import { notify } from 'utils/notify';
 
-import Menu from './Menu';
 
 const CHANNELS = [
   {
@@ -27,11 +39,14 @@ const CHANNELS = [
   },
 ];
 
+const schema = z.object({}).passthrough();
+
 function Notifications() {
   const { user, meta, updateUser } = useSession();
 
   const form = useForm({
-    initialValues: {
+    resolver: zodResolver(schema),
+    defaultValues: {
       ...pick(user, ['id', 'firstName', 'lastName', 'phone', 'email']),
       notifications: meta.notifications.map((base) => {
         const config = user.notifications.find((c) => {
@@ -50,7 +65,7 @@ function Notifications() {
     path: `/1/users/me`,
     onSuccess: ({ data }) => {
       updateUser(data);
-      notifications.show({
+      notify({
         title: 'Profile updated',
         message: 'Your profile has been successfully updated.',
         color: 'green',
@@ -62,56 +77,72 @@ function Notifications() {
     return null;
   }
 
+  function onSubmit(values) {
+    saveRequest.request({
+      body: {
+        ...values,
+      },
+    });
+  }
+
+  const notificationsValue = form.watch('notifications') || [];
+
   return (
-    <Stack gap="md">
-      <Meta title="Account Details" />
-      <Menu />
+    <div className="flex flex-col gap-4">
+      <PageHeader title="Notifications" />
 
       <ErrorMessage error={saveRequest.error} />
       <form
-        onSubmit={form.onSubmit((values) => {
-          saveRequest.request({
-            body: {
-              ...values,
-            },
-          });
-        })}>
-        <Fieldset legend="Notifications" mb="md" variant="unstyled">
-          {form.getValues().notifications.map((notification, index) => {
-            const { name, label } = notification;
-            return (
-              <Stack key={name}>
-                <Text size="sm">{label}</Text>
-                <Group>
-                  {CHANNELS.map((channel) => {
-                    return (
-                      <Chip
-                        key={channel.name}
-                        label={channel.label}
-                        size="xs"
-                        {...form.getInputProps(
-                          `notifications.${index}.${channel.value}`,
-                          {
-                            type: 'checkbox',
-                          },
-                        )}>
-                        {channel.label}
-                      </Chip>
-                    );
-                  })}
-                </Group>
-              </Stack>
-            );
-          })}
-        </Fieldset>
-        <Button
-          type="submit"
-          loading={saveRequest.loading}
-          disabled={saveRequest.loading}>
-          Update Profile
-        </Button>
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex max-w-2xl flex-col gap-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Notifications</CardTitle>
+            <CardDescription>
+              Choose how you'd like to be notified on each channel.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="divide-border flex flex-col divide-y">
+            {notificationsValue.map((notification, index) => {
+              const { name, label } = notification;
+              return (
+                <div
+                  className="flex flex-col gap-2 py-4 first:pt-0 last:pb-0"
+                  key={name ?? label ?? index}>
+                  <p className="text-sm font-medium">{label}</p>
+                  <div className="flex flex-wrap gap-4">
+                    {CHANNELS.map((channel) => {
+                      const fieldName = `notifications.${index}.${channel.value}`;
+                      const id = `${name ?? index}-${channel.value}`;
+                      return (
+                        <div
+                          className="flex items-center gap-2"
+                          key={channel.value}>
+                          <Checkbox
+                            id={id}
+                            checked={!!form.watch(fieldName)}
+                            onCheckedChange={(checked) => {
+                              form.setValue(fieldName, checked === true);
+                            }}
+                          />
+                          <Label htmlFor={id}>{channel.label}</Label>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+          </CardContent>
+        </Card>
+        <div className="flex items-center gap-3">
+          <Button type="submit" disabled={saveRequest.loading}>
+            {saveRequest.loading && <Spinner className="text-current" />}
+            Save preferences
+          </Button>
+        </div>
       </form>
-    </Stack>
+    </div>
   );
 }
 

@@ -1,13 +1,13 @@
-const jwt = require('jsonwebtoken');
-const { assertSmsSent } = require('twilio');
-const { assertMailSent, getLastSent } = require('postmark');
-const { request, context, createUser } = require('../../utils/testing');
-const { mockTime, advanceTime } = require('../../utils/testing/time');
-const { createAuthToken, createAccessToken, verifyToken } = require('../../utils/tokens');
-const { verifyPassword } = require('../../utils/auth/password');
-const { assertAuthToken } = require('../../utils/testing/tokens');
-const { getAuthenticator } = require('../../utils/auth/authenticators');
-const { User } = require('../../models');
+import jwt from 'jsonwebtoken';
+import { assertSmsSent } from 'twilio';
+import { assertMailSent, getLastSent } from 'postmark';
+import { request, context, createUser } from '../../utils/testing/index.js';
+import { mockTime, advanceTime } from '../../utils/testing/time.js';
+import { createAuthToken, createAccessToken, verifyToken } from '../../utils/tokens.js';
+import { verifyPassword } from '../../utils/auth/password.js';
+import { assertAuthToken } from '../../utils/testing/tokens.js';
+import { getAuthenticator } from '../../utils/auth/authenticators.js';
+import { User } from '../../models/index.js';
 
 function getJti(token) {
   const { payload } = jwt.decode(token, { complete: true });

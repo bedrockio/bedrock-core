@@ -1,0 +1,306 @@
+/*
+ * shadcn/ui + Tailwind v4 design tokens.
+ *
+ * NOTE: Tailwind's preflight (global base reset) is intentionally NOT imported
+ * while Mantine is still mounted — it would reset Mantine's base element styles
+ * and break unconverted screens (see change-ui-framework-to-shadcn.html §6.3).
+ * We import theme + utilities + the shadcn component layer only. Once Mantine is
+ * removed in the teardown phase, switch the two imports below back to a single
+ * `@import "tailwindcss";` to re-enable preflight.
+ */
+/* Mantine is gone — full Tailwind (incl. preflight) is back in its normal layers. */
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Theme = the literal shadcn/ui default (neutral base, oklch).
+ * See restyle-to-shadcn-default.html.
+ *
+ * ┌──────────────────────────────────────────────────────────────────────────┐
+ * │  TO BRAND THE APP — change the primary colour                              │
+ * │                                                                            │
+ * │  SHIPPED DEFAULT: Indigo. This IS the white-label knob — an adopter        │
+ * │  rebrands the whole app by changing --primary + --primary-foreground in     │
+ * │  BOTH :root (light) and .dark below (tagged `BRAND PRIMARY` inline).        │
+ * │  Nothing else needs to change: every primary button, focus ring, active     │
+ * │  nav and selection reads from these tokens.                                 │
+ * │                                                                            │
+ * │  Current default — Indigo:                                                 │
+ * │      :root  { --primary: oklch(0.505 0.18 266);  --primary-foreground: oklch(0.985 0 0); }
+ * │      .dark  { --primary: oklch(0.62 0.17 266);   --primary-foreground: oklch(0.985 0 0); }
+ * │  To rebrand — e.g. green:                                                  │
+ * │      :root  { --primary: oklch(0.55 0.12 152);   --primary-foreground: oklch(0.985 0 0); }
+ * │      .dark  { --primary: oklch(0.62 0.13 152);   --primary-foreground: oklch(0.985 0 0); }
+ * │                                                                            │
+ * │  Optionally also brand --ring (focus) and --sidebar-primary to match.      │
+ * │  Nothing else needs to change — every primary button, focus ring and       │
+ * │  active state reads from these tokens.                                     │
+ * └──────────────────────────────────────────────────────────────────────────┘
+ */
+:root {
+  --radius: 0.625rem;
+
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.24 0.008 285); /* muted near-black ink (was pure 0.145) — softer, still ~11:1 on the near-white ground */
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.24 0.008 285);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.24 0.008 285);
+
+  --primary: oklch(0.505 0.18 266); /* BRAND PRIMARY (light) — Indigo white-label knob, see header */
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0 0);
+
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.55 0.16 266); /* focus ring follows the brand */
+
+  /* semantic (Alert info/success/warning) — meaning-only colours (§5.6) */
+  --info: oklch(0.6 0.118 248);
+  --success: oklch(0.6 0.13 150);
+  --warning: oklch(0.68 0.15 65);
+
+  --sidebar: oklch(0.978 0.004 285);
+  --sidebar-foreground: oklch(0.24 0.008 285);
+  --sidebar-primary: oklch(0.505 0.18 266);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.955 0.005 285);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.92 0.004 285);
+  --sidebar-ring: oklch(0.55 0.16 266);
+
+  /* Soft-gloss-minimal elevation vocabulary (DESIGN.md §Elevation).
+     Cards lift off the --app-base canvas with ONE soft shadow. */
+  --shadow-rest: 0 1px 2px oklch(0.25 0.03 60 / 0.05), 0 10px 24px -14px oklch(0.25 0.03 60 / 0.22);
+  --shadow-raised: 0 4px 14px oklch(0.25 0.03 60 / 0.12);
+  --shadow-overlay: 0 16px 48px oklch(0.25 0.03 60 / 0.18);
+  --card-hi: oklch(1 0 0 / 0.55); /* soft-gloss top highlight */
+  /* Warm + accent-tinted app canvas (applied at layout level, not to flat
+     --background). Split in two: the base tint fills the scroll box, the aurora
+     rides a fixed composited layer (see .app-ground) instead of a repaint-heavy
+     background-attachment: fixed. */
+  --app-base: linear-gradient(165deg, oklch(0.984 0.004 285), oklch(0.96 0.005 285));
+  --app-aurora: radial-gradient(1050px 540px at 86% -12%, color-mix(in oklch, var(--primary) 10%, transparent), transparent 62%);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.2 0.012 285);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.2 0.012 285);
+  --popover-foreground: oklch(0.985 0 0);
+
+  --primary: oklch(0.62 0.17 266); /* BRAND PRIMARY (dark) — Indigo white-label knob, see header */
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(0.985 0 0);
+
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.58 0.15 266); /* focus ring follows the brand */
+
+  --info: oklch(0.68 0.13 248);
+  --success: oklch(0.68 0.14 150);
+  --warning: oklch(0.75 0.15 65);
+
+  --sidebar: oklch(0.145 0.01 285);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.62 0.17 266);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.22 0.012 285);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.58 0.15 266);
+
+  /* Soft-gloss-minimal elevation vocabulary — dark (DESIGN.md §Elevation). */
+  --shadow-rest: 0 1px 2px oklch(0 0 0 / 0.3), 0 14px 30px -16px oklch(0 0 0 / 0.55);
+  --shadow-raised: 0 4px 14px oklch(0 0 0 / 0.5);
+  --shadow-overlay: 0 20px 60px oklch(0 0 0 / 0.6);
+  --card-hi: oklch(1 0 0 / 0.09); /* soft-gloss top highlight */
+  --app-base: linear-gradient(165deg, oklch(0.16 0.012 285), oklch(0.11 0.008 285));
+  --app-aurora: radial-gradient(1050px 580px at 86% -12%, color-mix(in oklch, var(--primary) 42%, transparent), transparent 58%);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-info: var(--info);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --font-sans: 'Geist Variable', system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Helvetica, Arial, sans-serif;
+  --font-mono: 'Geist Mono Variable', ui-monospace, SFMono-Regular, Menlo,
+    Consolas, monospace;
+  /* Operator's Console display face — headings + card/section titles. */
+  --font-heading: 'Bricolage Grotesque Variable', 'Geist Variable', system-ui,
+    sans-serif;
+}
+
+/*
+ * Canonical shadcn base layer. Without this:
+ *  - bare `border`/`border-b` (table rows, Cards, definition lists) default to
+ *    currentColor (dark) instead of the subtle `--border` token → heavy lines;
+ *  - elements with no explicit text colour (outline/ghost buttons) fall back to
+ *    UA black, which is invisible/wrong in dark mode.
+ */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  /* Headings and card/section titles take the Bricolage display face. */
+  h1,
+  h2,
+  h3,
+  h4,
+  [data-slot='card-title'] {
+    font-family: var(--font-heading);
+    letter-spacing: -0.01em;
+  }
+}
+
+/*
+ * Soft-gloss-minimal card surface (DESIGN.md §Elevation).
+ * A borderless surface over the --app-base canvas: one soft lift + a faint top
+ * highlight. The shadcn Card applies this via the `card-soft` class.
+ */
+@layer components {
+  /* Operator's Console card: borderless, floats on Highlight + Shadow.
+     One depth language across light and dark (a light top-edge highlight +
+     soft shadow; tonal lift carries dark). */
+  .card-soft {
+    background: var(--card);
+    box-shadow:
+      inset 0 1px 0 oklch(1 0 0 / 0.9),
+      0 2px 4px oklch(0.22 0.03 285 / 0.05),
+      0 16px 34px -18px oklch(0.22 0.04 285 / 0.24);
+  }
+  .dark .card-soft {
+    box-shadow:
+      inset 0 1px 0 oklch(1 0 0 / 0.08),
+      0 3px 8px oklch(0 0 0 / 0.36),
+      0 18px 34px -16px oklch(0 0 0 / 0.62);
+  }
+}
+
+/*
+ * The authenticated app canvas: the warm + accent-tinted ground cards sit on.
+ * The base tint paints on the scroll box; the aurora glow rides a fixed,
+ * GPU-composited pseudo-element pinned to the viewport's top-right corner, so it
+ * stays put on scroll without the full-viewport repaint that
+ * `background-attachment: fixed` costs (and that mobile Safari renders wrong).
+ * `z-index: 0` establishes a stacking context so the -1 layer sits above the
+ * base tint but behind all content.
+ */
+.app-ground {
+  position: relative;
+  z-index: 0;
+  background: var(--app-base);
+}
+.app-ground::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--app-aurora);
+}
+
+/*
+ * Same aurora ground for a panel that shares the viewport with a sibling
+ * (e.g. the split-screen auth layout): the glow is painted as a background
+ * layer scoped to the panel's own box instead of `.app-ground`'s
+ * viewport-pinned pseudo-element, which would otherwise bleed across both
+ * panels.
+ */
+.auth-ground {
+  background-image: var(--app-aurora), var(--app-base);
+  background-repeat: no-repeat;
+}
+
+/*
+ * Sidebar plane: a warm (light) / accent-tinted (dark) frosted surface, slightly
+ * translucent so the app-ground bleeds through — part of the same soft-gloss world
+ * as the cards, not a flat cool slab of chrome.
+ */
+.sidebar-soft {
+  background: var(--sidebar);
+}
+
+/*
+ * Reduced motion — honor the OS setting (WCAG 2.3.3). Collapse tweened
+ * transitions and the enter/exit animations (dialogs, dropdowns, accordions,
+ * the arrow nudge / chevron rotate) so nothing slides, zooms or moves. We keep
+ * the looping status indicators — the spinner and the skeleton pulse — running,
+ * because they communicate live state rather than decorate; killing them would
+ * destroy useful feedback, which is the failure mode a blanket kill causes.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .animate-spin {
+    animation-duration: 1s !important;
+    animation-iteration-count: infinite !important;
+  }
+  .animate-pulse {
+    animation-duration: 2s !important;
+    animation-iteration-count: infinite !important;
+  }
+}

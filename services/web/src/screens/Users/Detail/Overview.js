@@ -1,21 +1,22 @@
 import { Link } from '@bedrockio/router';
 
-import {
-  Anchor,
-  Badge,
-  Box,
-  Card,
-  Divider,
-  Group,
-  Image,
-  SimpleGrid,
-  Stack,
-  Text,
-} from '@mantine/core';
-
 import { usePage } from 'stores/page';
 
+import Thumbnail from 'components/Thumbnail';
 import UserImage from 'components/UserImage';
+
+import { Badge } from '@/components/ui/badge';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  DefinitionItem,
+  DefinitionList,
+} from '@/components/ui/definition-list';
+import { Separator } from '@/components/ui/separator';
 
 import { useRequest } from 'utils/api';
 import { formatDateTime } from 'utils/date';
@@ -23,14 +24,6 @@ import { formatRoles } from 'utils/permissions';
 import { urlForUpload } from 'utils/uploads';
 
 import Menu from './Menu';
-
-function LinkWrapped({ children, ...props }) {
-  return (
-    <Anchor component={Link} {...props}>
-      {children}
-    </Anchor>
-  );
-}
 
 export default function UserOverview() {
   const { user } = usePage();
@@ -49,105 +42,71 @@ export default function UserOverview() {
       <Menu />
       <UserImage user={user} />
 
-      <SimpleGrid mt="md" cols={{ base: 1, md: 2 }} spacing="xl">
-        <Card withBorder>
-          <Stack spacing="xs">
-            <Text size="md" weight="bold">
-              User Information
-            </Text>
-            <Divider />
-
-            <Box>
-              <Text size="xs" c="dimmed">
-                Name
-              </Text>
-              <Text>{user.name}</Text>
-            </Box>
-
-            <Box>
-              <Text size="xs" c="dimmed">
-                Email
-              </Text>
-              <Text>{user.email}</Text>
-            </Box>
-
-            <Box>
-              <Text size="xs" c="dimmed">
-                Roles
-              </Text>
-              <Box mt={3}>
-                {formatRoles(user.roles).map((label) => {
-                  return (
-                    <Badge
-                      variant="default"
-                      size="md"
-                      radius="md"
-                      leftSection={<label.icon size={14} />}
-                      key={label.key}>
-                      {label.content}
-                    </Badge>
-                  );
-                })}
-              </Box>
-            </Box>
-
-            <Box>
-              <Text size="xs" c="dimmed">
-                Phone
-              </Text>
-              <Text>{user.phone || 'N / A'}</Text>
-            </Box>
-
-            <Box>
-              <Text size="xs" c="dimmed">
-                Created At
-              </Text>
-              <Text>{formatDateTime(user.createdAt)}</Text>
-            </Box>
-          </Stack>
+      <div className="mt-4 grid grid-cols-1 gap-6 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>User Information</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <DefinitionList>
+              <DefinitionItem label="Name">{user.name}</DefinitionItem>
+              <DefinitionItem label="Email">{user.email}</DefinitionItem>
+              <DefinitionItem label="Roles">
+                <div className="flex flex-wrap gap-1">
+                  {formatRoles(user.roles).map((label) => {
+                    return (
+                      <Badge variant="secondary" key={label.key}>
+                        <label.icon size={12} />
+                        {label.content}
+                      </Badge>
+                    );
+                  })}
+                </div>
+              </DefinitionItem>
+              <DefinitionItem label="Phone">
+                {user.phone || 'N / A'}
+              </DefinitionItem>
+              <DefinitionItem label="Created At">
+                {formatDateTime(user.createdAt)}
+              </DefinitionItem>
+            </DefinitionList>
+          </CardContent>
         </Card>
 
-        <Card withBorder>
-          <Card.Section p="md" withBorder>
-            <Text size="md" weight="bold">
-              Shops
-            </Text>
-          </Card.Section>
-          {shopsRequest.data.length === 0 && (
-            <Text mt="md" size="xs" c="dimmed">
-              No shops yet
-            </Text>
-          )}
-          {shopsRequest.data.map((shop) => {
-            return (
-              <Card.Section
-                component={LinkWrapped}
-                to={`/shops/${shop.id}`}
-                p="md"
-                underline={false}
-                key={shop.id}>
-                <Group>
-                  <Image
-                    radius={4}
-                    h={40}
-                    w={40}
-                    fit
-                    src={urlForUpload(shop.images[0])}
-                  />
-                  <Stack gap={0}>
-                    <Text weight="bold" color="primary" td="none">
-                      {shop.name}
-                    </Text>
-                    <Text size="xs" c="dimmed" td="none">
-                      {shop.description}
-                    </Text>
-                  </Stack>
-                </Group>
-              </Card.Section>
-            );
-          })}
+        <Card>
+          <CardHeader>
+            <CardTitle>Shops</CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col">
+            {shopsRequest.data.length === 0 && (
+              <p className="text-muted-foreground text-xs">No shops yet</p>
+            )}
+            {shopsRequest.data.map((shop, index) => {
+              return (
+                <div key={shop.id}>
+                  {index > 0 && <Separator className="my-4" />}
+                  <Link
+                    to={`/shops/${shop.id}`}
+                    className="flex items-center gap-4 no-underline">
+                    <Thumbnail
+                      src={urlForUpload(shop.images[0])}
+                      className="size-10"
+                    />
+                    <div className="flex flex-col">
+                      <span className="text-primary font-bold">
+                        {shop.name}
+                      </span>
+                      <span className="text-muted-foreground text-xs">
+                        {shop.description}
+                      </span>
+                    </div>
+                  </Link>
+                </div>
+              );
+            })}
+          </CardContent>
         </Card>
-      </SimpleGrid>
+      </div>
     </>
   );
 }
