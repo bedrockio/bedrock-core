@@ -38,20 +38,6 @@ async function saveDefinition(updated) {
 
 // Definition update
 
-async function updateDefinitionPath(path, value) {
-  const definition = await loadDefinition();
-  if (value === null) {
-    // Unset field using undefined here.
-    value = undefined;
-  }
-  const field = path[path.length - 1];
-  set(definition, path, value);
-  if (EDITABLE_FIELDS.includes(field)) {
-    set(definition, [...path.slice(0, -1), 'x-generated'], undefined);
-  }
-  await saveDefinition(definition);
-}
-
 // Generation
 
 async function generateDefinition() {
@@ -535,4 +521,4 @@ function applyRouterHack() {
   };
 }
 
-export { DEFINITION_FILE, loadDefinition, generateDefinition, updateDefinitionPath, recordRequest, saveDefinition };
+export { loadDefinition, generateDefinition, recordRequest, saveDefinition };

@@ -1,9 +1,9 @@
-import { PassThrough, Readable } from 'stream';
+import { PassThrough } from 'stream';
 
 import csv from 'fast-csv';
 import config from '@bedrockio/config';
 import mongoose from 'mongoose';
-import { get, once, startCase } from 'lodash-es';
+import { get, startCase } from 'lodash-es';
 
 import { serializeObject } from './serialize.js';
 
@@ -270,52 +270,4 @@ function convertCase(obj, options) {
 
 // Parsing
 
-const PARSE_OPTIONS = {
-  trim: true,
-  headers: true,
-  ignoreEmpty: true,
-};
-
-function parseCsv(str) {
-  const getStream = once(async () => {
-    if (str.startsWith('http')) {
-      const response = await fetch(str);
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-      const nodeStream = Readable.fromWeb(response.body);
-      return csv.parseStream(nodeStream, PARSE_OPTIONS);
-    } else if (str.includes('\n')) {
-      return csv.parseString(str, PARSE_OPTIONS);
-    } else {
-      return csv.parseFile(str, PARSE_OPTIONS);
-    }
-  });
-
-  return {
-    [Symbol.asyncIterator]() {
-      async function* iterate() {
-        const stream = await getStream();
-        for await (const row of stream) {
-          yield row;
-        }
-      }
-      return iterate();
-    },
-
-    async then(resolve, reject) {
-      try {
-        const stream = await getStream();
-        const rows = [];
-        for await (const row of stream) {
-          rows.push(row);
-        }
-        resolve(rows);
-      } catch (error) {
-        reject(error);
-      }
-    },
-  };
-}
-
-export { csvExport, parseCsv };
+export { csvExport };

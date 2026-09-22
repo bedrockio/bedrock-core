@@ -1,10 +1,4 @@
-import crypto from 'crypto';
-import config from '@bedrockio/config';
-
 const { default: twilio } = await vi.importActual('twilio');
-
-const API_URL = config.get('API_URL');
-const AUTH_TOKEN = config.get('TWILIO_AUTH_TOKEN');
 
 let sentMessages;
 let unsubscribed;
@@ -47,14 +41,6 @@ function assertSmsCount(count) {
   expect(sentMessages.length).toBe(count);
 }
 
-function getSentSms(options) {
-  return sentMessages.find((sms) => {
-    return Object.keys(options).some((key) => {
-      return sms[key] === options[key];
-    });
-  });
-}
-
 function createClient() {
   return {
     messages: {
@@ -63,21 +49,12 @@ function createClient() {
   };
 }
 
-function signRequest(path, params) {
-  const url = API_URL + path;
-  const data = Object.keys(params)
-    .sort()
-    .reduce((acc, key) => acc + key + params[key], url);
-
-  return crypto.createHmac('sha1', AUTH_TOKEN).update(Buffer.from(data, 'utf-8')).digest('base64');
-}
-
 function setTwilioUnsubscribed(phone) {
   unsubscribed.push(phone);
 }
 
 Object.assign(createClient, twilio);
 
-export { signRequest, getSentSms, assertSmsSent, assertSmsCount, setTwilioUnsubscribed };
+export { assertSmsSent, assertSmsCount, setTwilioUnsubscribed };
 
 export default createClient;

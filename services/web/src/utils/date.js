@@ -22,28 +22,9 @@ export function formatDate(arg, options) {
   });
 }
 
-export function formatDateCompact(arg, locale) {
-  // MM/DD/YYYY
-  const date = typeof arg === 'string' ? new Date(arg) : arg;
-  return new Intl.DateTimeFormat(locale, {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).format(date);
-}
-
 export function formatDateTime(arg, options) {
   return getFormatted(arg, {
     ...DATETIME_MED,
-    ...options,
-  });
-}
-
-export function formatTime(arg, options) {
-  return getFormatted(arg, {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
     ...options,
   });
 }

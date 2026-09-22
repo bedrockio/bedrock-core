@@ -55,10 +55,6 @@ class MockMessaging {
   }
 }
 
-function getLastMessage() {
-  return sentMessages[sentMessages.length - 1];
-}
-
 export function initializeApp() {
   return {
     messaging() {
@@ -73,6 +69,6 @@ export const credential = {
   },
 };
 
-export { assertPushSent, assertPushCount, getLastMessage };
+export { assertPushSent, assertPushCount };
 
 export default { initializeApp, credential };

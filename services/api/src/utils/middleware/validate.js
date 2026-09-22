@@ -71,31 +71,6 @@ function validateFiles() {
   });
 }
 
-function validateParam(arg) {
-  const schema = resolveSchema(arg);
-  return wrapSchema(schema, 'body', async (value, ctx, next) => {
-    try {
-      const { params } = ctx;
-      const { authUser } = ctx.state;
-      const key = findKey(params, value);
-
-      params[key] = await schema.validate(value, {
-        ...ctx.state,
-        scopes: authUser?.getScopes(),
-      });
-    } catch (error) {
-      throwError(ctx, error);
-    }
-    return await next();
-  });
-}
-
-function findKey(obj, value) {
-  return Object.keys(obj).find((key) => {
-    return obj[key] === value;
-  });
-}
-
 function wrapSchema(schema, type, fn) {
   // Allows docs to see the schema on the middleware
   // layer to generate an OpenApi definition for it.
@@ -136,4 +111,4 @@ function isImplementationError(error) {
   }
 }
 
-export { validateBody, validateQuery, validateFiles, validateDelete, validateParam };
+export { validateBody, validateQuery, validateFiles, validateDelete };

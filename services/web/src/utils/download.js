@@ -1,21 +1,4 @@
-import { getToken } from './api/token';
-import { API_URL } from './env';
-
 const FILENAME_REG = /filename="(.+)"/;
-
-export async function downloadAsFile(url, options) {
-  let response;
-  if (url.includes(API_URL)) {
-    response = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${getToken()}`,
-      },
-    });
-  } else {
-    response = await fetch(url);
-  }
-  await downloadResponse(response, options);
-}
 
 export async function downloadResponse(response, options = {}) {
   let { filename, openInline } = options;

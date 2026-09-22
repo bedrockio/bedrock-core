@@ -33,4 +33,4 @@ afterEach(() => {
   unmockTime();
 });
 
-export { setTime, mockTime, unmockTime, advanceTime };
+export { mockTime, unmockTime, advanceTime };

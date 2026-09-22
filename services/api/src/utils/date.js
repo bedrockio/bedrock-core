@@ -18,8 +18,4 @@ function getDateTime(arg, user) {
   }
 }
 
-function getTimeZone(user) {
-  return user.timeZone || DEFAULT_TIME_ZONE;
-}
-
-export { getDateTime, getTimeZone };
+export { getDateTime };

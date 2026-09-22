@@ -27,7 +27,7 @@ export function literalDeclaration(name, parameters, opts) {
   return `let ${name} = ${literalRepresentation(parameters, opts)}`;
 }
 
-export function literalRepresentation(value, opts, indentLevel) {
+function literalRepresentation(value, opts, indentLevel) {
   indentLevel = indentLevel === undefined ? 1 : indentLevel + 1;
 
   switch (Object.prototype.toString.call(value)) {

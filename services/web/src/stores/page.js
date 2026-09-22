@@ -1,4 +1,4 @@
-import { useLocation, useParams } from '@bedrockio/router';
+import { useParams } from '@bedrockio/router';
 import { createContext, useCallback, use, useEffect, useState } from 'react';
 
 import { Spinner } from '@/components/ui/spinner';
@@ -6,10 +6,6 @@ import { Spinner } from '@/components/ui/spinner';
 import ErrorMessage from 'components/ErrorMessage';
 
 export const PageContext = createContext();
-
-export function PageProvider(props) {
-  return <PageContext value={{}}>{props.children}</PageContext>;
-}
 
 export function usePage() {
   return use(PageContext);
@@ -19,14 +15,9 @@ export function usePageLoader(fn) {
   return useParamsLoader('id', fn);
 }
 
-export function useParamsLoader(arg, fn) {
+function useParamsLoader(arg, fn) {
   const names = Array.isArray(arg) ? arg : [arg];
   return useLoader(names, useParams(), fn);
-}
-
-export function useQueryLoader(arg, fn) {
-  const names = Array.isArray(arg) ? arg : [arg];
-  return useLoader(names, useSearchParams(), fn);
 }
 
 function useLoader(names, params, fn) {
@@ -102,11 +93,4 @@ function useLoader(names, params, fn) {
   );
 
   return PageLoader;
-}
-
-// Note that this hook is included in React Router v6 but not v5,
-// so including it here.
-function useSearchParams() {
-  const { search } = useLocation();
-  return Object.fromEntries(new URLSearchParams(search));
 }

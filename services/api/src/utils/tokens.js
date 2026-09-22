@@ -138,7 +138,6 @@ function generateTokenId() {
 
 export {
   verifyToken,
-  generateTokenId,
   createAuthToken,
   removeAuthToken,
   getAuthPayload,

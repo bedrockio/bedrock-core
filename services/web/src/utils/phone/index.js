@@ -23,12 +23,6 @@ export function formatPhone(phone, countryCode) {
   return phone;
 }
 
-export function getFormatLength(code) {
-  const country = COUNTRIES[code];
-  const digits = country.format.replace(/[^#]/g, '');
-  return digits.length;
-}
-
 function getCountryByPrefix(phone) {
   let prefix = '';
   const len = Math.min(phone.length, 5);
@@ -41,7 +35,7 @@ function getCountryByPrefix(phone) {
   }
 }
 
-export function applyFormat(phone, format) {
+function applyFormat(phone, format) {
   let str = '';
   let j = 0;
   for (let i = 0; i < format.length; i++) {

@@ -14,7 +14,7 @@ let errorCount = 0;
 // overridden later which could present an attack vector for XSS.
 const fetch = window.fetch;
 
-export class NetworkError extends CustomError {
+class NetworkError extends CustomError {
   constructor() {
     // this allows consumers to discriminate network errors
     // vs API errors and also normalizes the error message for
@@ -23,7 +23,7 @@ export class NetworkError extends CustomError {
   }
 }
 
-export class TimeoutError extends CustomError {
+class TimeoutError extends CustomError {
   constructor() {
     super('Connection timeout.');
   }

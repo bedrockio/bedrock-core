@@ -12,7 +12,6 @@ const APP_NAME = config.get('APP_NAME');
 const POSTMARK_FROM = config.get('POSTMARK_FROM');
 const POSTMARK_API_KEY = config.get('POSTMARK_API_KEY');
 const POSTMARK_DEV_EMAIL = config.get('POSTMARK_DEV_EMAIL');
-const POSTMARK_WEBHOOK_KEY = config.get('POSTMARK_WEBHOOK_KEY');
 
 const DEFAULT_LAYOUT = 'layout.html';
 
@@ -155,13 +154,4 @@ function stripHtml(str) {
   });
 }
 
-function validateWebhookKey(ctx) {
-  const key = ctx.request.get('x-pm-webhook-key');
-  if (key !== POSTMARK_WEBHOOK_KEY) {
-    logger.warn(`Bad webhook key "${key}".`);
-    logger.warn(`Configured key is ${POSTMARK_WEBHOOK_KEY}`);
-    throw new Error('Invalid Postmark webhook key.');
-  }
-}
-
-export { sendMail, getMailParams, validateWebhookKey };
+export { sendMail, getMailParams };

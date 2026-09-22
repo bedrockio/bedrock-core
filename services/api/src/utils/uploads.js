@@ -1,7 +1,6 @@
 import os from 'os';
 import path from 'path';
-import fs from 'fs';
-import { copyFile, rm, stat, writeFile } from 'fs/promises';
+import { copyFile, stat, writeFile } from 'fs/promises';
 
 import config from '@bedrockio/config';
 import logger from '@bedrockio/logger';
@@ -173,60 +172,8 @@ async function createResumableUpload(attributes) {
   };
 }
 
-// Replaces the stored bytes of an upload with the file at `filepath`. The
-// storage destination and content type follow the upload's current metadata,
-// so if `mimeType` was changed first (e.g. transcoding WebM audio to M4A)
-// the file lands at the new destination — the caller is responsible for
-// cleaning up the old one (see deleteUploadFile).
-async function replaceUploadFile(upload, filepath) {
-  const file = {
-    filepath,
-    filename: upload.filename,
-  };
-  if (upload.storageType === 'gcs') {
-    await uploadGcs(file, upload);
-  } else {
-    await uploadLocal(file, upload);
-  }
-}
-
-// Deletes the stored file for an upload-like object ({ id, mimeType,
-// storageType } is enough). The Upload document itself is untouched.
-async function deleteUploadFile(upload) {
-  if (upload.storageType === 'gcs') {
-    await getGcsFile(upload).delete({
-      ignoreNotFound: true,
-    });
-  } else {
-    await rm(getUploadLocalPath(upload), {
-      force: true,
-    });
-  }
-}
-
 function getUploadLocalPath(upload) {
   return path.join(os.tmpdir(), getUploadFilename(upload));
-}
-
-function getUploadReadStream(upload) {
-  if (upload.storageType === 'local') {
-    return fs.createReadStream(getUploadLocalPath(upload));
-  }
-  if (upload.storageType === 'gcs') {
-    return getGcsFile(upload).createReadStream();
-  }
-  throw new Error(`Unsupported upload storage type: ${upload.storageType}`);
-}
-
-// Reads the stored file into a base64 string, for platforms that require a
-// file to be inlined in the request rather than fetched from a URL. The whole
-// file is held in memory, so this is only suitable for documents and images.
-async function getUploadBase64(upload) {
-  const chunks = [];
-  for await (const chunk of getUploadReadStream(upload)) {
-    chunks.push(chunk);
-  }
-  return Buffer.concat(chunks).toString('base64');
 }
 
 function validateAccess(ctx, upload) {
@@ -330,53 +277,12 @@ async function parseRange(header, filePath) {
   return { start, end, size };
 }
 
-async function createUploadFromUrl(url, options) {
-  const response = await fetch(url);
-
-  const file = {
-    ...parseResponseHeaders(response),
-    buffer: Buffer.from(await response.arrayBuffer()),
-  };
-
-  return await createUpload(file, options);
-}
-
-function parseResponseHeaders(response) {
-  const { headers } = response;
-
-  let mimetype = headers.get('content-type') || 'application/octet-stream';
-
-  // Strip out charset if it exists
-  mimetype = mimetype.split(';')[0].trim();
-
-  const disposition = headers.get('content-disposition');
-
-  let filename;
-
-  if (disposition) {
-    filename = disposition.match(/filename="(.+)"/)?.[1];
-  }
-
-  filename ||= `file.${mime.extension(mimetype)}`;
-
-  return {
-    mimetype,
-    filename,
-  };
-}
-
 export {
   createUploads,
   createUpload,
   getUploadUrl,
-  getUploadFilename,
   getUploadLocalPath,
-  getUploadReadStream,
-  getUploadBase64,
   validateAccess,
   parseRange,
-  createUploadFromUrl,
   createResumableUpload,
-  replaceUploadFile,
-  deleteUploadFile,
 };

@@ -33,4 +33,3 @@ export function notify({ title, message, color } = {}) {
 }
 
 export const notifySuccess = (params) => notify({ ...params, color: 'green' });
-export const notifyError = (params) => notify({ ...params, color: 'red' });
