@@ -282,6 +282,20 @@ describe('/1/auth/otp', () => {
         expect(user.phoneVerified).toBe(true);
       });
 
+      it('should not accept both an email and a phone', async () => {
+        const user = await createUser({
+          email: 'foo@bar.com',
+          phone: '+12223456789',
+        });
+        const code = await createOtp(user, { channel: 'email' });
+        const response = await request('POST', '/1/auth/otp/login', {
+          email: user.email,
+          phone: user.phone,
+          code,
+        });
+        expect(response).toHaveStatus(400);
+      });
+
       it('should not verify email when the code was sent by sms', async () => {
         let user = await createUser({
           email: 'foo@bar.com',

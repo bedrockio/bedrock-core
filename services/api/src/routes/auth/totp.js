@@ -8,18 +8,20 @@ const { login, verifyLoginAttempts } = require('../../utils/auth');
 const { verifyCode, verifyTotp, generateTotp, enableTotp, revokeTotp } = require('../../utils/auth/totp');
 
 const { AuditEntry } = require('../../models');
-const { findUser } = require('./utils');
+const { findUser, validateIdentity } = require('./utils');
 
 const router = new Router();
 
 router
   .post(
     '/login',
-    validateBody({
-      phone: yd.string().phone(),
-      email: yd.string().email(),
-      code: yd.string().length(6).required(),
-    }),
+    validateBody(
+      validateIdentity({
+        phone: yd.string().phone(),
+        email: yd.string().email(),
+        code: yd.string().length(6).required(),
+      }),
+    ),
     async (ctx) => {
       const { code } = ctx.request.body;
 

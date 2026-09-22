@@ -7,19 +7,21 @@ const { verifyOtp } = require('../../utils/auth/otp');
 const { login, verifyLoginAttempts, claimUnverifiedUser } = require('../../utils/auth');
 
 const { AuditEntry } = require('../../models');
-const { findUser } = require('./utils');
+const { findUser, validateIdentity } = require('./utils');
 
 const router = new Router();
 
 router
   .post(
     '/send',
-    validateBody({
-      type: yd.string().allow('link', 'code').default('code'),
-      channel: yd.string().allow('email', 'sms').default('email'),
-      email: yd.string().email(),
-      phone: yd.string().phone(),
-    }),
+    validateBody(
+      validateIdentity({
+        type: yd.string().allow('link', 'code').default('code'),
+        channel: yd.string().allow('email', 'sms').default('email'),
+        email: yd.string().email(),
+        phone: yd.string().phone(),
+      }),
+    ),
     async (ctx) => {
       const { body } = ctx.request;
       const user = await findUser(ctx);
@@ -38,11 +40,13 @@ router
   )
   .post(
     '/login',
-    validateBody({
-      code: yd.string().length(6).required(),
-      email: yd.string().email(),
-      phone: yd.string().phone(),
-    }),
+    validateBody(
+      validateIdentity({
+        code: yd.string().length(6).required(),
+        email: yd.string().email(),
+        phone: yd.string().phone(),
+      }),
+    ),
     async (ctx) => {
       const { code } = ctx.request.body;
       const user = await findUser(ctx);
