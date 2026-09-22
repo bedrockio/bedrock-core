@@ -7,12 +7,10 @@ const API_URL = config.get('API_URL');
 const AUTH_TOKEN = config.get('TWILIO_AUTH_TOKEN');
 
 let sentMessages;
-let createdRooms;
 let unsubscribed;
 
 beforeEach(() => {
   sentMessages = [];
-  createdRooms = [];
   unsubscribed = [];
 });
 
@@ -49,10 +47,6 @@ function assertSmsCount(count) {
   expect(sentMessages.length).toBe(count);
 }
 
-function assertRoomCreated(roomName) {
-  expect(createdRooms).toContain(roomName);
-}
-
 function getSentSms(options) {
   return sentMessages.find((sms) => {
     return Object.keys(options).some((key) => {
@@ -61,38 +55,8 @@ function getSentSms(options) {
   });
 }
 
-function rooms(roomName) {
-  return {
-    async fetch() {
-      if (!createdRooms.includes(roomName)) {
-        const error = new Error('No room created.');
-        error.code = 20404;
-        throw error;
-      }
-    },
-
-    participants: {
-      async list() {
-        return [];
-      },
-    },
-  };
-}
-
-rooms.create = createRoom;
-
-async function createRoom(options) {
-  const { uniqueName } = options;
-  createdRooms.push(uniqueName);
-}
-
 function createClient() {
   return {
-    video: {
-      v1: {
-        rooms,
-      },
-    },
     messages: {
       create: sendMessage,
     },
@@ -114,6 +78,6 @@ function setTwilioUnsubscribed(phone) {
 
 Object.assign(createClient, twilio);
 
-export { signRequest, getSentSms, assertSmsSent, assertSmsCount, assertRoomCreated, setTwilioUnsubscribed };
+export { signRequest, getSentSms, assertSmsSent, assertSmsCount, setTwilioUnsubscribed };
 
 export default createClient;

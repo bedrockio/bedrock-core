@@ -51,7 +51,6 @@
     "less": "^4.3.0",
     "lodash-es": "^4.17.21",
     "lucide-react": "^1.17.0",
-    "postcss": "^8.5.3",
     "prism-react-renderer": "^2.4.1",
     "prop-types": "^15.8.1",
     "qr.js": "^0.0.0",
@@ -75,8 +74,7 @@
   "devDependencies": {
     "@bedrockio/eslint-plugin": "^1.6.0",
     "@bedrockio/prettier-config": "^1.1.1",
-    "prettier": "^3.6.2",
-    "typescript": "^6.0.3"
+    "prettier": "^3.6.2"
   },
   "volta": {
     "node": "26.3.0"
