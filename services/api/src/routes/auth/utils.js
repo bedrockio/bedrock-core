@@ -5,7 +5,9 @@ import { User } from '../../models/index.js';
 // is sent to is never ambiguous.
 function validateIdentity(body) {
   return yd.object(body).custom((val) => {
-    if (!val.email === !val.phone) {
+    if (val.email && val.phone) {
+      throw new Error('Cannot provide both an email and a phone.');
+    } else if (!val.email && !val.phone) {
       throw new Error('Either email or phone is required.');
     }
   });
