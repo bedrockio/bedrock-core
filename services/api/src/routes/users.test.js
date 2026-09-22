@@ -88,7 +88,7 @@ describe('/1/users', () => {
         },
         { user },
       );
-      expect(response).toHaveStatus(400);
+      expect(response).toHaveStatus(401);
       user = await User.findById(user._id);
       expect(user.roles).toHaveLength(0);
     });
@@ -96,7 +96,7 @@ describe('/1/users', () => {
     it('should not allow setting tester flag', async () => {
       let user = await createUser();
       const response = await request('PATCH', '/1/users/me', { isTester: true }, { user });
-      expect(response).toHaveStatus(400);
+      expect(response).toHaveStatus(401);
       user = await User.findById(user._id);
       expect(user.isTester).toBe(false);
     });

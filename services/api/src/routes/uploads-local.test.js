@@ -35,7 +35,7 @@ describe('/1/uploads', () => {
     it('should not expose owner contact details when included', async () => {
       const owner = await createUser({ phone: '+12125551234' });
       const upload = await createUpload({ owner });
-      const response = await request('GET', `/1/uploads/${upload.id}?include=owner`, {}, {});
+      const response = await request('GET', `/1/uploads/${upload.id}`, { include: 'owner' }, {});
       expect(response).toHaveStatus(200);
       const { owner: data } = response.body.data;
       expect(data.firstName).toBe(owner.firstName);

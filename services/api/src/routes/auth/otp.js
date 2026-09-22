@@ -17,7 +17,7 @@ router
     validateBody(
       validateIdentity({
         type: yd.string().allow('link', 'code').default('code'),
-        channel: yd.string().allow('email', 'sms').default('email'),
+        channel: yd.string().allow('email', 'sms'),
         email: yd.string().email(),
         phone: yd.string().phone(),
       }),
@@ -28,6 +28,8 @@ router
 
       const challenge = await sendOtp(user, {
         ...body,
+        // Send to whichever identifier named the account unless told otherwise.
+        channel: body.channel || (body.phone ? 'sms' : 'email'),
         phase: 'login',
       });
 
