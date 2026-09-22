@@ -12,7 +12,7 @@ function range(start, end) {
 
 /**
  * Page range with leading/trailing boundaries and siblings around the current
- * page, collapsing gaps into ellipses — mirrors Mantine's Pagination behaviour.
+ * page, collapsing gaps into ellipses.
  */
 function getPaginationRange(page, total, siblings = 2, boundaries = 2) {
   const totalNumbers = siblings * 2 + 3 + boundaries * 2;

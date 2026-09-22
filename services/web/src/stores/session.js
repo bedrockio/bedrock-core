@@ -5,7 +5,6 @@ import React, { useCallback, use, useEffect, useRef, useState } from 'react';
 
 import { trackSession } from 'utils/analytics';
 import { hasToken, request, setToken } from 'utils/api';
-import { wrapContext } from 'utils/hoc';
 import { merge } from 'utils/object';
 import { getOrganization, setOrganization } from 'utils/organization';
 import { userHasAccess } from 'utils/permissions';
@@ -346,4 +345,3 @@ export function useSession() {
   return use(SessionContext);
 }
 
-export const withSession = wrapContext(SessionContext);

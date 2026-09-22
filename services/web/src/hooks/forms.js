@@ -42,9 +42,6 @@ export function useFields(current) {
 }
 
 // The following resolver is to allow setField to be called manually.
-// Note that unfortunately Mantine hides nearly all the props in
-// onChange events for non-native components (ie those that use combobox).
-// Components like Select and MultiSelect will likely require a wrapper.
 function resolveOptions(...args) {
   if (args[0]?.nativeEvent && args.length === 1) {
     return args[0].target;

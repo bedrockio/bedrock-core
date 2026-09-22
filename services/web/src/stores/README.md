@@ -1,57 +1,12 @@
-Use Mantine for UI components whenever possible. Always check for reusable
-Mantine components before creating custom ones. Use function declarations
-instead of arrow functions for better debugging.
-
 # Stores
 
 Components can inject a session store, allowing them to access and react to
 changes in the user object and stored session data. These are implemented as a
 single [React context](https://reactjs.org/docs/context.html).
 
-- [Class Components](#class-components)
 - [Hooks](#hooks)
 - [State](#state)
 - [Methods](#methods)
-
-## Class Components
-
-Class based components can be injected with the session store using the HOC
-`withSession`, and accessed with `this.context`.
-
-Bedrock by default shows a loader while the session is bootstrapping. This means
-that you can use `withSession` and depend on the `user` object to exist when the
-wrapped component is mounted if the user is logged in. In most cases this is
-acceptable, however if the app needs to be more responsive (ie. display non-user
-specific content while bootstrapping), it can be removed (see
-[App.js](../App.js)) which will allow the wrapped component to render before the
-session is loaded. For most cases, `withSession` can still be used as the
-wrapped component will re-render when the session is loaded. For the less common
-case when components need to load data on `componentDidMount` another HOC
-`withLoadedSession` is provided. This will wait to mount the wrapped component
-until the session has been bootstrapped.
-
-```jsx
-import { withSession } from 'stores/session';
-
-class MyComponent extends React.Component {
-  componentDidMount() {
-    const { user, loading } = this.context;
-    console.log(user);
-    console.log(loading);
-  }
-
-  render() {
-    const { user } = this.context;
-    if (user) {
-      return <div>Hello {user.name}.</div>;
-    } else {
-      return 'Loading...';
-    }
-  }
-}
-
-export default withSession(MyComponent);
-```
 
 ## Hooks
 

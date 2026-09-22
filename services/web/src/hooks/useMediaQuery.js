@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 
 /**
- * Local replacement for the Mantine useMediaQuery.
  * Returns true when the media query matches.
  */
 export function useMediaQuery(query, initial = false) {

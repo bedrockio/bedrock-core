@@ -1,14 +1,6 @@
 /*
  * shadcn/ui + Tailwind v4 design tokens.
- *
- * NOTE: Tailwind's preflight (global base reset) is intentionally NOT imported
- * while Mantine is still mounted — it would reset Mantine's base element styles
- * and break unconverted screens (see change-ui-framework-to-shadcn.html §6.3).
- * We import theme + utilities + the shadcn component layer only. Once Mantine is
- * removed in the teardown phase, switch the two imports below back to a single
- * `@import "tailwindcss";` to re-enable preflight.
  */
-/* Mantine is gone — full Tailwind (incl. preflight) is back in its normal layers. */
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
