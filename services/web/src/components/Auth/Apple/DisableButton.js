@@ -1,9 +1,11 @@
-import { Button } from '@mantine/core';
 import { noop } from 'lodash';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 
 import { useSession } from 'stores/session';
+
+import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 
 import { disable } from 'utils/auth/apple';
 
@@ -15,7 +17,7 @@ import { disable } from 'utils/auth/apple';
  * @returns {JSX.Element} The DisableButton component.
  */
 export default function DisableButton(props) {
-  const { onError = noop, onDisabled = noop } = props;
+  const { onError = noop, onDisabled = noop, ...rest } = props;
   const [loading, setLoading] = useState(false);
   const { user, updateUser } = useSession();
 
@@ -34,11 +36,12 @@ export default function DisableButton(props) {
 
   return (
     <Button
-      color="red"
+      variant="destructive"
       size="sm"
-      loading={loading}
+      disabled={loading}
       onClick={handleClick}
-      {...props}>
+      {...rest}>
+      {loading && <Spinner />}
       Disable
     </Button>
   );

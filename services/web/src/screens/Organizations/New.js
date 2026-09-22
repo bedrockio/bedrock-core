@@ -1,6 +1,6 @@
-import { Link, useNavigate } from '@bedrockio/router';
-import { Button, Stack } from '@mantine/core';
+import { useNavigate } from '@bedrockio/router';
 
+import CloseButton from 'components/CloseButton';
 import PageHeader from 'components/PageHeader';
 
 import Form from './Form';
@@ -9,25 +9,21 @@ export default function NewOrganization() {
   const navigate = useNavigate();
 
   return (
-    <Stack>
+    <div className="flex flex-col gap-4">
       <PageHeader
         title="New Organization"
         breadcrumbItems={[
           { title: 'Home', href: '/' },
           { title: 'Organizations', href: '/organizations' },
-          { title: 'Organization Shop' },
+          { title: 'New Organization' },
         ]}
-        rightSection={
-          <Button component={Link} to="/organizations" variant="default">
-            Back
-          </Button>
-        }
+        rightSection={<CloseButton to="/organizations" />}
       />
       <Form
-        onSave={() => {
-          navigate(`/organizations`);
+        onSuccess={(organization) => {
+          navigate(`/organizations/${organization.id}`);
         }}
       />
-    </Stack>
+    </div>
   );
 }

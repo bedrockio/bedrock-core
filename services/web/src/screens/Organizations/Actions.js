@@ -1,17 +1,25 @@
 import { Link } from '@bedrockio/router';
-import { ActionIcon, Button, Group, Menu, Text } from '@mantine/core';
 
 import {
-  PiCode,
-  PiDotsThreeOutlineVerticalBold,
-  PiListMagnifyingGlass,
-  PiPencilSimpleBold,
-  PiTrashBold,
-} from 'react-icons/pi';
+  Code,
+  EllipsisVertical,
+  FileSearch,
+  Pencil,
+  Trash2,
+} from 'lucide-react';
 
+import CloseButton from 'components/CloseButton';
 import Protected from 'components/Protected';
 import Confirm from 'modals/Confirm';
 import InspectObject from 'modals/InspectObject';
+
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 import { request } from 'utils/api';
 
@@ -20,35 +28,33 @@ export default function OrganizationActions({
   organization,
   reload,
 }) {
+  // In edit mode the header only offers a way out — a close (✕), no row menu.
+  if (displayMode === 'edit') {
+    return <CloseButton to={`/organizations/${organization.id}`} />;
+  }
+
   function renderButton() {
     if (displayMode === 'list') {
       return (
         <Protected endpoint="organizations" permission="update">
-          <ActionIcon
-            variant="default"
-            component={Link}
-            to={`/organizations/${organization.id}/edit`}>
-            <PiPencilSimpleBold />
-          </ActionIcon>
+          <Button asChild variant="outline" size="icon">
+            <Link to={`/organizations/${organization.id}/edit`}>
+              <Pencil />
+            </Link>
+          </Button>
         </Protected>
       );
     } else if (displayMode === 'edit') {
       return (
-        <Button
-          variant="default"
-          component={Link}
-          to={`/organizations/${organization.id}`}>
-          Back
+        <Button asChild variant="outline">
+          <Link to={`/organizations/${organization.id}`}>Back</Link>
         </Button>
       );
     } else if (displayMode === 'show') {
       return (
         <Protected endpoint="organizations" permission="update">
-          <Button
-            variant="default"
-            component={Link}
-            to={`/organizations/${organization.id}/edit`}>
-            Edit
+          <Button asChild variant="outline">
+            <Link to={`/organizations/${organization.id}/edit`}>Edit</Link>
           </Button>
         </Protected>
       );
@@ -56,36 +62,36 @@ export default function OrganizationActions({
   }
 
   return (
-    <Group gap="xs" justify="flex-end">
+    <div className="flex items-center justify-end gap-2">
       <Protected endpoint="shops" permission="update">
         {renderButton()}
       </Protected>
-      <Menu shadow="md" keepMounted>
-        <Menu.Target>
-          {displayMode !== 'list' ? (
-            <ActionIcon variant="default">
-              <PiDotsThreeOutlineVerticalBold />
-            </ActionIcon>
-          ) : (
-            <ActionIcon variant="default">
-              <PiDotsThreeOutlineVerticalBold />
-            </ActionIcon>
-          )}
-        </Menu.Target>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" size="icon">
+            <EllipsisVertical />
+          </Button>
+        </DropdownMenuTrigger>
 
-        <Menu.Dropdown>
+        <DropdownMenuContent>
           <InspectObject
             title={`Inspect ${organization.name}`}
             object={organization}
-            trigger={<Menu.Item leftSection={<PiCode />}>Inspect</Menu.Item>}
+            trigger={
+              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                <Code />
+                Inspect
+              </DropdownMenuItem>
+            }
           />
           <Protected endpoint="auditEntries" permission="read">
-            <Menu.Item
-              component={Link}
-              to={`/audit-log?object=${organization.id}&filterLabel=${organization.name}`}
-              leftSection={<PiListMagnifyingGlass />}>
-              Audit Logs
-            </Menu.Item>
+            <DropdownMenuItem asChild>
+              <Link
+                to={`/organization/audit-log?object=${organization.id}&filterLabel=${organization.name}`}>
+                <FileSearch />
+                Audit Logs
+              </Link>
+            </DropdownMenuItem>
           </Protected>
           <Protected endpoint="organizations" permission="delete">
             <Confirm
@@ -100,20 +106,23 @@ export default function OrganizationActions({
               }}
               confirmButton="Delete"
               content={
-                <Text>
+                <p className="text-sm">
                   Are you sure you want to delete{' '}
                   <strong>{organization.name}</strong>?
-                </Text>
+                </p>
               }
               trigger={
-                <Menu.Item color="red" leftSection={<PiTrashBold />}>
+                <DropdownMenuItem
+                  variant="destructive"
+                  onSelect={(e) => e.preventDefault()}>
+                  <Trash2 />
                   Delete
-                </Menu.Item>
+                </DropdownMenuItem>
               }
             />
           </Protected>
-        </Menu.Dropdown>
-      </Menu>
-    </Group>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 }

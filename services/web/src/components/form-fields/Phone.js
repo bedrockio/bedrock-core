@@ -1,10 +1,12 @@
-import { TextInput } from '@mantine/core';
 import PropTypes from 'prop-types';
+
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 
 import { COUNTRIES, formatPhone } from 'utils/phone';
 
 export default function PhoneField(props) {
-  const { name, country = 'us', error, ...rest } = props;
+  const { name, country = 'us', error, label, ...rest } = props;
 
   function getPrefix() {
     return COUNTRIES[country].prefix;
@@ -31,15 +33,20 @@ export default function PhoneField(props) {
     return formatPhone(props.value, country);
   }
 
+  const hasError = error?.hasField?.('phone');
+
   return (
-    <TextInput
-      {...rest}
-      error={error?.hasField?.('phone')}
-      type="tel"
-      autoComplete="tel"
-      value={getFormatted()}
-      onChange={onChange}
-    />
+    <div className="flex flex-col gap-2">
+      {label && <Label>{label}</Label>}
+      <Input
+        {...rest}
+        type="tel"
+        autoComplete="tel"
+        value={getFormatted()}
+        aria-invalid={hasError ? true : undefined}
+        onChange={onChange}
+      />
+    </div>
   );
 }
 

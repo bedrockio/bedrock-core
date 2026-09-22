@@ -1,5 +1,4 @@
 import { useNavigate } from '@bedrockio/router';
-import { Stack } from '@mantine/core';
 
 import { usePage } from 'stores/page';
 
@@ -11,7 +10,7 @@ export default function EditShop() {
   const navigate = useNavigate();
 
   return (
-    <Stack>
+    <div className="flex flex-col gap-4">
       <Menu displayMode="edit" />
       <Form
         shop={shop}
@@ -20,6 +19,6 @@ export default function EditShop() {
           navigate(`/shops/${shop.id}`);
         }}
       />
-    </Stack>
+    </div>
   );
 }

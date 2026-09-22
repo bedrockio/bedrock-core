@@ -1,18 +1,31 @@
-import { Group, Table } from '@mantine/core';
-import { FaChevronDown, FaChevronUp } from 'react-icons/fa6';
+import { ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react';
+
+import { TableHead } from '@/components/ui/table';
+import { cn } from '@/lib/utils';
 
 import { useSearch } from './Context';
 
 export default function SortableHeader(props) {
-  const { name, children, ...rest } = props;
+  const { name, children, className, ...rest } = props;
 
   const { sort, setSort } = useSearch();
+
+  // A header without a `name` is not sortable — render a plain cell with no
+  // button semantics, so it never becomes a focusable "sort" control that
+  // triggers a bogus setSort({ field: undefined }). (Search.Header already
+  // routes these to TableHead; this keeps SortableHeader correct in isolation.)
+  if (!name) {
+    return (
+      <TableHead className={className} {...rest}>
+        {children}
+      </TableHead>
+    );
+  }
 
   function getSorted() {
     let { field, order } = sort || {};
 
     // Note that _id is a default that serves as a proxy for createdAt.
-    // The reasoning for that is here:
     // https://github.com/bedrockio/model?tab=readme-ov-file#default-sort-order
     if (field === '_id') {
       field = 'createdAt';
@@ -32,25 +45,41 @@ export default function SortableHeader(props) {
     });
   }
 
-  function render() {
-    return (
-      <Table.Th {...rest} onClick={onClick} style={{ cursor: 'pointer' }}>
-        <Group justify="space-between" wrap="no-wrap">
-          {children}
-          {renderIcon()}
-        </Group>
-      </Table.Th>
-    );
-  }
+  const sorted = getSorted();
 
-  function renderIcon() {
-    const sorted = getSorted();
-    if (sorted === 'asc') {
-      return <FaChevronUp />;
-    } else if (sorted === 'desc') {
-      return <FaChevronDown />;
-    }
-  }
-
-  return render();
+  return (
+    <TableHead
+      {...rest}
+      onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick();
+        }
+      }}
+      role="button"
+      tabIndex={0}
+      aria-sort={
+        sorted === 'asc'
+          ? 'ascending'
+          : sorted === 'desc'
+            ? 'descending'
+            : 'none'
+      }
+      className={cn(
+        'group focus-visible:ring-ring cursor-pointer outline-none select-none focus-visible:ring-2',
+        className,
+      )}>
+      <div className="flex items-center gap-1.5">
+        {children}
+        {sorted === 'asc' ? (
+          <ChevronUp className="text-primary size-3.5 shrink-0" />
+        ) : sorted === 'desc' ? (
+          <ChevronDown className="text-primary size-3.5 shrink-0" />
+        ) : (
+          <ChevronsUpDown className="size-3.5 shrink-0 opacity-0 transition-opacity group-hover:opacity-50" />
+        )}
+      </div>
+    </TableHead>
+  );
 }

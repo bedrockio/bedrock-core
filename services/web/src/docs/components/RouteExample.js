@@ -1,6 +1,7 @@
-import { ActionIcon, Group, Text } from '@mantine/core';
 import { useState } from 'react';
-import { PiMinus, PiPlus, PiTrashBold } from 'react-icons/pi';
+import { Minus, Plus, Trash2 } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
 
 import { useClass } from 'helpers/bem';
 
@@ -70,14 +71,9 @@ export default function RouteExample(props) {
       <div
         className={getElementClass('title', isGood() ? 'good' : 'bad')}
         onClick={onToggleClick}>
-        <Group justify="space-between">
-          <Group grow>
-            <Text
-              style={{
-                margin: 0,
-              }}>
-              {status}
-            </Text>
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex grow items-center gap-3">
+            <span className="m-0">{status}</span>
             <EditableField
               type="summary"
               path={path}
@@ -88,13 +84,13 @@ export default function RouteExample(props) {
               }}
               className={getElementClass('summary')}
               trigger={
-                <ActionIcon variant="default">
-                  <PiTrashBold />
-                </ActionIcon>
+                <Button variant="outline" size="icon">
+                  <Trash2 />
+                </Button>
               }
             />
-          </Group>
-          <Group>
+          </div>
+          <div className="flex items-center gap-3">
             {canEditDocs() && (
               <Confirm
                 title="Delete Example"
@@ -103,23 +99,22 @@ export default function RouteExample(props) {
                 onConfirm={async () => {
                   unsetPath(path);
                 }}
-                content={
-                  <Text>Are you sure you want to delete this example?</Text>
-                }
+                content={<p>Are you sure you want to delete this example?</p>}
                 trigger={
-                  <ActionIcon
-                    variant="default"
+                  <Button
+                    variant="outline"
+                    size="icon"
                     onClick={(evt) => {
                       evt.stopPropagation();
                     }}>
-                    <PiTrashBold />
-                  </ActionIcon>
+                    <Trash2 />
+                  </Button>
                 }
               />
             )}
-            {open ? <PiMinus /> : <PiPlus />}
-          </Group>
-        </Group>
+            {open ? <Minus /> : <Plus />}
+          </div>
+        </div>
       </div>
       {open && (
         <div className={getElementClass('content')}>

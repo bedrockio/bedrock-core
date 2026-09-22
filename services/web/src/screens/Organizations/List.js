@@ -1,19 +1,18 @@
 import { Link } from '@bedrockio/router';
 
-import {
-  Anchor,
-  Button,
-  Group,
-  Loader,
-  Stack,
-  Table,
-  Text,
-} from '@mantine/core';
-
 import ErrorMessage from 'components/ErrorMessage';
 import PageHeader from 'components/PageHeader';
 import Search from 'components/Search';
 import SearchFilters from 'components/Search/Filters';
+
+import { Button } from '@/components/ui/button';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 
 import { request } from 'utils/api';
 import { formatDateTime } from 'utils/date';
@@ -30,98 +29,88 @@ export default function OrganizationList() {
   }
 
   return (
-    <>
-      <Search.Provider onDataNeeded={onDataNeeded}>
-        {({ items: organizations, reload, error, loading }) => (
-          <Stack>
-            <PageHeader
-              title="Organizations"
-              breadcrumbItems={[
-                { href: '/', title: 'Home' },
-                { title: 'Organizations' },
-              ]}
-              rightSection={
-                <>
-                  <Button
-                    variant="primary"
-                    component={Link}
-                    to="/organizations/new">
-                    New Organization
-                  </Button>
-                </>
-              }
-            />
+    <Search.Provider onDataNeeded={onDataNeeded}>
+      {({ items: organizations, reload, error }) => (
+        <div className="flex flex-col gap-4">
+          <PageHeader
+            title="Organizations"
+            breadcrumbItems={[
+              { href: '/', title: 'Home' },
+              { title: 'Organizations' },
+            ]}
+            rightSection={
+              <Button asChild>
+                <Link to="/organizations/new">New Organization</Link>
+              </Button>
+            }
+          />
 
-            <Group justify="space-between">
-              <Group>
-                <SearchFilters.Modal>
-                  <SearchFilters.DateRange
-                    time
-                    name="createdAt"
-                    label="Created At"
-                  />
-                </SearchFilters.Modal>
-                {loading && <Loader size="sm" />}
-              </Group>
+          <div className="flex items-center justify-between gap-4">
+            <SearchFilters.Modal>
+              <SearchFilters.DateRange
+                time
+                name="createdAt"
+                label="Created At"
+              />
+            </SearchFilters.Modal>
 
-              <Group>
-                <Search.Status />
-                <SearchFilters.Keyword />
-              </Group>
-            </Group>
+            <div className="flex items-center gap-4">
+              <Search.Status />
+              <SearchFilters.Keyword />
+            </div>
+          </div>
 
-            <ErrorMessage error={error} />
+          <ErrorMessage error={error} />
 
-            <Table stickyHeader striped>
-              <Table.Thead>
-                <Table.Tr>
-                  <Search.Header name="name">Name</Search.Header>
-                  <Search.Header name="createdAt" width={280}>
-                    Created
-                  </Search.Header>
-                  <Search.Header style={{ textAlign: 'right' }} width={100}>
-                    Actions
-                  </Search.Header>
-                </Table.Tr>
-              </Table.Thead>
-              <Table.Tbody>
-                <Search.EmptyMessage>
-                  <Table.Tr>
-                    <Table.Td colSpan={3} style={{ textAlign: 'center' }}>
-                      <Text p="md" fw="bold" ta="center">
-                        No organization found.
-                      </Text>
-                    </Table.Td>
-                  </Table.Tr>
-                </Search.EmptyMessage>
-                {organizations.map((organization) => (
-                  <Table.Tr key={organization.id}>
-                    <Table.Td>
-                      <Anchor
-                        size="sm"
-                        component={Link}
-                        to={`/organizations/${organization.id}`}>
-                        {organization.name}
-                      </Anchor>
-                    </Table.Td>
-                    <Table.Td>
-                      {formatDateTime(organization.createdAt)}
-                    </Table.Td>
-                    <Table.Td align="right">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <Search.Header name="name">Name</Search.Header>
+                <Search.Header name="createdAt" width={280}>
+                  Created
+                </Search.Header>
+                <Search.Header width={100} className="text-center">
+                  Actions
+                </Search.Header>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <Search.EmptyMessage>
+                <TableRow>
+                  <TableCell colSpan={3}>
+                    <p className="py-4 text-center font-bold">
+                      No organization found.
+                    </p>
+                  </TableCell>
+                </TableRow>
+              </Search.EmptyMessage>
+              {organizations.map((organization) => (
+                <TableRow key={organization.id}>
+                  <TableCell>
+                    <Link
+                      className="text-foreground no-underline hover:underline"
+                      to={`/organizations/${organization.id}`}>
+                      {organization.name}
+                    </Link>
+                  </TableCell>
+                  <TableCell>{formatDateTime(organization.createdAt)}</TableCell>
+                  <TableCell>
+                    <div className="flex justify-center">
                       <Actions
                         displayMode="list"
                         organization={organization}
                         reload={reload}
                       />
-                    </Table.Td>
-                  </Table.Tr>
-                ))}
-              </Table.Tbody>
-            </Table>
-            <Search.Pagination />
-          </Stack>
-        )}
-      </Search.Provider>
-    </>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+
+          <Search.Pagination />
+        </div>
+      )}
+    </Search.Provider>
   );
 }

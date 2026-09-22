@@ -1,7 +1,8 @@
-import { Alert } from '@mantine/core';
 import { get } from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
+
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 import {
   expandRoute,
@@ -115,7 +116,11 @@ export default class RouteParams extends React.Component {
     const queryParams = this.getQueryParams();
 
     if (!routeEntry) {
-      return <Alert>No OpenApi entry found.</Alert>;
+      return (
+        <Alert>
+          <AlertDescription>No OpenApi entry found.</AlertDescription>
+        </Alert>
+      );
     } else if (requestBody) {
       const { path, mime } = requestBody;
       return (

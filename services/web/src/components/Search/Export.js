@@ -1,14 +1,20 @@
-import { Button, Tooltip } from '@mantine/core';
-import { showNotification } from '@mantine/notifications';
-
 import { useRequest } from 'hooks/request';
 
+import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+
 import { downloadResponse } from 'utils/download';
+import { notify } from 'utils/notify';
 
 import { useSearch } from './Context';
 
 export default function ExportButton(props) {
-  const { children = 'Export', limit = 10000, size, ...rest } = props;
+  const { children = 'Export', limit = 10000, ...rest } = props;
 
   const { meta, filters, onDataNeeded } = useSearch();
 
@@ -22,65 +28,35 @@ export default function ExportButton(props) {
       await downloadResponse(response);
     },
     onError(error) {
-      showNotification({
-        message: error.message,
-        color: 'red',
-      });
+      notify({ message: error.message, color: 'red' });
     },
   });
 
-  function isTooMany() {
-    return meta?.total > limit;
-  }
+  const tooMany = meta?.total > limit;
 
-  function render() {
-    if (!loading && isTooMany()) {
-      return renderTooMany();
-    } else {
-      return renderButton();
-    }
-  }
+  const button = (
+    <Button
+      variant="outline"
+      disabled={tooMany || meta?.total === 0 || loading}
+      onClick={run}
+      {...rest}>
+      {loading && <Spinner className="text-current" />}
+      {children}
+    </Button>
+  );
 
-  function getButtonProps() {
-    if (isTooMany()) {
-      return {
-        color: 'red',
-        variant: 'outline',
-        disabled: true,
-      };
-    } else {
-      return {
-        variant: 'default',
-        disabled: meta?.total === 0 || loading,
-      };
-    }
-  }
-
-  function renderButton() {
+  if (tooMany && !loading) {
     return (
-      <Button
-        {...rest}
-        {...getButtonProps()}
-        size={size}
-        loading={loading}
-        onClick={run}>
-        {children}
-      </Button>
-    );
-  }
-
-  function renderTooMany() {
-    return (
-      <Tooltip
-        w={220}
-        multiline
-        withArrow
-        color="red"
-        label="Too many rows to export, narrow your search.">
-        {renderButton()}
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span tabIndex={0}>{button}</span>
+        </TooltipTrigger>
+        <TooltipContent>
+          Too many rows to export, narrow your search.
+        </TooltipContent>
       </Tooltip>
     );
   }
 
-  return render();
+  return button;
 }

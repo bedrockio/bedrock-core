@@ -1,7 +1,7 @@
 import { useNavigate } from '@bedrockio/router';
-import { Space } from '@mantine/core';
 
-import BackLink from 'components/BackLink';
+import CloseButton from 'components/CloseButton';
+import PageHeader from 'components/PageHeader';
 
 import Form from './Form';
 
@@ -9,14 +9,16 @@ export default function NewTemplate() {
   const navigate = useNavigate();
 
   return (
-    <>
-      <BackLink />
-      <Space m="md" />
+    <div className="flex flex-col gap-4">
+      <PageHeader
+        title="New Template"
+        rightSection={<CloseButton to="/organization/templates" />}
+      />
       <Form
         onSuccess={(template) => {
-          navigate(`/templates/${template.id}`);
+          navigate(`/organization/templates/${template.id}`);
         }}
       />
-    </>
+    </div>
   );
 }

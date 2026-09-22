@@ -8,7 +8,11 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
     "paths": {
+      "@/*": [
+        "./src/*"
+      ],
       "helpers/*": [
         "./src/helpers/*"
       ],

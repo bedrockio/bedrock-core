@@ -1,29 +1,27 @@
-import {
-  ActionIcon,
-  Button,
-  Divider,
-  Fieldset,
-  Grid,
-  Group,
-  LoadingOverlay,
-  Stack,
-  Text,
-} from '@mantine/core';
-
 import { useState } from 'react';
-import { PiTrashBold } from 'react-icons/pi';
+import { Trash2 } from 'lucide-react';
 
 import { useSession } from 'stores/session';
 
 import AppleDisableButton from 'components/Auth/Apple/DisableButton';
 import GoogleDisableButton from 'components/Auth/Google/DisableButton';
 import ErrorMessage from 'components/ErrorMessage';
-import Meta from 'components/Meta';
+import PageHeader from 'components/PageHeader';
+
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { Spinner } from '@/components/ui/spinner';
 
 import { createPasskey, removePasskey } from 'utils/auth/passkey';
 import { formatDate, fromNow } from 'utils/date';
 
-import Menu from '../Menu';
 import Sessions from './Sessions';
 import TwoFactorAuthentication from './TwoFactorAuthentication';
 
@@ -108,89 +106,118 @@ export default function Security() {
   const { loading, error } = state;
 
   return (
-    <Stack>
-      <Meta title="Security" />
-      <Menu />
-      <div style={{ position: 'relative' }}>
-        <LoadingOverlay visible={loading} />
-        <Grid gutter="xl">
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <Stack>
-              <Fieldset legend="Passkey" variant="unstyled">
-                <Stack gap="xs">
-                  {user.authenticators
-                    .filter((authenticator) => authenticator.type === 'passkey')
-                    .map((passkey) => {
-                      const { id, name, createdAt, lastUsedAt } = passkey;
-                      return (
-                        <Group justify="space-between" align="center" key={id}>
-                          <Stack gap="0">
-                            <Text size="sm">{name}</Text>
-                            <Text size="sm">
-                              Added on {formatDate(createdAt)} | Last used{' '}
-                              {fromNow(lastUsedAt)}
-                            </Text>
-                          </Stack>
-                          <ActionIcon
-                            title="Delete"
-                            variant="transparent"
-                            loading={loading}
-                            disabled={loading}
-                            onClick={() => deletePasskey(passkey)}>
-                            <PiTrashBold />
-                          </ActionIcon>
-                        </Group>
-                      );
-                    })}
-                  <Group>
-                    <Button
-                      size="sm"
-                      variant="default"
-                      onClick={onCreatePasskeyClick}>
-                      Add Passkey
-                    </Button>
-                  </Group>
-                </Stack>
-              </Fieldset>
-              <Fieldset legend="Two-factor authentication" variant="unstyled">
-                <TwoFactorAuthentication />
-              </Fieldset>
-              <Fieldset legend="Sign-in with" variant="unstyled">
-                <ErrorMessage error={error} />
+    <div className="flex flex-col gap-4">
+      <PageHeader title="Security" />
+      <div className="relative flex max-w-2xl flex-col gap-6">
+        {loading && (
+          <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/60">
+            <Spinner className="size-6" />
+          </div>
+        )}
+        <div className="grid grid-cols-1 items-start gap-6 sm:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>Passkey</CardTitle>
+              <CardDescription>
+                Sign in without a password using a passkey on your device.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-3">
+              {user.authenticators
+                .filter((authenticator) => authenticator.type === 'passkey')
+                .map((passkey) => {
+                  const { id, name, createdAt, lastUsedAt } = passkey;
+                  return (
+                    <div
+                      className="flex items-center justify-between gap-4"
+                      key={id}>
+                      <div className="flex min-w-0 flex-col">
+                        <span className="text-sm font-medium">{name}</span>
+                        <span className="text-muted-foreground text-xs">
+                          Added {formatDate(createdAt)} · Last used{' '}
+                          {fromNow(lastUsedAt)}
+                        </span>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        title="Delete"
+                        disabled={loading}
+                        onClick={() => deletePasskey(passkey)}>
+                        <Trash2 />
+                      </Button>
+                    </div>
+                  );
+                })}
+              <div className="flex">
+                <Button variant="outline" onClick={onCreatePasskeyClick}>
+                  Add Passkey
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
 
-                <Text size="sm" fw="bold">
-                  Google
-                </Text>
-                <div>
-                  {hasAuthenticator('google') ? (
-                    <GoogleDisableButton onDisabled={onGoogleDisabled} />
-                  ) : (
-                    <Text size="sm">Sign in with Google to enable.</Text>
-                  )}
-                </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Two-factor authentication</CardTitle>
+              <CardDescription>
+                Require a second step at sign-in for extra security.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <TwoFactorAuthentication />
+            </CardContent>
+          </Card>
+        </div>
 
-                <Divider my="md" />
+        <Card>
+          <CardHeader>
+            <CardTitle>Sign-in with</CardTitle>
+            <CardDescription>
+              Connect a provider to sign in faster.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ErrorMessage error={error} />
 
-                <Text size="sm" fw="bold">
-                  Apple
-                </Text>
-                <div>
-                  {hasAuthenticator('apple') ? (
-                    <AppleDisableButton onDisabled={onAppleDisabled} />
-                  ) : (
-                    <Text size="sm">Sign in with Apple to enable.</Text>
-                  )}
-                </div>
-              </Fieldset>
-            </Stack>
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <Fieldset mt="md" legend="Sessions" variant="unstyled">
-              <Sessions />
-            </Fieldset>
-          </Grid.Col>
-        </Grid>
+            <p className="text-sm font-semibold">Google</p>
+            <div className="mt-1">
+              {hasAuthenticator('google') ? (
+                <GoogleDisableButton onDisabled={onGoogleDisabled} />
+              ) : (
+                <p className="text-muted-foreground text-sm">
+                  Sign in with Google to enable.
+                </p>
+              )}
+            </div>
+
+            <Separator className="my-4" />
+
+            <p className="text-sm font-semibold">Apple</p>
+            <div className="mt-1">
+              {hasAuthenticator('apple') ? (
+                <AppleDisableButton onDisabled={onAppleDisabled} />
+              ) : (
+                <p className="text-muted-foreground text-sm">
+                  Sign in with Apple to enable.
+                </p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1.5">
+            <h2 className="text-base leading-none font-semibold tracking-tight">
+              Sessions
+            </h2>
+            <p className="text-muted-foreground text-sm">
+              Devices currently signed in to your account.
+            </p>
+          </div>
+          <Sessions />
+        </div>
       </div>
-    </Stack>
+    </div>
   );
 }

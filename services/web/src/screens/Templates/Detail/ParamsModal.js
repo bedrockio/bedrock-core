@@ -1,7 +1,8 @@
-import { Alert, Paper } from '@mantine/core';
-
 import ModalWrapper from 'components/ModalWrapper';
 import { useLoader } from 'hooks/loader';
+
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Card } from '@/components/ui/card';
 
 import { request } from 'utils/api';
 
@@ -19,15 +20,17 @@ function ParamsModal(props) {
   });
 
   return (
-    <Paper p="md">
-      <Alert variant="light" color="yellow">
-        Note that this is dummy data for template creation and not what will
-        actually be sent.
+    <Card className="gap-4 p-4">
+      <Alert variant="warning">
+        <AlertDescription>
+          Note that this is dummy data for template creation and not what will
+          actually be sent.
+        </AlertDescription>
       </Alert>
       <pre style={{ fontSize: '12px', overflow: 'auto' }}>
         {JSON.stringify(params, null, 2)}
       </pre>
-    </Paper>
+    </Card>
   );
 }
 

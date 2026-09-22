@@ -1,29 +1,30 @@
-import { Badge, Button, Modal, Stack } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
 import { omit } from 'lodash';
-import React, { useEffect, useState } from 'react';
-import { PiSlidersHorizontalBold } from 'react-icons/pi';
+import { SlidersHorizontal } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
-import Actions from 'components/form-fields/Actions';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 
 import { SearchContext, useSearch } from '../Context';
 
 function FilterModal(props) {
-  const { size = 'md', children } = props;
+  const { children } = props;
 
   const search = useSearch();
 
-  const [opened, { open, close }] = useDisclosure(false);
-
-  const [filters, setFilters] = useState({
-    ...search.filters,
-  });
+  const [opened, setOpened] = useState(false);
+  const [filters, setFilters] = useState({ ...search.filters });
 
   function updateFilters(newFilters) {
-    setFilters({
-      ...filters,
-      ...newFilters,
-    });
+    setFilters((current) => ({ ...current, ...newFilters }));
   }
 
   useEffect(() => {
@@ -41,7 +42,7 @@ function FilterModal(props) {
   function onSubmit(evt) {
     evt.preventDefault();
     search.setFilters(filters);
-    close();
+    setOpened(false);
   }
 
   function onResetClick() {
@@ -49,51 +50,47 @@ function FilterModal(props) {
       setFilters({});
       search.resetFilters();
     }
-    close();
+    setOpened(false);
   }
 
-  function render() {
-    return (
-      <React.Fragment>
-        <Button
-          onClick={open}
-          variant="default"
-          leftSection={<PiSlidersHorizontalBold />}
-          rightSection={renderBadge()}>
+  const count = getFilterCount();
+
+  return (
+    <Dialog open={opened} onOpenChange={setOpened}>
+      <DialogTrigger asChild>
+        <Button variant="outline">
+          <SlidersHorizontal className="size-4" />
           Filter
+          {!search.loading && count > 0 && (
+            <Badge className="ml-1 size-5 rounded-full p-0">{count}</Badge>
+          )}
         </Button>
-        <Modal size={size} opened={opened} onClose={close} title="Filter">
-          <form id="filters" onSubmit={onSubmit}>
-            <SearchContext
-              value={{
-                ...search,
-                filters,
-                setFilters: updateFilters,
-              }}>
-              <Stack gap="md">{children}</Stack>
-            </SearchContext>
-          </form>
-          <Actions>
-            <Button variant="default" onClick={onResetClick}>
-              Reset
-            </Button>
-            <Button type="submit" form="filters">
-              Apply
-            </Button>
-          </Actions>
-        </Modal>
-      </React.Fragment>
-    );
-  }
-
-  function renderBadge() {
-    const count = getFilterCount();
-    if (!search.loading && count > 0) {
-      return <Badge circle>{count}</Badge>;
-    }
-  }
-
-  return render();
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Filter</DialogTitle>
+        </DialogHeader>
+        <form id="filters" onSubmit={onSubmit}>
+          <SearchContext
+            value={{
+              ...search,
+              filters,
+              setFilters: updateFilters,
+            }}>
+            <div className="flex flex-col gap-4">{children}</div>
+          </SearchContext>
+        </form>
+        <DialogFooter>
+          <Button variant="outline" onClick={onResetClick}>
+            Reset
+          </Button>
+          <Button type="submit" form="filters">
+            Apply
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
 }
 
 export default FilterModal;

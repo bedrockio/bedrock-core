@@ -1,7 +1,12 @@
-import { Popover } from '@mantine/core';
 import { get, isEqual } from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 import { useClass } from 'helpers/bem';
 
@@ -204,12 +209,14 @@ export default function DocsProperties(props) {
           return (
             <React.Fragment>
               {renderTypes(variants[0])}
-              <Popover position="right" withArrow>
-                <Popover.Target>
+              <Tooltip>
+                <TooltipTrigger asChild>
                   <span className={getElementClass('note')}>*</span>
-                </Popover.Target>
-                <Popover.Dropdown>May also be an array.</Popover.Dropdown>
-              </Popover>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  May also be an array.
+                </TooltipContent>
+              </Tooltip>
             </React.Fragment>
           );
         }

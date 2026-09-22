@@ -1,6 +1,11 @@
-import { Group, Image, Stack, Table, Text, Title } from '@mantine/core';
-
 import { usePage } from 'stores/page';
+
+import Thumbnail from 'components/Thumbnail';
+
+import {
+  DefinitionItem,
+  DefinitionList,
+} from '@/components/ui/definition-list';
 
 import { formatDateTime } from 'utils/date';
 import { formatAddress } from 'utils/formatting';
@@ -14,50 +19,41 @@ export default function ShopOverview() {
     <>
       <Menu />
 
-      <Stack mt="md" spacing="md">
-        <Text fz="md" lh="md">
-          {shop.description}
-        </Text>
-        <Title order={4}>Images</Title>
-        <Group>
+      <div className="mt-4 flex flex-col gap-4">
+        <h2 className="text-xl font-bold tracking-tight">Images</h2>
+        <div className="flex flex-wrap gap-4">
           {shop.images.map((image) => (
-            <Image
-              w={300}
-              fit="object-cover"
-              radius="xs"
-              key={image}
-              src={urlForUpload(image)}
-            />
+            <div key={image} className="card-soft rounded-2xl p-1.5">
+              <Thumbnail
+                className="w-[300px] rounded-xl"
+                src={urlForUpload(image)}
+              />
+            </div>
           ))}
-        </Group>
+        </div>
 
-        <Table mt="md" variant="vertical" layout="fixed" withTableBorder>
-          <Table.Tbody>
-            <Table.Tr>
-              <Table.Th w={160}>Categories</Table.Th>
-              <Table.Td>
-                <ul>
-                  {shop.categories.map((category) => {
-                    return <li key={category.id}>{category.name}</li>;
-                  })}
-                </ul>
-              </Table.Td>
-            </Table.Tr>
-            <Table.Tr>
-              <Table.Th>Address</Table.Th>
-              <Table.Td>{formatAddress(shop.address)}</Table.Td>
-            </Table.Tr>
-            <Table.Tr>
-              <Table.Th>Created At</Table.Th>
-              <Table.Td>{formatDateTime(shop.createdAt)}</Table.Td>
-            </Table.Tr>
-            <Table.Tr>
-              <Table.Th>Updated At</Table.Th>
-              <Table.Td>{formatDateTime(shop.updatedAt)}</Table.Td>
-            </Table.Tr>
-          </Table.Tbody>
-        </Table>
-      </Stack>
+        <DefinitionList>
+          <DefinitionItem label="Description">
+            {shop.description}
+          </DefinitionItem>
+          <DefinitionItem label="Categories">
+            <ul>
+              {shop.categories.map((category) => {
+                return <li key={category.id}>{category.name}</li>;
+              })}
+            </ul>
+          </DefinitionItem>
+          <DefinitionItem label="Address">
+            {formatAddress(shop.address)}
+          </DefinitionItem>
+          <DefinitionItem label="Created At">
+            {formatDateTime(shop.createdAt)}
+          </DefinitionItem>
+          <DefinitionItem label="Updated At">
+            {formatDateTime(shop.updatedAt)}
+          </DefinitionItem>
+        </DefinitionList>
+      </div>
     </>
   );
 }

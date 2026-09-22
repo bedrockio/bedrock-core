@@ -26,15 +26,23 @@ export default function TemplateDetail() {
     <Loader
       notFound={
         <NotFound
-          link={<Link to="/templates">Templates</Link>}
+          link={<Link to="/organization/templates">Templates</Link>}
           message="Sorry that template wasn't found."
         />
       }>
       <Routes>
-        <Route path="/templates/:id" render={Overview} exact />
-        <Route path="/templates/:id/edit" render={Edit} exact />
-        <Route path="/templates/:id/content" render={Content} exact />
-        <Route path="/templates/:id/preview" render={Preview} exact />
+        <Route path="/organization/templates/:id" render={Overview} exact />
+        <Route path="/organization/templates/:id/edit" render={Edit} exact />
+        <Route
+          path="/organization/templates/:id/content"
+          render={Content}
+          exact
+        />
+        <Route
+          path="/organization/templates/:id/preview"
+          render={Preview}
+          exact
+        />
         <Route render={NotFound} />
       </Routes>
     </Loader>

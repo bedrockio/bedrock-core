@@ -1,6 +1,6 @@
-import { Button } from '@mantine/core';
-
 import { useSession } from 'stores/session';
+
+import { Button } from '@/components/ui/button';
 
 export default function AcceptInviteAuthenticated() {
   const { logout } = useSession();

@@ -1,5 +1,5 @@
 import { useNavigate } from '@bedrockio/router';
-import { NavLink } from '@mantine/core';
+import { ArrowLeft } from 'lucide-react';
 
 export default function BackLink(props) {
   const { label = 'Back' } = props;
@@ -11,5 +11,13 @@ export default function BackLink(props) {
     navigate.back();
   }
 
-  return <NavLink onClick={onClick} label={`← ${label}`} p="0" />;
+  return (
+    <a
+      href="#"
+      onClick={onClick}
+      className="text-foreground inline-flex items-center gap-1 no-underline hover:underline">
+      <ArrowLeft className="size-4" />
+      {label}
+    </a>
+  );
 }

@@ -1,10 +1,19 @@
-import { Button, Checkbox, Stack, TextInput, Textarea } from '@mantine/core';
 import { get } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Spinner } from '@/components/ui/spinner';
+import { Textarea } from '@/components/ui/textarea';
+
 import ErrorMessage from 'components/ErrorMessage';
+import { useModalContext } from 'components/ModalWrapper';
 
 export default function EditFieldModal(props) {
+  const { close } = useModalContext();
+
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [updateModel, setUpdateModel] = useState(false);
@@ -39,7 +48,7 @@ export default function EditFieldModal(props) {
       }
       await props.updatePath(updatePath, value);
       setLoading(false);
-      props.close();
+      close();
     } catch (err) {
       setError(err);
       setLoading(false);
@@ -57,53 +66,48 @@ export default function EditFieldModal(props) {
     const { model } = props;
     if (model) {
       return (
-        <Checkbox
-          label={`Update base ${model.toLowerCase()}.`}
-          checked={updateModel}
-          onChange={(event) => setUpdateModel(event.currentTarget.checked)}
-          mt="md"
-        />
+        <Label className="mt-4">
+          <Checkbox
+            checked={updateModel}
+            onCheckedChange={(checked) => setUpdateModel(checked === true)}
+          />
+          {`Update base ${model.toLowerCase()}.`}
+        </Label>
       );
     }
     return null;
   }
 
   return (
-    <>
-      <Stack>
-        <form id="edit-docs-field" onSubmit={onSubmit}>
-          <ErrorMessage error={error} />
-          {props.markdown ? (
-            <Textarea
-              value={value || ''}
-              onChange={handleFieldChange}
-              onKeyDown={onKeyDown}
-              autosize
-              minRows={4}
-              data-autofocus
-              mt="sm"
-            />
-          ) : (
-            <TextInput
-              type="text"
-              value={value || ''}
-              onChange={handleFieldChange}
-              onKeyDown={onKeyDown}
-              data-autofocus
-              mt="sm"
-            />
-          )}
-          {renderUpdateModel()}
-        </form>
+    <div className="flex flex-col gap-4">
+      <form id="edit-docs-field" onSubmit={onSubmit}>
+        <ErrorMessage error={error} />
+        {props.markdown ? (
+          <Textarea
+            value={value || ''}
+            onChange={handleFieldChange}
+            onKeyDown={onKeyDown}
+            rows={4}
+            autoFocus
+            className="mt-2"
+          />
+        ) : (
+          <Input
+            type="text"
+            value={value || ''}
+            onChange={handleFieldChange}
+            onKeyDown={onKeyDown}
+            autoFocus
+            className="mt-2"
+          />
+        )}
+        {renderUpdateModel()}
+      </form>
 
-        <Button
-          type="submit"
-          form="edit-docs-field"
-          loading={loading}
-          disabled={loading}>
-          Save
-        </Button>
-      </Stack>
-    </>
+      <Button type="submit" form="edit-docs-field" disabled={loading}>
+        {loading && <Spinner />}
+        Save
+      </Button>
+    </div>
   );
 }

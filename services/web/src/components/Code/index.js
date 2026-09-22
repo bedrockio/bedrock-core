@@ -1,8 +1,7 @@
-import { Paper } from '@mantine/core';
 import { Highlight, themes } from 'prism-react-renderer';
 import PropTypes from 'prop-types';
 import { useMemo, useState } from 'react';
-import { PiCheckFatBold, PiCopyBold } from 'react-icons/pi';
+import { Check, Copy } from 'lucide-react';
 
 import { useClass } from 'helpers/bem';
 
@@ -68,7 +67,7 @@ export default function Code({ code, language, scroll, action, ...rest }) {
   }, [language]);
 
   return (
-    <Paper className={className}>
+    <div className={className}>
       <CodeBlock code={code || rest.children} language={lang} />
       <div className={getElementClass('action')}>
         {action || (
@@ -78,11 +77,11 @@ export default function Code({ code, language, scroll, action, ...rest }) {
               'copy-button',
               copied ? null : 'clickable',
             )}>
-            {copied ? <PiCheckFatBold /> : <PiCopyBold />}
+            {copied ? <Check /> : <Copy />}
           </div>
         )}
       </div>
-    </Paper>
+    </div>
   );
 }
 

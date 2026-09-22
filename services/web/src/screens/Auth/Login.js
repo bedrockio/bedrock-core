@@ -1,23 +1,28 @@
 import { Link, useNavigate } from '@bedrockio/router';
-
-import {
-  Anchor,
-  Button,
-  PasswordInput,
-  Stack,
-  Text,
-  TextInput,
-  Title,
-} from '@mantine/core';
-
-import { useForm } from '@mantine/form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader2 } from 'lucide-react';
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 import { useSession } from 'stores/session';
 
 import Federated from 'components/Auth/Federated';
 import ErrorMessage from 'components/ErrorMessage';
 import Meta from 'components/Meta';
+
+import { Button } from '@/components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { PasswordInput } from '@/components/ui/password-input';
+import { Separator } from '@/components/ui/separator';
 
 import { request } from 'utils/api';
 import { AUTH_CHANNEL, AUTH_TYPE } from 'utils/env';
@@ -50,37 +55,40 @@ async function loginOtp(body) {
   });
 }
 
+const schema = z.object({
+  email: z.string().min(1, 'Email is required').email('Enter a valid email'),
+  password:
+    AUTH_TYPE === 'password'
+      ? z.string().min(1, 'Password is required')
+      : z.string().optional(),
+});
+
 export default function PasswordLogin() {
   const navigate = useNavigate();
   const { authenticate } = useSession();
 
   const form = useForm({
-    initialValues: {
-      password: '',
+    resolver: zodResolver(schema),
+    defaultValues: {
       email: '',
+      password: '',
     },
   });
 
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const loading = form.formState.isSubmitting;
 
-  function onAuthStart() {
-    setLoading(true);
-  }
+  function onAuthStart() {}
 
-  function onAuthStop() {
-    setLoading(false);
-  }
+  function onAuthStop() {}
 
   function onAuthError(error) {
     setError(error);
-    setLoading(false);
   }
 
   async function onSubmit(values) {
     try {
       setError(null);
-      setLoading(true);
 
       const { data } = await login(values);
       const { token, challenge } = data;
@@ -93,57 +101,84 @@ export default function PasswordLogin() {
       }
     } catch (error) {
       setError(error);
-      setLoading(false);
     }
   }
 
   return (
     <React.Fragment>
       <Meta title="Login" />
-      <Title order={3} mb="md">
-        Login
-      </Title>
+      <div className="mb-4 flex flex-col items-center gap-1 text-center">
+        <h1 className="text-2xl font-bold tracking-tight">Login</h1>
+        <p className="text-muted-foreground text-sm">
+          Sign in to access your dashboard.
+        </p>
+      </div>
       <ErrorMessage error={error} />
-      <form onSubmit={form.onSubmit(onSubmit)}>
-        <Stack gap="xs">
-          <TextInput
-            required
-            label="Email"
-            type="email"
-            placeholder="Email"
-            {...form.getInputProps('email')}
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex flex-col gap-4">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    type="email"
+                    placeholder="Email"
+                    autoComplete="email"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
           {AUTH_TYPE === 'password' && (
-            <div>
-              <PasswordInput
-                required
-                label="Password"
-                type="password"
-                placeholder="Password"
-                {...form.getInputProps('password')}
-              />
-              <Text c="dimmed" size="xs" mt={4}>
-                <Anchor tabIndex={3} component={Link} to="/forgot-password">
-                  Forgot password
-                </Anchor>
-              </Text>
-            </div>
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="flex items-center justify-between">
+                    <FormLabel>Password</FormLabel>
+                    <Link
+                      className="text-muted-foreground hover:text-foreground text-xs no-underline hover:underline"
+                      tabIndex={3}
+                      to="/forgot-password">
+                      Forgot Password?
+                    </Link>
+                  </div>
+                  <FormControl>
+                    <PasswordInput
+                      placeholder="Password"
+                      autoComplete="current-password"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           )}
-          <Button
-            fullWidth
-            loading={loading}
-            disabled={loading}
-            variant="filled"
-            type="submit">
+          <Button className="w-full" type="submit" disabled={loading}>
+            {loading && <Loader2 className="size-4 animate-spin" />}
             Login
           </Button>
 
-          <Text size={'xs'} c="dimmed">
-            Don't have an account?{' '}
-            <Anchor tabIndex={4} component={Link} to="/signup">
-              Register
-            </Anchor>
-          </Text>
+          <Separator />
+
+          <p className="text-muted-foreground text-center text-xs">
+            Don&apos;t have an account?{' '}
+            <Link
+              className="text-foreground font-medium no-underline hover:underline"
+              tabIndex={4}
+              to="/signup">
+              Sign up
+            </Link>
+          </p>
 
           <Federated
             type="login"
@@ -151,8 +186,8 @@ export default function PasswordLogin() {
             onAuthStart={onAuthStart}
             onAuthError={onAuthError}
           />
-        </Stack>
-      </form>
+        </form>
+      </Form>
     </React.Fragment>
   );
 }

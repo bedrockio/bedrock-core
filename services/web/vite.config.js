@@ -4,6 +4,7 @@ import path from 'path';
 
 import config from '@bedrockio/config';
 import mdx from '@mdx-js/rollup';
+import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import { omitBy, template } from 'lodash-es';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
@@ -31,6 +32,7 @@ export default defineConfig({
       rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
     }),
     react(),
+    tailwindcss(),
     env(),
     partials(),
   ],
@@ -39,6 +41,7 @@ export default defineConfig({
   resolve: {
     alias: {
       lodash: 'lodash-es',
+      '@': path.resolve(__dirname, './src'),
       helpers: path.resolve(__dirname, './src/helpers'),
       screens: path.resolve(__dirname, './src/screens'),
       stores: path.resolve(__dirname, './src/stores'),
