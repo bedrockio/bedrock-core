@@ -1,9 +1,9 @@
-const { assertSmsSent } = require('twilio');
-const { assertMailSent } = require('postmark');
-const { request, createUser } = require('../../utils/testing');
-const { assertAuthToken } = require('../../utils/testing/tokens');
-const { mockTime, advanceTime } = require('../../utils/testing/time');
-const { User } = require('../../models');
+import { assertSmsSent } from 'twilio';
+import { assertMailSent } from 'postmark';
+import { request, createUser } from '../../utils/testing/index.js';
+import { assertAuthToken } from '../../utils/testing/tokens.js';
+import { mockTime, advanceTime } from '../../utils/testing/time.js';
+import { User } from '../../models/index.js';
 
 describe('mfa', () => {
   describe('user based', () => {

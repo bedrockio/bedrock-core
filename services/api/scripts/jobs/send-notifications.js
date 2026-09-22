@@ -1,7 +1,7 @@
-const process = require('process');
-const logger = require('@bedrockio/logger');
-const { initialize } = require('../../src/utils/database');
-const { sendNotifications } = require('../../src/utils/notifications');
+import process from 'process';
+import logger from '@bedrockio/logger';
+import { initialize } from '../../src/utils/database.js';
+import { sendNotifications } from '../../src/utils/notifications.js';
 
 async function run() {
   await initialize();

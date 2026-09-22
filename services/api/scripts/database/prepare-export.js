@@ -1,17 +1,18 @@
-const os = require('os');
-const path = require('path');
-const process = require('process');
-const fs = require('fs/promises');
+import os from 'os';
+import path from 'path';
+import process from 'process';
+import fs from 'fs/promises';
+import { spawn } from 'child_process';
 
-const { glob } = require('glob');
-const mongoose = require('mongoose');
-const { program } = require('commander');
+import { glob } from 'glob';
+import mongoose from 'mongoose';
+import { program } from 'commander';
 
-const config = require('@bedrockio/config');
-const logger = require('@bedrockio/logger');
+import config from '@bedrockio/config';
+import logger from '@bedrockio/logger';
 
-const { User } = require('../../src/models');
-const { initialize } = require('../../src/utils/database');
+import { User } from '../../src/models/index.js';
+import { initialize } from '../../src/utils/database.js';
 
 const MONGO_URI = config.get('MONGO_URI');
 
@@ -143,12 +144,13 @@ async function getSanitizations(options) {
     return [];
   }
 
-  const gl = path.resolve(__dirname, 'sanitizations/*.{json,js}');
+  const gl = path.resolve(import.meta.dirname, 'sanitizations/*.{json,js}');
   const files = await glob(gl);
   const result = [];
 
   for (let file of files) {
-    let definition = require(file);
+    const options = file.endsWith('.json') ? { with: { type: 'json' } } : undefined;
+    let { default: definition } = await import(file, options);
     if (typeof definition === 'function') {
       definition = await definition();
     }
@@ -377,7 +379,6 @@ function parseDate(str) {
 
 async function exec(command, args = []) {
   return new Promise((resolve, reject) => {
-    const { spawn } = require('child_process');
     const child = spawn(command, args);
 
     child.stdout.on('data', (data) => {

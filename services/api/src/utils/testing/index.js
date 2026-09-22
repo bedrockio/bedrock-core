@@ -1,8 +1,10 @@
-const mongoose = require('mongoose');
-const { User, Upload, Template } = require('../../models');
+import fs from 'fs';
+import { syncBuiltinESMExports } from 'module';
+import mongoose from 'mongoose';
+import { User, Upload, Template } from '../../models/index.js';
 
-const context = require('./context');
-const request = require('./request');
+import context from './context.js';
+import request from './request.js';
 
 async function createUser(attributes = {}) {
   const user = new User({
@@ -61,8 +63,22 @@ async function createTemplate(attributes) {
   });
 }
 
-module.exports = {
+// @bedrockio/templates imports readFileSync by name, which only sees
+// a spy on fs once the builtin's named exports are re-synced.
+function mockReadFileSync(fn) {
+  vi.spyOn(fs, 'readFileSync').mockImplementation(fn);
+  syncBuiltinESMExports();
+}
+
+function restoreMocks() {
+  vi.restoreAllMocks();
+  syncBuiltinESMExports();
+}
+
+export {
   context,
+  mockReadFileSync,
+  restoreMocks,
   request,
   createUser,
   createUpload,

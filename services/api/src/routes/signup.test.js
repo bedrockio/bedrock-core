@@ -1,8 +1,8 @@
-const { assertSmsSent } = require('twilio');
-const { assertMailSent } = require('postmark');
-const { request, createUser } = require('../utils/testing');
-const { assertAuthToken } = require('../utils/testing/tokens');
-const { User } = require('../models');
+import { assertSmsSent } from 'twilio';
+import { assertMailSent } from 'postmark';
+import { request, createUser } from '../utils/testing/index.js';
+import { assertAuthToken } from '../utils/testing/tokens.js';
+import { User } from '../models/index.js';
 
 describe('POST /signup', () => {
   describe('password', () => {

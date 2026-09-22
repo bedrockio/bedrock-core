@@ -1,4 +1,4 @@
-const { request } = require('./utils/testing');
+import { request } from './utils/testing/index.js';
 
 describe('Test App Index', () => {
   test('It should have a valid index response', async () => {

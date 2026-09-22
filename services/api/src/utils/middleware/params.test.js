@@ -1,9 +1,9 @@
-const mongoose = require('mongoose');
-const { noop } = require('lodash');
-const { createTestModel } = require('@bedrockio/model');
-const { fetchByParam, fetchByParamWithSlug } = require('./params');
-const { context, createUser, createUpload } = require('../testing');
-const { User, Upload } = require('../../models');
+import mongoose from 'mongoose';
+import { noop } from 'lodash-es';
+import { createTestModel } from '@bedrockio/model';
+import { fetchByParam, fetchByParamWithSlug } from './params.js';
+import { context, createUser, createUpload } from '../testing/index.js';
+import { User, Upload } from '../../models/index.js';
 
 describe('fetchByParam', () => {
   it('should fetch user and attach to state', async () => {

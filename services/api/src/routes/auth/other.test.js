@@ -1,5 +1,5 @@
-const { request, createUser, createAdmin } = require('../../utils/testing');
-const { User } = require('../../models');
+import { request, createUser, createAdmin } from '../../utils/testing/index.js';
+import { User } from '../../models/index.js';
 
 describe('/1/auth', () => {
   describe('POST /logout', () => {

@@ -1,5 +1,5 @@
-const cors = require('@koa/cors');
-const logger = require('@bedrockio/logger');
+import cors from '@koa/cors';
+import logger from '@bedrockio/logger';
 
 // Note: "allowedOrigins" can be passed into the options here to
 // enable whitelisting domains here for added security layer.
@@ -33,11 +33,11 @@ function restrictOrigins(allowed) {
   };
 }
 
-module.exports = function (options = {}) {
+export default function (options = {}) {
   const { allowedOrigins, ...corsOptions } = options;
   return cors({
     origin: allowedOrigins ? restrictOrigins(allowedOrigins) : null,
     ...DEFAULTS,
     ...corsOptions,
   });
-};
+}

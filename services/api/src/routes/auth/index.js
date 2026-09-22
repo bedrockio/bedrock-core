@@ -1,12 +1,12 @@
-const Router = require('@koa/router');
+import Router from '@koa/router';
 
-const otp = require('./otp');
-const totp = require('./totp');
-const apple = require('./apple');
-const google = require('./google');
-const passkey = require('./passkey');
-const password = require('./password');
-const other = require('./other');
+import otp from './otp.js';
+import totp from './totp.js';
+import apple from './apple.js';
+import google from './google.js';
+import passkey from './passkey.js';
+import password from './password.js';
+import other from './other.js';
 
 const router = new Router();
 
@@ -18,4 +18,4 @@ router.use('/passkey', passkey.routes());
 router.use('/password', password.routes());
 router.use(other.routes());
 
-module.exports = router;
+export default router;

@@ -1,15 +1,16 @@
-const path = require('path');
-const { assertPushSent } = require('firebase-admin');
-const { createUser, createUpload, createTemplate } = require('../testing');
-const { getImageUrl } = require('../images');
-const { sendPush } = require('./push');
+import fs from 'fs';
+import path from 'path';
+import { assertPushSent } from 'firebase-admin';
+import { createUser, createUpload, createTemplate, mockReadFileSync, restoreMocks } from '../testing/index.js';
+import { getImageUrl } from '../images.js';
+import { sendPush } from './push.js';
 
 beforeEach(() => {
   mockFiles();
 });
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  restoreMocks();
 });
 
 const mocks = {
@@ -33,9 +34,8 @@ Hello!
 };
 
 function mockFiles() {
-  const fs = require('fs');
   const readFileSync = fs.readFileSync;
-  jest.spyOn(fs, 'readFileSync').mockImplementation((...args) => {
+  mockReadFileSync((...args) => {
     const filename = path.basename(args[0]);
     const value = mocks[filename];
     if (value) {

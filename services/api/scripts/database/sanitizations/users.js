@@ -1,11 +1,11 @@
-const bcrypt = require('bcryptjs');
+import bcrypt from 'bcryptjs';
 
 // Development password. Note this is hard
 // coded as this will be run on the actual
 // CLI deploymenet pod.
 const DEV_PASSWORD = 'development.now';
 
-module.exports = async () => {
+export default async () => {
   const salt = await bcrypt.genSalt(12);
   const hashedPassword = await bcrypt.hash(DEV_PASSWORD, salt);
 

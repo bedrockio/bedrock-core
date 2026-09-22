@@ -1,7 +1,7 @@
-const ms = require('ms');
-const jwt = require('jsonwebtoken');
-const config = require('@bedrockio/config');
-const { nanoid } = require('nanoid');
+import ms from 'ms';
+import jwt from 'jsonwebtoken';
+import config from '@bedrockio/config';
+import { nanoid } from 'nanoid';
 
 const JWT_SECRET = config.get('JWT_SECRET');
 
@@ -136,7 +136,7 @@ function generateTokenId() {
   return nanoid(15);
 }
 
-module.exports = {
+export {
   verifyToken,
   generateTokenId,
   createAuthToken,

@@ -1,18 +1,18 @@
-const fs = require('fs');
+import fs from 'fs';
 
-const Router = require('@koa/router');
-const { fetchByParam } = require('../utils/middleware/params');
-const { authenticate } = require('../utils/middleware/authenticate');
-const { validateFiles, validateBody } = require('../utils/middleware/validate');
-const {
+import Router from '@koa/router';
+import { fetchByParam } from '../utils/middleware/params.js';
+import { authenticate } from '../utils/middleware/authenticate.js';
+import { validateFiles, validateBody } from '../utils/middleware/validate.js';
+import {
   createUploads,
   createResumableUpload,
   getUploadLocalPath,
   getUploadUrl,
   parseRange,
   validateAccess,
-} = require('../utils/uploads');
-const { Upload } = require('../models');
+} from '../utils/uploads.js';
+import { Upload } from '../models/index.js';
 
 const router = new Router();
 
@@ -129,4 +129,4 @@ router
     ctx.status = 204;
   });
 
-module.exports = router;
+export default router;

@@ -5,8 +5,8 @@
 // this file must not require a file that will cause models to
 // be loaded as the plugin will not be applied leading to documents
 // not being cleaned and cause random test failures.
-const mongoose = require('mongoose');
-const { isFixture } = require('@bedrockio/fixtures');
+import mongoose from 'mongoose';
+import { isFixture } from '@bedrockio/fixtures';
 
 let stored;
 

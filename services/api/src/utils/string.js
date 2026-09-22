@@ -34,7 +34,4 @@ async function stringReplaceAsync(str, reg, fn) {
   return str;
 }
 
-module.exports = {
-  dedent,
-  stringReplaceAsync,
-};
+export { dedent, stringReplaceAsync };

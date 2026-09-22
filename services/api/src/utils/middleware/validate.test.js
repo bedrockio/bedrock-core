@@ -1,6 +1,6 @@
-const yd = require('@bedrockio/yada');
-const { validateBody, validateQuery } = require('./validate');
-const { context } = require('../testing');
+import yd from '@bedrockio/yada';
+import { validateBody, validateQuery } from './validate.js';
+import { context } from '../testing/index.js';
 
 describe('validateBody', () => {
   it('should not throw an error if empty object passed', async () => {

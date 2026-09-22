@@ -1,5 +1,5 @@
-const { request, createUser, createAdmin, createUpload } = require('../utils/testing');
-const { Shop, AuditEntry } = require('../models');
+import { request, createUser, createAdmin, createUpload } from '../utils/testing/index.js';
+import { Shop, AuditEntry } from '../models/index.js';
 
 describe('/1/shops', () => {
   describe('POST /search', () => {

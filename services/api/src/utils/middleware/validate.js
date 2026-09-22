@@ -1,6 +1,6 @@
-const qs = require('qs');
-const yd = require('@bedrockio/yada');
-const { PermissionsError, ImplementationError } = require('@bedrockio/model');
+import qs from 'qs';
+import yd from '@bedrockio/yada';
+import { PermissionsError, ImplementationError } from '@bedrockio/model';
 
 function validateBody(arg) {
   const schema = resolveSchema(arg);
@@ -136,10 +136,4 @@ function isImplementationError(error) {
   }
 }
 
-module.exports = {
-  validateBody,
-  validateQuery,
-  validateFiles,
-  validateDelete,
-  validateParam,
-};
+export { validateBody, validateQuery, validateFiles, validateDelete, validateParam };

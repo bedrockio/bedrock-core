@@ -1,5 +1,5 @@
-const { request, createUser, createSuperAdmin } = require('../utils/testing');
-const { Organization } = require('../models');
+import { request, createUser, createSuperAdmin } from '../utils/testing/index.js';
+import { Organization } from '../models/index.js';
 
 describe('/1/organizations', () => {
   describe('POST /search', () => {

@@ -1,15 +1,15 @@
-const os = require('os');
-const path = require('path');
-const fs = require('fs');
-const { copyFile, rm, stat, writeFile } = require('fs/promises');
+import os from 'os';
+import path from 'path';
+import fs from 'fs';
+import { copyFile, rm, stat, writeFile } from 'fs/promises';
 
-const config = require('@bedrockio/config');
-const logger = require('@bedrockio/logger');
-const mime = require('mime-types');
-const { Storage } = require('@google-cloud/storage');
-const { Upload } = require('../models');
-const { createUploadToken, verifyToken } = require('./tokens');
-const { userHasAccess } = require('./permissions');
+import config from '@bedrockio/config';
+import logger from '@bedrockio/logger';
+import mime from 'mime-types';
+import { Storage } from '@google-cloud/storage';
+import { Upload } from '../models/index.js';
+import { createUploadToken, verifyToken } from './tokens.js';
+import { userHasAccess } from './permissions.js';
 
 const API_URL = config.get('API_URL');
 const APP_URL = config.get('APP_URL');
@@ -365,7 +365,7 @@ function parseResponseHeaders(response) {
   };
 }
 
-module.exports = {
+export {
   createUploads,
   createUpload,
   getUploadUrl,

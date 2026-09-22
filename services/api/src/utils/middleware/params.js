@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const { lowerFirst } = require('lodash');
+import mongoose from 'mongoose';
+import { lowerFirst } from 'lodash-es';
 
 function fetchByParam(Model, options = {}) {
   const docName = options.as || lowerFirst(Model.modelName);
@@ -52,8 +52,4 @@ function isSelf(ctx, next) {
   return next();
 }
 
-module.exports = {
-  isSelf,
-  fetchByParam,
-  fetchByParamWithSlug,
-};
+export { isSelf, fetchByParam, fetchByParamWithSlug };

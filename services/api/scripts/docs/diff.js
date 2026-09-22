@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
+import fs from 'fs';
 
 const METHODS = ['get', 'put', 'post', 'patch', 'delete', 'head', 'options'];
 
@@ -143,11 +143,9 @@ function formatKey(key) {
     .replace(/\.$/, '');
 }
 
-if (require.main === module) {
+if (import.meta.main) {
   const [baseFile, headFile] = process.argv.slice(2);
   process.stdout.write(diffSpecs(baseFile, headFile).join('\n') + '\n');
 }
 
-module.exports = {
-  diffSpecs,
-};
+export { diffSpecs };

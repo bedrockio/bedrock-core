@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 
 function assertAuthToken(user, token) {
   const { payload } = jwt.decode(token, {
@@ -10,6 +10,4 @@ function assertAuthToken(user, token) {
   });
 }
 
-module.exports = {
-  assertAuthToken,
-};
+export { assertAuthToken };

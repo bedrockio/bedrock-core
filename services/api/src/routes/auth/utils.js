@@ -1,4 +1,4 @@
-const { User } = require('../../models');
+import { User } from '../../models/index.js';
 
 async function findUser(ctx) {
   const { phone, email } = ctx.request.body;
@@ -21,6 +21,4 @@ async function findUser(ctx) {
   return await User.findOne(query);
 }
 
-module.exports = {
-  findUser,
-};
+export { findUser };

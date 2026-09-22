@@ -1,5 +1,5 @@
-const User = require('./user');
-const mongoose = require('mongoose');
+import User from './user.js';
+import mongoose from 'mongoose';
 
 describe('User', () => {
   describe('serialization', () => {

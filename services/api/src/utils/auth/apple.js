@@ -1,12 +1,12 @@
-const verifyAppleToken = require('verify-apple-id-token').default;
-const config = require('@bedrockio/config');
+import appleIdToken from 'verify-apple-id-token';
+import config from '@bedrockio/config';
 
-const { clearAuthenticators, upsertAuthenticator } = require('./authenticators');
+import { clearAuthenticators, upsertAuthenticator } from './authenticators.js';
 
 const APPLE_SERVICE_ID = config.get('APPLE_SERVICE_ID');
 
 async function verifyToken(token) {
-  const payload = await verifyAppleToken({
+  const payload = await appleIdToken.default({
     idToken: token,
     clientId: APPLE_SERVICE_ID,
   });
@@ -29,8 +29,4 @@ function removeAppleAuthenticator(user) {
   clearAuthenticators(user, 'apple');
 }
 
-module.exports = {
-  verifyToken,
-  upsertAppleAuthenticator,
-  removeAppleAuthenticator,
-};
+export { verifyToken, upsertAppleAuthenticator, removeAppleAuthenticator };
