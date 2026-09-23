@@ -83,7 +83,10 @@ User.getCreateValidation()
 
 Replacing it drops the model's access scopes and drifts the moment the definition changes.
 
-### Variants
+## 2. Variants
+
+The router above is the baseline. Apply the ones that fit the resource — each is a deviation to make
+knowingly, not a default.
 
 - **Permissions** — gate the router with a permissions middleware when the resource is not readable by every
   authenticated user, either once for the whole router or split between read and write.
@@ -97,12 +100,12 @@ Replacing it drops the model's access scopes and drifts the moment the definitio
   named roles and to the document's own user. Use a `hasAccess` check on the param fetch only for rules that
   block cannot express; it answers `403`.
 
-## 2. Audit log
+## 3. Audit log
 
 Decide explicitly whether the resource is audited. If it is, follow the [audit-log](../audit-log/SKILL.md)
 skill — it covers the create, update and delete entries and the quiet ways they go wrong.
 
-## 3. Tests
+## 4. Tests
 
 Colocated as `src/routes/<resources>.test.js`, Vitest, one `describe` per endpoint. Cover the five endpoints
 and any non-trivial authorization; skip trivial cases. Tests assert observable behaviour — status, response
@@ -124,19 +127,19 @@ method, path, body and an acting user. Assert status with `toHaveStatus`. For de
 by fetching the deleted document and checking `deletedAt`, not by expecting the row to be gone. An audited
 resource also asserts its entries.
 
-## 4. Roles
+## 5. Roles
 
 Add the resource to `src/roles.json` for every role that should see it — `"all"` for admins, `"read"` for
 viewers. Required even when the router does not check permissions, because the dashboard uses the role
 definition to decide what to render.
 
-## 5. Documentation
+## 6. Documentation
 
 Regenerate the OpenAPI definition so it picks up the new paths, then add the portal page under
 `services/web/src/docs/pages` and register it in that directory's index. One section per endpoint: a heading,
 a one-line description, and the route reference that renders the generated request and response schemas.
 
-## 6. Verify
+## 7. Verify
 
 ```bash
 cd services/api && pnpm test
