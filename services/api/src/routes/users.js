@@ -14,6 +14,13 @@ import roles from '../roles.json' with { type: 'json' };
 
 import { AuditEntry } from '../models/index.js';
 
+// Unique checks in update validation exclude the document by an id in the body,
+// which clients have no reason to send. Take it from the fetched document.
+function excludeSelfFromUniqueChecks(ctx, next) {
+  ctx.request.body.id = ctx.state.user.id;
+  return next();
+}
+
 const router = new Router();
 
 router
@@ -25,7 +32,7 @@ router
       data: expandRoles(authUser, ctx),
     };
   })
-  .patch('/me', isSelf, validateBody(User.getUpdateValidation()), async (ctx) => {
+  .patch('/me', isSelf, excludeSelfFromUniqueChecks, validateBody(User.getUpdateValidation()), async (ctx) => {
     const { authUser } = ctx.state;
     authUser.assign(ctx.request.body);
     await authUser.save();
@@ -139,22 +146,27 @@ router
       };
     },
   )
-  .patch('/:id', validateBody(User.getUpdateValidation().custom(validateUserRoles)), async (ctx) => {
-    const { user } = ctx.state;
-    const snapshot = new User(user);
-    user.assign(ctx.request.body);
-    await user.save();
-    await AuditEntry.append('Updated User', {
-      ctx,
-      snapshot,
-      object: user,
-      fields: ['email', 'roles'],
-    });
+  .patch(
+    '/:id',
+    excludeSelfFromUniqueChecks,
+    validateBody(User.getUpdateValidation().custom(validateUserRoles)),
+    async (ctx) => {
+      const { user } = ctx.state;
+      const snapshot = new User(user);
+      user.assign(ctx.request.body);
+      await user.save();
+      await AuditEntry.append('Updated User', {
+        ctx,
+        snapshot,
+        object: user,
+        fields: ['email', 'roles'],
+      });
 
-    ctx.body = {
-      data: user,
-    };
-  })
+      ctx.body = {
+        data: user,
+      };
+    },
+  )
   .delete('/:id', async (ctx) => {
     const { user } = ctx.state;
     try {

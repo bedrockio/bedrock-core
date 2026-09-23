@@ -48,9 +48,9 @@ async function loginOtp(body) {
     method: 'POST',
     path: `/1/auth/otp/send`,
     body: {
-      ...body,
+      email: body.email,
       type: AUTH_TYPE,
-      authChannel: AUTH_CHANNEL,
+      channel: AUTH_CHANNEL,
     },
   });
 }

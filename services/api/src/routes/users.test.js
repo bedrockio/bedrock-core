@@ -322,6 +322,27 @@ describe('/1/users', () => {
       expect(dbUser.name).toEqual('New Name');
     });
 
+    it('should allow submitting an unchanged email', async () => {
+      const admin = await createAdmin();
+      const user1 = await createUser({ email: 'old@bar.com' });
+      const response = await request(
+        'PATCH',
+        `/1/users/${user1.id}`,
+        { firstName: 'New', email: 'old@bar.com' },
+        { user: admin },
+      );
+      expect(response).toHaveStatus(200);
+      expect(response.body.data.firstName).toBe('New');
+    });
+
+    it('should still reject an email taken by another user', async () => {
+      const admin = await createAdmin();
+      await createUser({ email: 'taken@bar.com' });
+      const user1 = await createUser({ email: 'mine@bar.com' });
+      const response = await request('PATCH', `/1/users/${user1.id}`, { email: 'taken@bar.com' }, { user: admin });
+      expect(response).toHaveStatus(400);
+    });
+
     it('should deny access to non-admins', async () => {
       const user = await createUser({});
       const user1 = await createUser({ firstName: 'New', lastName: 'Name' });
