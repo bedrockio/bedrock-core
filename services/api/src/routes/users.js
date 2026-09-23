@@ -139,26 +139,22 @@ router
       };
     },
   )
-  .patch(
-    '/:id',
-    validateBody(User.getUpdateValidation().custom(validateUserRoles)),
-    async (ctx) => {
-      const { user } = ctx.state;
-      const snapshot = new User(user);
-      user.assign(ctx.request.body);
-      await user.save();
-      await AuditEntry.append('Updated User', {
-        ctx,
-        snapshot,
-        object: user,
-        fields: ['email', 'roles'],
-      });
+  .patch('/:id', validateBody(User.getUpdateValidation().custom(validateUserRoles)), async (ctx) => {
+    const { user } = ctx.state;
+    const snapshot = new User(user);
+    user.assign(ctx.request.body);
+    await user.save();
+    await AuditEntry.append('Updated User', {
+      ctx,
+      snapshot,
+      object: user,
+      fields: ['email', 'roles'],
+    });
 
-      ctx.body = {
-        data: user,
-      };
-    },
-  )
+    ctx.body = {
+      data: user,
+    };
+  })
   .delete('/:id', async (ctx) => {
     const { user } = ctx.state;
     try {
