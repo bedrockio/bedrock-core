@@ -60,7 +60,7 @@ export default function UserList() {
               ]}
               rightSection={
                 <>
-                  <Search.Export />
+                  <Search.Export filename="users" />
                   <Button asChild>
                     <Link to="/users/new">New User</Link>
                   </Button>
