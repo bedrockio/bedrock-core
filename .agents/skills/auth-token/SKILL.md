@@ -53,26 +53,12 @@ Then set the token on the `http://localhost:2200` origin:
    ```
 3. Navigate again to the screen you want.
 
-`getToken()` reads `sessionStorage.jwt` first and falls back to `localStorage.jwt`, which is why the
-session copy is cleared. `localStorage.session` is a cached user blob; stale values confuse the
-session store on boot.
+[`getToken()`](../../../services/web/src/utils/api/token.js) reads `sessionStorage.jwt` first and
+falls back to `localStorage.jwt`, which is why the session copy is cleared. `localStorage.session`
+is a cached user blob; stale values confuse the session store on boot.
 
 The dashboard now renders instead of the login screen. Prefer `read_page` / `get_page_text` over
 screenshots — they are cheaper and assert text and structure. After exercising a screen, read
 `read_console_messages` (errors only) and `read_network_requests` for failed API calls; a UI that
 renders while a request 4xx's is still broken.
 
-## Reference
-
-| | |
-|---|---|
-| Web | `http://localhost:2200` ([`services/web/.env`](../../../services/web/.env) → `SERVER_PORT`) |
-| API | `http://localhost:2300` ([`services/api/.env`](../../../services/api/.env) → `SERVER_PORT`) |
-| Token storage | `localStorage.jwt` ([`token.js`](../../../services/web/src/utils/api/token.js)) |
-| Mint script | [`services/api/scripts/tokens/mint`](../../../services/api/scripts/tokens/mint) |
-
-The web app calls the API cross-origin at `API_URL`; there is no Vite proxy, so the API must be up
-independently of the dev server.
-
-Before UI edits, read [`services/web/AGENTS.md`](../../../services/web/AGENTS.md) and
-[`services/web/DESIGN.md`](../../../services/web/DESIGN.md) — this skill only gets you authenticated.
