@@ -83,13 +83,24 @@ User.getCreateValidation()
 
 Replacing it drops the model's access scopes and drifts the moment the definition changes.
 
-## 2. Variants
+## 2. Permissions
+
+Two things, and the resource needs the first whether or not it needs the second.
+
+Add the resource to `src/roles.json` for every role that should see it — `"all"` for admins, `"read"` for
+viewers. This is required even when the router checks nothing, because the dashboard reads the role
+definition to decide what to render.
+
+Then gate the router with the permissions middleware if the resource is not readable by every authenticated
+user. Apply it once for the whole router, or split it so reads and writes need different permissions. The
+permission is the same key used in `roles.json`, with the action appended — the resource alone covers every
+action on it.
+
+## 3. Variants
 
 The router above is the baseline. Apply the ones that fit the resource — each is a deviation to make
 knowingly, not a default.
 
-- **Permissions** — gate the router with a permissions middleware when the resource is not readable by every
-  authenticated user, either once for the whole router or split between read and write.
 - **Creating user** — take it from the authenticated user, never from the request body. The field is named
   `user` for what it points at; `owner` survives only on uploads.
 - **Multi-tenancy** — set the organization from request state on create and gate writes on the organization
@@ -97,15 +108,15 @@ knowingly, not a default.
 - **Guarded delete** — a model can refuse deletion while it is still referenced. Validate the delete and
   translate the resulting error into a `400`, rather than letting it surface as a `500`.
 - **Per-document access** — prefer the model definition's `access` block, which grants update and delete to
-  named roles and to the document's own user. Use a `hasAccess` check on the param fetch only for rules that
+  named roles and to the document's own user. Use a `hasAccess` check on the param fetch only for rules the
   block cannot express; it answers `403`.
 
-## 3. Audit log
+## 4. Audit log
 
 Decide explicitly whether the resource is audited. If it is, follow the [audit-log](../audit-log/SKILL.md)
 skill — it covers the create, update and delete entries and the quiet ways they go wrong.
 
-## 4. Tests
+## 5. Tests
 
 Colocated as `src/routes/<resources>.test.js`, Vitest, one `describe` per endpoint. Cover the five endpoints
 and any non-trivial authorization; skip trivial cases. Tests assert observable behaviour — status, response
@@ -126,12 +137,6 @@ The testing helpers create users at each role level and the common referenced do
 method, path, body and an acting user. Assert status with `toHaveStatus`. For delete, assert the soft delete
 by fetching the deleted document and checking `deletedAt`, not by expecting the row to be gone. An audited
 resource also asserts its entries.
-
-## 5. Roles
-
-Add the resource to `src/roles.json` for every role that should see it — `"all"` for admins, `"read"` for
-viewers. Required even when the router does not check permissions, because the dashboard uses the role
-definition to decide what to render.
 
 ## 6. Documentation
 
