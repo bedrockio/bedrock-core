@@ -1,47 +1,75 @@
 ---
 name: crud-api-endpoint
-description: Add the CRUD REST endpoints for an existing model in services/api (Koa router, audit entries, tests, roles, docs), following the Product resource as the reference implementation. Use when asked to create, scaffold, or extend an API endpoint, resource, or model in this repo.
+description: Add the CRUD REST endpoints for an existing model in services/api — router, tests, role permissions and the docs portal page, with the response and validation contract they have to follow. Use when asked to create, scaffold, or extend an API endpoint or resource in this repo.
 ---
 
 # CRUD API endpoint
 
-Reference implementation: `Product`. Mirror it unless a requirement forces a deviation.
+A CRUD resource is a router mounted under `/1/<resources>`, its colocated tests, an entry in the role
+permissions, and a page in the docs portal. The model comes first and is not part of this.
 
-| Concern | File |
-| --- | --- |
-| Schema (prerequisite) | [`src/models/definitions/product.json`](../../../services/api/src/models/definitions/product.json) |
-| Model export (prerequisite) | [`src/models/index.js`](../../../services/api/src/models/index.js) |
-| Routes | [`src/routes/products.js`](../../../services/api/src/routes/products.js) |
-| Mount | [`src/routes/index.js`](../../../services/api/src/routes/index.js) |
-| Tests | [`src/routes/products.test.js`](../../../services/api/src/routes/products.test.js) |
-| Audit log | [audit-log](../audit-log/SKILL.md) skill |
-| Permissions | [`src/roles.json`](../../../services/api/src/roles.json) |
-| API docs | [`src/docs/pages/Products.mdx`](../../../services/web/src/docs/pages/Products.mdx) |
-
-Naming: definition file and model name singular (`product.json`, `Product`); route file and URL segment plural
-kebab-case (`audit-entries.js`, `/1/audit-entries`). `fetchByParam` puts the document on
-`ctx.state.<lowerFirst(ModelName)>`.
+Naming: the model and its definition file are singular (`Product`, `product.json`); the route file and URL
+segment are plural kebab-case (`audit-entries.js`, `/1/audit-entries`). Routes live in `src/routes`, tests
+beside them as `<resources>.test.js`.
 
 ## Prerequisite: the model
 
-This skill starts from a model that already exists: `src/models/definitions/<resource>.json` defining the
-attributes and its `search` block, exported through `loadModel` in `src/models/index.js`. If it does not exist
-yet, write it first — [`src/models/README.md`](../../../services/api/src/models/README.md) carries the
-attribute-naming and data-modelling rules — then come back.
+This starts from a model that already exists — a definition in `src/models/definitions` with its attributes
+and `search` block, loaded and exported from `src/models/index.js`. Write that first if it is missing; the
+models README carries the attribute-naming and data-modelling rules.
 
-Everything below derives from that definition: `getCreateValidation()` and its siblings are generated from the
-attributes, and `Model.search()` filters on `search.fields`.
+Everything below derives from it. The request validation and the search behaviour are generated from the
+definition, so the endpoints cannot be written against a model that is not settled.
 
 ## 1. Router
 
-Copy [`src/routes/products.js`](../../../services/api/src/routes/products.js) to `src/routes/<resources>.js`
-and rename the model, the `ctx.state` key and the local variable. It is the canonical shape: `authenticate()`
-and `.param('id', fetchByParam(Model))`, then create, get, search with CSV export, update, delete — in that
-order.
+Five endpoints: create, get, search, update, delete. Authenticate once for the whole router and resolve `:id`
+once as a param, so each handler receives the document on `ctx.state` under the model's lowercased name.
 
-Validation comes off the model: `getCreateValidation()`, `getUpdateValidation()`, `getSearchValidation({
-allowExport: true })`. For anything the schema cannot express — a field that never persists, a cross-field
-rule — extend the generated schema rather than replacing it:
+```js
+const router = new Router();
+
+router
+  .use(authenticate())
+  .param('id', fetchByParam(Product))
+  .post('/', validateBody(Product.getCreateValidation()), async (ctx) => {
+    ctx.body = { data: await Product.create(ctx.request.body) };
+  })
+  .get('/:id', async (ctx) => {
+    ctx.body = { data: ctx.state.product };
+  })
+  .post('/search', validateBody(Product.getSearchValidation({ allowExport: true })), async (ctx) => {
+    const { format, filename, ...params } = ctx.request.body;
+    const { data, meta } = await Product.search(params);
+    if (format === 'csv') {
+      return csvExport(ctx, data, { filename });
+    }
+    ctx.body = { data, meta };
+  })
+  .patch('/:id', validateBody(Product.getUpdateValidation()), async (ctx) => {
+    const { product } = ctx.state;
+    product.assign(ctx.request.body);
+    await product.save();
+    ctx.body = { data: product };
+  })
+  .delete('/:id', async (ctx) => {
+    await ctx.state.product.delete();
+    ctx.status = 204;
+  });
+```
+
+Mount it in the routes index under the plural segment. Listing is a `POST /search` with a body, not a `GET`
+with query parameters — the search validation accepts the filter, sort and pagination the model defines, and
+`allowExport` adds the `format` and `filename` fields that turn the same call into a CSV download.
+
+Contract: success bodies are always `{ data }`, search adds `{ data, meta }` where `meta.total` is the
+unpaginated count, and delete returns `204` with no body. Deletes are soft — the document keeps existing with
+a `deletedAt` and is excluded from normal queries.
+
+Validation comes off the model rather than hand-written schemas: create, update, search and delete each have a
+generated schema that already reflects the attributes, their requiredness and their access scopes. For
+something the definition cannot express — a field that never persists, a cross-field rule — extend the
+generated schema instead of replacing it:
 
 ```js
 User.getCreateValidation()
@@ -53,83 +81,60 @@ User.getCreateValidation()
   });
 ```
 
-A hand-written yada object in place of the generated one drops the model's own access scopes and drifts the
-moment the definition changes.
-
-Contract: success bodies are always `{ data }`, search adds `{ data, meta }`, delete is `204` with no body.
-`delete()` is a soft delete — the document stays retrievable via `findByIdDeleted`.
-
-Mount it in `src/routes/index.js` (import + `router.use('/products', products.routes())`).
+Replacing it drops the model's access scopes and drifts the moment the definition changes.
 
 ### Variants
 
-- **Permissions** — add `.use(requirePermissions('<resources>.read'))` from
-  `../utils/middleware/permissions.js` when the resource is not readable by every authenticated user. See
-  [`organizations.js`](../../../services/api/src/routes/organizations.js) (split read/write) and
-  [`audit-entries.js`](../../../services/api/src/routes/audit-entries.js). Products deliberately has none.
-- **Creating user** — take it from the token, never the body: `Shop.create({ ...ctx.request.body, user:
-  ctx.state.authUser._id })`. The field is named `user`, not `owner` — `Upload.owner` is the one legacy
-  exception.
-- **Multi-tenancy** — set `organization: ctx.state.organization` on create and gate with
-  `requirePermissions('<resources>.write', 'organization')`.
-- **Guarded delete** — `validateDelete(Model.getDeleteValidation())` plus `try/catch` around `delete()`
-  rethrowing as `ctx.throw(400, err)` when references must block removal.
-- **Per-document access** — prefer the model definition's `access` block (`shop.json` grants `update`/`delete`
-  to `user`, `admin`, `superAdmin`); reach for `fetchByParam(Model, { hasAccess: async (ctx, doc) => ... })`,
-  which 403s on failure, only for rules the block cannot express. `{ as: 'name' }` renames the `ctx.state`
-  key.
+- **Permissions** — gate the router with a permissions middleware when the resource is not readable by every
+  authenticated user, either once for the whole router or split between read and write.
+- **Creating user** — take it from the authenticated user, never from the request body. The field is named
+  `user` for what it points at; `owner` survives only on uploads.
+- **Multi-tenancy** — set the organization from request state on create and gate writes on the organization
+  scope, so a tenant cannot write into another's data.
+- **Guarded delete** — a model can refuse deletion while it is still referenced. Validate the delete and
+  translate the resulting error into a `400`, rather than letting it surface as a `500`.
+- **Per-document access** — prefer the model definition's `access` block, which grants update and delete to
+  named roles and to the document's own user. Use a `hasAccess` check on the param fetch only for rules that
+  block cannot express; it answers `403`.
 
 ## 2. Audit log
 
 Decide explicitly whether the resource is audited. If it is, follow the [audit-log](../audit-log/SKILL.md)
-skill — it covers the `AuditEntry.append()` calls for create, update and delete, and the quiet failures around
-`fields` and `snapshot`. `Product` is unaudited; [`shops.js`](../../../services/api/src/routes/shops.js) is
-the audited equivalent.
+skill — it covers the create, update and delete entries and the quiet ways they go wrong.
 
 ## 3. Tests
 
-`src/routes/<resources>.test.js`, colocated, Vitest, one `describe` per endpoint. Cover the five endpoints and
-any non-trivial authorization; skip trivial cases.
+Colocated as `src/routes/<resources>.test.js`, Vitest, one `describe` per endpoint. Cover the five endpoints
+and any non-trivial authorization; skip trivial cases. Tests assert observable behaviour — status, response
+body, and what is actually in the database afterwards.
 
 ```js
-import { request, createUser } from '../utils/testing/index.js';
-import { Product } from '../models/index.js';
-
-describe('/1/products', () => {
-  describe('POST /', () => {
-    it('should be able to create product', async () => {
-      const user = await createUser();
-      const response = await request('POST', '/1/products', { name: 'some other product' }, { user });
-      expect(response).toHaveStatus(200);
-      expect(response.body.data.name).toBe('some other product');
-    });
+describe('POST /', () => {
+  it('should be able to create product', async () => {
+    const user = await createUser();
+    const response = await request('POST', '/1/products', { name: 'some other product' }, { user });
+    expect(response).toHaveStatus(200);
+    expect(response.body.data.name).toBe('some other product');
   });
 });
 ```
 
-Helpers in [`src/utils/testing/index.js`](../../../services/api/src/utils/testing/index.js): `request`,
-`createUser`, `createAdmin`, `createSuperAdmin`, `createUpload`, `createTemplate`. Assert status with
-`expect(response).toHaveStatus(...)`. Assert soft delete with `findByIdDeleted(...)` then
-`expect(doc.deletedAt).toBeDefined()`. When the resource is audited, each mutating test also asserts the entry
-— `AuditEntry.findOne({ object: id })` then `activity`, `actor`, `ownerId`, `ownerType`, as in
-[`shops.test.js`](../../../services/api/src/routes/shops.test.js).
+The testing helpers create users at each role level and the common referenced documents; `request` takes the
+method, path, body and an acting user. Assert status with `toHaveStatus`. For delete, assert the soft delete
+by fetching the deleted document and checking `deletedAt`, not by expecting the row to be gone. An audited
+resource also asserts its entries.
 
 ## 4. Roles
 
-Add the resource key to [`src/roles.json`](../../../services/api/src/roles.json) for every role that should
-see it — `"all"` for `superAdmin`/`admin`, `"read"` for `viewer`. Required even when the router does not call
-`requirePermissions`, because the dashboard uses it to decide what to render.
+Add the resource to `src/roles.json` for every role that should see it — `"all"` for admins, `"read"` for
+viewers. Required even when the router does not check permissions, because the dashboard uses the role
+definition to decide what to render.
 
 ## 5. Documentation
 
-Regenerate the OpenAPI definition (`bedrock generate docs`, or `POST /1/docs/generate` against a running API —
-see [auth-token](../auth-token/SKILL.md) for a token) so `openapi.json` picks up the new paths, then add the
-portal page.
-
-`services/web/src/docs/pages/<Resources>.mdx` — one `##` section per endpoint with a one-line description and
-a `<Route />`, closing with `<VisitedSchemas />`; copy
-[`Products.mdx`](../../../services/web/src/docs/pages/Products.mdx). Register it in
-[`src/docs/pages/index.js`](../../../services/web/src/docs/pages/index.js) (import + `PAGES` entry).
+Regenerate the OpenAPI definition so it picks up the new paths, then add the portal page under
+`services/web/src/docs/pages` and register it in that directory's index. One section per endpoint: a heading,
+a one-line description, and the route reference that renders the generated request and response schemas.
 
 ## 6. Verify
 
