@@ -29,7 +29,7 @@ router
             actor: user,
           },
           {
-            owner: user,
+            ownerId: user,
           },
           {
             object: user,
