@@ -26,6 +26,11 @@ import { Separator } from '@/components/ui/separator';
 
 import { request } from 'utils/api';
 import { AUTH_CHANNEL, AUTH_TYPE } from 'utils/env';
+import { formatPhone, normalizePhone } from 'utils/phone';
+
+// The SMS channel delivers to a phone, so the login screen identifies by phone
+// rather than email. Password login never uses a channel.
+const USE_PHONE = AUTH_TYPE !== 'password' && AUTH_CHANNEL === 'sms';
 
 function login(values) {
   if (AUTH_TYPE === 'password') {
@@ -39,7 +44,10 @@ async function loginPassword(body) {
   return await request({
     method: 'POST',
     path: `/1/auth/password/login`,
-    body,
+    body: {
+      email: body.email,
+      password: body.password,
+    },
   });
 }
 
@@ -48,15 +56,20 @@ async function loginOtp(body) {
     method: 'POST',
     path: `/1/auth/otp/send`,
     body: {
-      ...body,
+      ...(USE_PHONE ? { phone: body.phone } : { email: body.email }),
       type: AUTH_TYPE,
-      authChannel: AUTH_CHANNEL,
+      channel: AUTH_CHANNEL,
     },
   });
 }
 
 const schema = z.object({
-  email: z.string().min(1, 'Email is required').email('Enter a valid email'),
+  email: USE_PHONE
+    ? z.string().optional()
+    : z.string().min(1, 'Email is required').email('Enter a valid email'),
+  phone: USE_PHONE
+    ? z.string().min(1, 'Phone is required')
+    : z.string().optional(),
   password:
     AUTH_TYPE === 'password'
       ? z.string().min(1, 'Password is required')
@@ -71,6 +84,7 @@ export default function PasswordLogin() {
     resolver: zodResolver(schema),
     defaultValues: {
       email: '',
+      phone: '',
       password: '',
     },
   });
@@ -118,24 +132,50 @@ export default function PasswordLogin() {
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col gap-4">
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input
-                    type="email"
-                    placeholder="Email"
-                    autoComplete="email"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {USE_PHONE ? (
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="tel"
+                      placeholder="Phone"
+                      autoComplete="tel"
+                      value={formatPhone(field.value || '', 'us')}
+                      onChange={(e) =>
+                        field.onChange(normalizePhone(e.target.value))
+                      }
+                      onBlur={field.onBlur}
+                      name={field.name}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ) : (
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="email"
+                      placeholder="Email"
+                      autoComplete="email"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
           {AUTH_TYPE === 'password' && (
             <FormField
               control={form.control}

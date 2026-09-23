@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 
+import AuthLogo from 'components/AuthLogo';
 import BasicLayout from 'layouts/Basic';
 import { useSession } from 'stores/session';
 
@@ -7,6 +8,7 @@ import Meta from 'components/Meta';
 
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 
 import { ENV_NAME } from 'utils/env';
 
@@ -51,15 +53,18 @@ function ErrorScreen({ title = 'Something went wrong', error }) {
   return (
     <BasicLayout>
       <Meta title={title || 'Error'} />
-      <Alert variant="destructive">
-        <AlertTitle>{title}</AlertTitle>
-        <AlertDescription>{renderErrorBody()}</AlertDescription>
-      </Alert>
-      <div className="mt-4">
-        <Button size="sm" onClick={handleLogoutClick}>
-          Logout
-        </Button>
-      </div>
+      <AuthLogo />
+      <Card className="w-full p-6">
+        <Alert variant="destructive">
+          <AlertTitle>{title}</AlertTitle>
+          <AlertDescription>{renderErrorBody()}</AlertDescription>
+        </Alert>
+        <div className="mt-4">
+          <Button size="sm" onClick={handleLogoutClick}>
+            Logout
+          </Button>
+        </div>
+      </Card>
     </BasicLayout>
   );
 }

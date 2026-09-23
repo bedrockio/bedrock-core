@@ -8,8 +8,8 @@ import { z } from 'zod';
 
 import { useSession } from 'stores/session';
 
+import AuthLogo from 'components/AuthLogo';
 import ErrorMessage from 'components/ErrorMessage';
-import Logo from 'components/Logo';
 import Meta from 'components/Meta';
 import PhoneField from 'components/form-fields/Phone';
 
@@ -92,9 +92,9 @@ export default function OnboardScreen() {
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex w-full flex-col gap-4">
       <Meta title="Tell Us More" />
-      <Logo className="max-h-8" />
+      <AuthLogo />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} noValidate>
           <Card className="p-4 shadow-sm">
@@ -107,7 +107,11 @@ export default function OnboardScreen() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input type="email" {...field} value={field.value || ''} />
+                        <Input
+                          type="email"
+                          {...field}
+                          value={field.value || ''}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

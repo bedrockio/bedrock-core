@@ -8,11 +8,13 @@ import { z } from 'zod';
 
 import { useSession } from 'stores/session';
 
+import AuthLogo from 'components/AuthLogo';
 import ErrorMessage from 'components/ErrorMessage';
 import Meta from 'components/Meta';
 import { useRequest } from 'hooks/request';
 
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import {
   Form,
   FormControl,
@@ -95,7 +97,8 @@ function AcceptInvite() {
     return (
       <React.Fragment>
         <Meta title="Login" />
-        {renderSwitch()}
+        <AuthLogo />
+        <Card className="w-full p-6">{renderSwitch()}</Card>
       </React.Fragment>
     );
   }

@@ -63,3 +63,13 @@ export function applyFormat(phone, format) {
 }
 
 export { COUNTRIES };
+
+// Normalise a typed phone number to a prefixed value.
+export function normalizePhone(value, country = 'us') {
+  let v = value
+    .trim()
+    .replace(/[ ()@.+-]/g, '')
+    .replace(/^[01](\d)/, '$1')
+    .replace(/[a-z]/gi, '');
+  return v ? `${COUNTRIES[country].prefix}${v}` : '';
+}
