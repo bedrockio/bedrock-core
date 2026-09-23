@@ -17,7 +17,7 @@ router
       AuditEntry.getSearchValidation({
         allowExport: true,
       }).append({
-        user: yd.string(),
+        user: yd.string().mongo(),
       }),
     ),
     async (ctx) => {
@@ -29,7 +29,7 @@ router
             actor: user,
           },
           {
-            owner: user,
+            ownerId: user,
           },
           {
             object: user,
