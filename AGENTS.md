@@ -22,11 +22,8 @@ generated from a schema must look and behave identically to hand-built ones.
 
 ## Skills
 
-Shared agent skills live in `.agents/skills/<name>/SKILL.md` and are tracked. Tool-specific skill
-directories (`.claude/`, `.github/skills/`) are gitignored, so point your tool at the shared ones:
-
-```bash
-mkdir -p .claude && ln -sfn ../.agents/skills .claude/skills
-```
+Shared agent skills live in `.agents/skills/<name>/SKILL.md`. `.claude/skills` is a committed symlink
+to that directory so Claude Code finds them; point other tools at `.agents/skills` the same way.
+Windows checkouts need `core.symlinks=true` or the link lands as a text file and no skill loads.
 
 Work inside the relevant service; prefer its own AGENTS.md and existing patterns over global assumptions.
