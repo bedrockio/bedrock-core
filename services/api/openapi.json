@@ -1942,7 +1942,7 @@
                     "required": [],
                     "additionalProperties": false
                   },
-                  "owner": {
+                  "user": {
                     "$ref": "#/components/schemas/Reference"
                   }
                 },
@@ -2111,7 +2111,7 @@
                     "required": [],
                     "additionalProperties": true
                   },
-                  "owner": {
+                  "user": {
                     "anyOf": [
                       {
                         "$ref": "#/components/schemas/Reference"
@@ -2448,7 +2448,7 @@
                     "required": [],
                     "additionalProperties": false
                   },
-                  "owner": {
+                  "user": {
                     "anyOf": [
                       {
                         "anyOf": [
@@ -5336,7 +5336,7 @@
             "required": [],
             "additionalProperties": false
           },
-          "owner": {
+          "user": {
             "$ref": "#/components/schemas/ObjectId"
           },
           "createdAt": {
