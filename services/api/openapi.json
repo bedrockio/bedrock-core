@@ -5412,7 +5412,7 @@
           "storageType": {
             "type": "string"
           },
-          "owner": {
+          "user": {
             "$ref": "#/components/schemas/ObjectId"
           },
           "createdAt": {
@@ -5427,7 +5427,7 @@
           "filename",
           "mimeType",
           "storageType",
-          "owner"
+          "user"
         ],
         "additionalProperties": false
       },

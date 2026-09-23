@@ -56,7 +56,7 @@ describe('/1/uploads', () => {
       const user1 = await createUser();
       const user2 = await createUser();
       const upload = await createUpload({
-        owner: user1,
+        user: user1,
         private: true,
       });
       const response = await request(
@@ -75,7 +75,7 @@ describe('/1/uploads', () => {
     it('should return raw URL without token for a public file', async () => {
       const user = await createUser();
       const upload = await createUpload({
-        owner: user,
+        user: user,
       });
       const response = await request('GET', `/1/uploads/${upload.id}/url`, {}, { user });
       expect(response).toHaveStatus(200);
@@ -87,7 +87,7 @@ describe('/1/uploads', () => {
       const user = await createUser();
       const upload = await createUpload({
         private: true,
-        owner: user,
+        user: user,
       });
 
       const response = await request('GET', `/1/uploads/${upload.id}/url`, {}, { user });
@@ -101,7 +101,7 @@ describe('/1/uploads', () => {
       const user = await createUser();
       const upload = await createUpload({
         private: true,
-        owner: user,
+        user: user,
       });
       const response = await request('GET', `/1/uploads/${upload.id}/url`, {}, { user: admin });
       expect(response).toHaveStatus(200);
@@ -143,7 +143,7 @@ describe('/1/uploads', () => {
       const user = await createUser();
       const upload = await createUpload({
         private: true,
-        owner: user,
+        user: user,
       });
       const token = createUploadToken(upload);
 
@@ -157,11 +157,11 @@ describe('/1/uploads', () => {
       const user = await createUser();
       const upload = await createUpload({
         private: true,
-        owner: user,
+        user: user,
       });
       const otherUpload = await createUpload({
         private: true,
-        owner: user,
+        user: user,
       });
       const token = createUploadToken(otherUpload);
 
@@ -184,7 +184,7 @@ describe('/1/uploads', () => {
       const user = await createUser();
       const upload = await createUpload({
         private: true,
-        owner: user,
+        user: user,
       });
       // Auth tokens have kid='user', not 'access' — should not grant upload access.
       const token = signToken({ ...getAuthPayload(user), upload: upload.id });
@@ -199,7 +199,7 @@ describe('/1/uploads', () => {
       const user = await createUser();
       const upload = await createUpload({
         private: true,
-        owner: user,
+        user: user,
       });
       const token = createUploadToken(upload);
 
@@ -221,7 +221,7 @@ describe('/1/uploads', () => {
       expect(upload.mimeType).toBe('image/png');
       expect(upload.storageType).toBe('local');
       expect(upload.filename).toBe('test.png');
-      expect(upload.owner.id).toBe(user.id);
+      expect(upload.user.id).toBe(user.id);
     });
 
     it('should be able to handle multiple files', async () => {
@@ -242,7 +242,7 @@ describe('/1/uploads', () => {
           filename: 'test.png',
           storageType: 'local',
           mimeType: 'image/png',
-          owner: {
+          user: {
             id: user.id,
           },
         },
@@ -250,7 +250,7 @@ describe('/1/uploads', () => {
           filename: 'test.png',
           storageType: 'local',
           mimeType: 'image/png',
-          owner: {
+          user: {
             id: user.id,
           },
         },
@@ -319,7 +319,7 @@ describe('/1/uploads', () => {
           filename: 'test.png',
           storageType: 'local',
           mimeType: 'image/png',
-          owner: {
+          user: {
             id: user.id,
           },
         },
@@ -328,7 +328,7 @@ describe('/1/uploads', () => {
           filename: 'test.png',
           storageType: 'local',
           mimeType: 'image/png',
-          owner: {
+          user: {
             id: user.id,
           },
         },
@@ -340,7 +340,7 @@ describe('/1/uploads', () => {
     it('should be able to delete own upload', async () => {
       const user = await createUser();
       const upload = await createUpload({
-        owner: user,
+        user: user,
       });
       const response = await request('DELETE', `/1/uploads/${upload.id}`, {}, { user });
       expect(response).toHaveStatus(204);
@@ -348,7 +348,7 @@ describe('/1/uploads', () => {
       expect(dbUpload.deletedAt).toBeDefined();
     });
 
-    it('should fail if you are not the owner', async () => {
+    it('should fail if you are not the user', async () => {
       const user = await createUser();
       const upload = await createUpload();
       const response = await request('DELETE', `/1/uploads/${upload.id}`, {}, { user });
