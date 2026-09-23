@@ -13,13 +13,13 @@ router
   .post('/', validateBody(Shop.getCreateValidation()), async (ctx) => {
     const shop = await Shop.create({
       ...ctx.request.body,
-      user: ctx.state.authUser._id,
+      owner: ctx.state.authUser._id,
     });
 
     await AuditEntry.append('Created Shop', {
       ctx,
       object: shop,
-      fields: ['name', 'user', 'country'],
+      fields: ['name', 'owner', 'country'],
     });
 
     ctx.body = {
@@ -64,7 +64,7 @@ router
     await AuditEntry.append('Updated Shop', {
       ctx,
       object: shop,
-      fields: ['name', 'user', 'country'],
+      fields: ['name', 'owner', 'country'],
       snapshot,
     });
 

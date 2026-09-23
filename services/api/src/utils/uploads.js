@@ -249,13 +249,13 @@ function validateAccess(ctx, upload) {
     }
   }
 
-  // A private upload is readable by its user, by anyone with upload access
+  // A private upload is readable by its owner, by anyone with upload access
   // within their organization, and by global ("super admin") users.
   const { authUser, organization } = ctx.state;
   let allowed;
   if (!authUser) {
     allowed = false;
-  } else if (authUser.equals(upload.user)) {
+  } else if (authUser.equals(upload.owner)) {
     allowed = true;
   } else {
     allowed = userHasOrganizationAccess(authUser, organization);

@@ -93,7 +93,7 @@ export default function ShopList() {
               <SearchFilters.Select
                 search
                 onDataNeeded={fetchOwners}
-                name="user"
+                name="owner"
                 label="Owner"
               />
               <SearchFilters.Select

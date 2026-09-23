@@ -25,7 +25,7 @@ describe('/1/uploads', () => {
       const upload = await createUpload({
         private: true,
         storageType: 'gcs',
-        user: user,
+        owner: user,
       });
 
       const response = await request('GET', `/1/uploads/${upload.id}/url`, {}, { user });
@@ -40,7 +40,7 @@ describe('/1/uploads', () => {
       const upload = await createUpload({
         private: true,
         storageType: 'gcs',
-        user: user,
+        owner: user,
       });
       const response = await request('GET', `/1/uploads/${upload.id}/url`, {}, { user: admin });
       expect(response).toHaveStatus(200);
@@ -72,7 +72,7 @@ describe('/1/uploads', () => {
       const upload = await createUpload({
         private: true,
         storageType: 'gcs',
-        user: user,
+        owner: user,
       });
 
       const response = await request('GET', `/1/uploads/${upload.id}/raw`, {}, { user });
@@ -87,7 +87,7 @@ describe('/1/uploads', () => {
       const upload = await createUpload({
         private: true,
         storageType: 'gcs',
-        user: user,
+        owner: user,
       });
       const response = await request('GET', `/1/uploads/${upload.id}/raw`, {}, { user: admin });
       expect(response).toHaveStatus(302);
@@ -140,7 +140,7 @@ describe('/1/uploads', () => {
       expect(response.body.data.upload.id).toBeDefined();
 
       const upload = await Upload.findOne({
-        user: user.id,
+        owner: user.id,
       });
       expect(upload.filename).toBe('test.png');
       expect(upload.mimeType).toBe('image/png');

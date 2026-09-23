@@ -17,7 +17,7 @@
       "required": true,
       "writeAccess": "none"
     },
-    "user": {
+    "owner": {
       "type": "ObjectId",
       "ref": "User",
       "required": true,
