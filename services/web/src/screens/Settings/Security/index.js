@@ -19,14 +19,18 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Spinner } from '@/components/ui/spinner';
 
-import { createPasskey, removePasskey } from 'utils/auth/passkey';
+import {
+  canShowPasskey,
+  createPasskey,
+  removePasskey,
+} from 'utils/auth/passkey';
 import { formatDate, fromNow } from 'utils/date';
 
 import Sessions from './Sessions';
 import TwoFactorAuthentication from './TwoFactorAuthentication';
 
 export default function Security() {
-  const { user, updateUser } = useSession();
+  const { user, meta, updateUser } = useSession();
 
   const [state, setState] = useState({
     error: null,
@@ -115,47 +119,49 @@ export default function Security() {
           </div>
         )}
         <div className="grid grid-cols-1 items-start gap-6 sm:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle>Passkey</CardTitle>
-              <CardDescription>
-                Sign in without a password using a passkey on your device.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3">
-              {user.authenticators
-                .filter((authenticator) => authenticator.type === 'passkey')
-                .map((passkey) => {
-                  const { id, name, createdAt, lastUsedAt } = passkey;
-                  return (
-                    <div
-                      className="flex items-center justify-between gap-4"
-                      key={id}>
-                      <div className="flex min-w-0 flex-col">
-                        <span className="text-sm font-medium">{name}</span>
-                        <span className="text-muted-foreground text-xs">
-                          Added {formatDate(createdAt)} · Last used{' '}
-                          {fromNow(lastUsedAt)}
-                        </span>
+          {canShowPasskey(meta) && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Passkey</CardTitle>
+                <CardDescription>
+                  Sign in without a password using a passkey on your device.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex flex-col gap-3">
+                {user.authenticators
+                  .filter((authenticator) => authenticator.type === 'passkey')
+                  .map((passkey) => {
+                    const { id, name, createdAt, lastUsedAt } = passkey;
+                    return (
+                      <div
+                        className="flex items-center justify-between gap-4"
+                        key={id}>
+                        <div className="flex min-w-0 flex-col">
+                          <span className="text-sm font-medium">{name}</span>
+                          <span className="text-muted-foreground text-xs">
+                            Added {formatDate(createdAt)} · Last used{' '}
+                            {fromNow(lastUsedAt)}
+                          </span>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          title="Delete"
+                          disabled={loading}
+                          onClick={() => deletePasskey(passkey)}>
+                          <Trash2 />
+                        </Button>
                       </div>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        title="Delete"
-                        disabled={loading}
-                        onClick={() => deletePasskey(passkey)}>
-                        <Trash2 />
-                      </Button>
-                    </div>
-                  );
-                })}
-              <div className="flex">
-                <Button variant="outline" onClick={onCreatePasskeyClick}>
-                  Add Passkey
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+                    );
+                  })}
+                <div className="flex">
+                  <Button variant="outline" onClick={onCreatePasskeyClick}>
+                    Add Passkey
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           <Card>
             <CardHeader>

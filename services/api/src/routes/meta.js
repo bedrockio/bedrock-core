@@ -1,4 +1,5 @@
 import Router from '@koa/router';
+import config from '@bedrockio/config';
 import types from '../lib/notifications/types.js';
 
 import roles from '../roles.json' with { type: 'json' };
@@ -10,6 +11,11 @@ router.get('/', async (ctx) => {
     data: {
       roles,
       notifications: types,
+      auth: {
+        type: config.get('AUTH_TYPE'),
+        channel: config.get('AUTH_CHANNEL'),
+        passkey: config.get('AUTH_PASSKEY', 'boolean'),
+      },
     },
   };
 });

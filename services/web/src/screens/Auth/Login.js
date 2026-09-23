@@ -25,18 +25,19 @@ import { PasswordInput } from '@/components/ui/password-input';
 import { Separator } from '@/components/ui/separator';
 
 import { request } from 'utils/api';
-import { AUTH_CHANNEL, AUTH_TYPE } from 'utils/env';
 import { formatPhone, normalizePhone } from 'utils/phone';
 
 // The SMS channel delivers to a phone, so the login screen identifies by phone
 // rather than email. Password login never uses a channel.
-const USE_PHONE = AUTH_TYPE !== 'password' && AUTH_CHANNEL === 'sms';
+function usesPhone(auth) {
+  return auth.type !== 'password' && auth.channel === 'sms';
+}
 
-function login(values) {
-  if (AUTH_TYPE === 'password') {
+function login(values, auth) {
+  if (auth.type === 'password') {
     return loginPassword(values);
   } else {
-    return loginOtp(values);
+    return loginOtp(values, auth);
   }
 }
 
@@ -51,37 +52,42 @@ async function loginPassword(body) {
   });
 }
 
-async function loginOtp(body) {
+async function loginOtp(body, auth) {
   return await request({
     method: 'POST',
     path: `/1/auth/otp/send`,
     body: {
-      ...(USE_PHONE ? { phone: body.phone } : { email: body.email }),
-      type: AUTH_TYPE,
-      channel: AUTH_CHANNEL,
+      ...(usesPhone(auth) ? { phone: body.phone } : { email: body.email }),
+      type: auth.type,
+      channel: auth.channel,
     },
   });
 }
 
-const schema = z.object({
-  email: USE_PHONE
-    ? z.string().optional()
-    : z.string().min(1, 'Email is required').email('Enter a valid email'),
-  phone: USE_PHONE
-    ? z.string().min(1, 'Phone is required')
-    : z.string().optional(),
-  password:
-    AUTH_TYPE === 'password'
-      ? z.string().min(1, 'Password is required')
+function getSchema(auth) {
+  const usePhone = usesPhone(auth);
+  return z.object({
+    email: usePhone
+      ? z.string().optional()
+      : z.string().min(1, 'Email is required').email('Enter a valid email'),
+    phone: usePhone
+      ? z.string().min(1, 'Phone is required')
       : z.string().optional(),
-});
+    password:
+      auth.type === 'password'
+        ? z.string().min(1, 'Password is required')
+        : z.string().optional(),
+  });
+}
 
 export default function PasswordLogin() {
   const navigate = useNavigate();
-  const { authenticate } = useSession();
+  const { authenticate, meta } = useSession();
+  const { auth } = meta;
+  const usePhone = usesPhone(auth);
 
   const form = useForm({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(getSchema(auth)),
     defaultValues: {
       email: '',
       phone: '',
@@ -104,7 +110,7 @@ export default function PasswordLogin() {
     try {
       setError(null);
 
-      const { data } = await login(values);
+      const { data } = await login(values, auth);
       const { token, challenge } = data;
 
       if (token) {
@@ -132,7 +138,7 @@ export default function PasswordLogin() {
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col gap-4">
-          {USE_PHONE ? (
+          {usePhone ? (
             <FormField
               control={form.control}
               name="phone"
@@ -176,7 +182,7 @@ export default function PasswordLogin() {
               )}
             />
           )}
-          {AUTH_TYPE === 'password' && (
+          {auth.type === 'password' && (
             <FormField
               control={form.control}
               name="password"

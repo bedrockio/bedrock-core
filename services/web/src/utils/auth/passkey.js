@@ -3,14 +3,12 @@ import {
   startRegistration,
 } from '@simplewebauthn/browser';
 
-import { AUTH_PASSKEY } from 'utils/env';
-
 import { request } from '../api';
 
 const DIALOG_ERRORS = ['ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY'];
 
-export function canShowPasskey() {
-  return !!AUTH_PASSKEY;
+export function canShowPasskey(meta) {
+  return !!meta?.auth?.passkey;
 }
 
 export async function login() {

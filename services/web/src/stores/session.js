@@ -99,54 +99,56 @@ function SessionProvider({ children, location }) {
   }, []);
 
   const bootstrap = useCallback(async () => {
-    if (hasToken()) {
-      updateState({
-        loading: true,
-        error: null,
+    updateState({
+      loading: true,
+      error: null,
+    });
+    try {
+      const { data: meta } = await request({
+        method: 'GET',
+        path: '/1/meta',
       });
-      try {
-        const { data: user } = await request({
-          method: 'GET',
-          path: '/1/users/me',
-        });
+      updateState({ meta });
 
-        const { data: meta } = await request({
-          method: 'GET',
-          path: '/1/meta',
-        });
-        const organization = await loadOrganization();
-
-        // Uncomment this line if you want to set up
-        // User-Id tracking. https://bit.ly/2DKQYEN.
-        // setUserId(user.id);
-
+      if (!hasToken()) {
         updateState({
-          user,
-          meta,
-          organization,
+          user: null,
+          ready: true,
+          loading: false,
+        });
+        return;
+      }
+
+      const { data: user } = await request({
+        method: 'GET',
+        path: '/1/users/me',
+      });
+
+      const organization = await loadOrganization();
+
+      // Uncomment this line if you want to set up
+      // User-Id tracking. https://bit.ly/2DKQYEN.
+      // setUserId(user.id);
+
+      updateState({
+        user,
+        organization,
+        loading: false,
+        ready: true,
+      });
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log(error);
+      captureError(error);
+      if (error.type === 'token') {
+        await logout();
+      } else {
+        updateState({
+          error,
           loading: false,
           ready: true,
         });
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.log(error);
-        captureError(error);
-        if (error.type === 'token') {
-          await logout();
-        } else {
-          updateState({
-            error,
-            loading: false,
-            ready: true,
-          });
-        }
       }
-    } else {
-      updateState({
-        user: null,
-        ready: true,
-        loading: false,
-      });
     }
   }, [loadOrganization]);
 

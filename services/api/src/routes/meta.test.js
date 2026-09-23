@@ -17,6 +17,21 @@ describe('/1/meta', () => {
             type: 'product-updated',
           },
         ],
+        auth: {
+          type: 'password',
+          channel: 'email',
+          passkey: true,
+        },
+      });
+    });
+
+    it('should get app meta without authentication', async () => {
+      const response = await request('GET', '/1/meta', {}, {});
+      expect(response).toHaveStatus(200);
+      expect(response.body.data.auth).toEqual({
+        type: 'password',
+        channel: 'email',
+        passkey: true,
       });
     });
   });

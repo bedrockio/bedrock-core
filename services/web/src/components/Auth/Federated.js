@@ -1,3 +1,5 @@
+import { useSession } from 'stores/session';
+
 import { canShowAppleSignin } from 'utils/auth/apple';
 import { canShowGoogleSignin } from 'utils/auth/google';
 import { canShowPasskey } from 'utils/auth/passkey';
@@ -8,12 +10,13 @@ import PasskeyButton from './PasskeyButton';
 
 export default function Federated(props) {
   const { type } = props;
+  const { meta } = useSession();
 
   const isSignup = type === 'signup';
 
   const showApple = canShowAppleSignin();
   const showGoogle = canShowGoogleSignin();
-  const showPasskey = !isSignup && canShowPasskey();
+  const showPasskey = !isSignup && canShowPasskey(meta);
 
   if (!showApple && !showGoogle && !showPasskey) {
     return null;

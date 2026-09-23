@@ -25,32 +25,33 @@ import { PasswordInput } from '@/components/ui/password-input';
 import { Separator } from '@/components/ui/separator';
 
 import { useRequest } from 'utils/api';
-import { AUTH_CHANNEL, AUTH_TYPE } from 'utils/env';
 import { formatPhone, normalizePhone } from 'utils/phone';
 
 // The signup route requires the identifier matching the channel. A password
 // account also needs an email, as password login only accepts one.
-const NEEDS_EMAIL = AUTH_CHANNEL === 'email' || AUTH_TYPE === 'password';
-const NEEDS_PHONE = AUTH_CHANNEL === 'sms';
-
-const schema = z.object({
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
-  email: NEEDS_EMAIL
-    ? z.string().min(1, 'Email is required').email('Invalid email')
-    : z.union([z.literal(''), z.string().email('Invalid email')]).optional(),
-  phone: NEEDS_PHONE
-    ? z.string().min(1, 'Phone is required')
-    : z.string().optional(),
-  password:
-    AUTH_TYPE === 'password'
-      ? z.string().min(1, 'Password is required')
+function getSchema(auth) {
+  const needsEmail = auth.channel === 'email' || auth.type === 'password';
+  const needsPhone = auth.channel === 'sms';
+  return z.object({
+    firstName: z.string().optional(),
+    lastName: z.string().optional(),
+    email: needsEmail
+      ? z.string().min(1, 'Email is required').email('Invalid email')
+      : z.union([z.literal(''), z.string().email('Invalid email')]).optional(),
+    phone: needsPhone
+      ? z.string().min(1, 'Phone is required')
       : z.string().optional(),
-});
+    password:
+      auth.type === 'password'
+        ? z.string().min(1, 'Password is required')
+        : z.string().optional(),
+  });
+}
 
 export default function SignupPassword() {
   const navigate = useNavigate();
-  const { authenticate } = useSession();
+  const { authenticate, meta } = useSession();
+  const { auth } = meta;
   const [error, setError] = useState(null);
 
   const signupRequest = useRequest({
@@ -72,7 +73,7 @@ export default function SignupPassword() {
   });
 
   const form = useForm({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(getSchema(auth)),
     defaultValues: {
       firstName: '',
       lastName: '',
@@ -92,8 +93,8 @@ export default function SignupPassword() {
     await signupRequest.request({
       body: {
         ...values,
-        type: AUTH_TYPE,
-        channel: AUTH_CHANNEL,
+        type: auth.type,
+        channel: auth.channel,
       },
     });
   }
@@ -187,7 +188,7 @@ export default function SignupPassword() {
               </FormItem>
             )}
           />
-          {AUTH_TYPE === 'password' && (
+          {auth.type === 'password' && (
             <FormField
               control={form.control}
               name="password"

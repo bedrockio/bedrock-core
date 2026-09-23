@@ -1,5 +1,6 @@
 import Router from '@koa/router';
 import yd from '@bedrockio/yada';
+import config from '@bedrockio/config';
 
 import { validateBody } from '../../utils/middleware/validate.js';
 import { authenticate } from '../../utils/middleware/authenticate.js';
@@ -18,6 +19,12 @@ import {
 const router = new Router();
 
 router
+  .use(async (ctx, next) => {
+    if (!config.get('AUTH_PASSKEY', 'boolean')) {
+      ctx.throw(403, 'Passkey authentication is disabled.');
+    }
+    await next();
+  })
   .post('/generate-login', async (ctx) => {
     try {
       ctx.body = {
