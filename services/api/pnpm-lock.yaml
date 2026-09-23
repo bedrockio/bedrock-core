@@ -167,23 +167,23 @@ importers:
   .:
     dependencies:
       '@bedrockio/chrono':
-        specifier: ^0.8.0
-        version: 0.8.0
+        specifier: ^0.12.3
+        version: 0.12.3
       '@bedrockio/config':
         specifier: ^3.0.0
         version: 3.0.0
       '@bedrockio/fixtures':
         specifier: ^1.4.5
-        version: 1.5.3(@bedrockio/model@0.23.0(@bedrockio/yada@1.11.2)(mongoose@9.9.5)(supports-color@9.4.0))(mongoose@9.9.5)(supports-color@9.4.0)
+        version: 1.5.3(@bedrockio/model@0.24.3(@bedrockio/yada@1.11.2)(mongoose@9.10.1)(supports-color@9.4.0))(mongoose@9.10.1)(supports-color@9.4.0)
       '@bedrockio/logger':
         specifier: ^1.1.3
         version: 1.3.1(supports-color@9.4.0)
       '@bedrockio/model':
-        specifier: ^0.23.0
-        version: 0.23.0(@bedrockio/yada@1.11.2)(mongoose@9.9.5)(supports-color@9.4.0)
+        specifier: ^0.24.3
+        version: 0.24.3(@bedrockio/yada@1.11.2)(mongoose@9.10.1)(supports-color@9.4.0)
       '@bedrockio/templates':
-        specifier: ^0.2.1
-        version: 0.2.1
+        specifier: ^0.3.3
+        version: 0.3.3
       '@bedrockio/yada':
         specifier: ^1.11.2
         version: 1.11.2
@@ -248,8 +248,8 @@ importers:
         specifier: ^3.0.2
         version: 3.0.2
       mongoose:
-        specifier: ^9.2.0
-        version: 9.9.5
+        specifier: ^9.10.1
+        version: 9.10.1
       ms:
         specifier: ^2.1.3
         version: 2.1.3
@@ -260,8 +260,8 @@ importers:
         specifier: ^3.11.0
         version: 3.11.0(debug@4.4.3(supports-color@9.4.0))
       qs:
-        specifier: ^6.11.0
-        version: 6.14.1
+        specifier: ^6.16.0
+        version: 6.16.0
       speakeasy:
         specifier: ^2.0.0
         version: 2.0.0
@@ -288,14 +288,14 @@ importers:
         specifier: ^11.2.0
         version: 11.2.0(supports-color@9.4.0)
       prettier:
-        specifier: ^3.5.1
-        version: 3.7.4
+        specifier: ^3.9.6
+        version: 3.9.6
       supertest:
         specifier: ^7.1.4
         version: 7.2.2(supports-color@9.4.0)
       vitest:
-        specifier: ^5.0.0
-        version: 5.0.0(@opentelemetry/api@1.9.1)(@types/node@25.0.3)(vite@8.3.0(@types/node@25.0.3)(terser@5.51.2)(yaml@2.9.0))
+        specifier: ^5.0.1
+        version: 5.0.1(@opentelemetry/api@1.9.1)(@types/node@25.0.3)(vite@8.3.0(@types/node@25.0.3)(terser@5.51.2)(yaml@2.9.0))
 
 packages:
 
@@ -464,8 +464,8 @@ packages:
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
-  '@bedrockio/chrono@0.8.0':
-    resolution: {integrity: sha512-l04dZoSIgH+28GWmVyuFqh3bOz4Qo0iXFtZ49lyKaMLMfA7JGQNPwRM3p+9Ko+BlDZJsIBOyQfLoXd6Pcw5T9A==}
+  '@bedrockio/chrono@0.12.3':
+    resolution: {integrity: sha512-AgxR/B+u9/Tf1yULtscQmTvvr3ulu08uVQdpC0tsDLCecmaB24jdZhkqDy7+Ew7qR+8ChnMBactLkm07Ws7PAQ==}
 
   '@bedrockio/config@3.0.0':
     resolution: {integrity: sha512-o7QJTVdL1yKt9NWVdEcSMnn8hQCPLE83u4Lj0+sW3DCHEkappTCKfospzqic/uI1kq1Uq6WKoRiAh6QQ8oF1GA==}
@@ -490,8 +490,8 @@ packages:
   '@bedrockio/logger@1.3.1':
     resolution: {integrity: sha512-ggUy8rBZbHCWWmhSL2BjDmGhHpfXP7u6dqPhzr0qt0hbwz+TW8NC2XtuzscWocui7oTxRFRQfpQg88+Z7inleQ==}
 
-  '@bedrockio/model@0.23.0':
-    resolution: {integrity: sha512-BGRRYpAlDB3UHhTsu3EmV6WQb1YCU110xijT6dcgZCcp4i1ywiez0+UTYfEE4fp9EpliyE8H3N3qlmCU0CD9Mg==}
+  '@bedrockio/model@0.24.3':
+    resolution: {integrity: sha512-w0u6l4cs1p2Mz+X1HnAkxsGurINOL0rjke5qzIgyOHpLaLB8+5E3qLTnRjRJwBYM+GrKJunVtwHQiXJnLQtO5g==}
     peerDependencies:
       '@bedrockio/yada': 1.x
       mongoose: 9.x
@@ -499,8 +499,8 @@ packages:
   '@bedrockio/prettier-config@1.1.1':
     resolution: {integrity: sha512-sL8BvR7z3X2z18AyfwgPqBTPPmS3iveJZe65JZk5YbN0s6Akba6W2F4JAygRVx6yueYRKErvpO0pcVMdtfYBSw==}
 
-  '@bedrockio/templates@0.2.1':
-    resolution: {integrity: sha512-cKDUkUBZ5weslF1m0CVt4t3Q8Jjhs+7yere4Z/CTDsP8aQ+g/+/i7lF6bvr0/oUwXrVAPCGHH8re3A5OqjWh5w==}
+  '@bedrockio/templates@0.3.3':
+    resolution: {integrity: sha512-rOZcA8MA3XPlK6vgQzctANCvaoFuCDhLFYRtEmQIuA4TV2y3IRlL9qZ9OxcdF0XGTgkfUxa3m0HsozvtsJX5zQ==}
 
   '@bedrockio/yada@1.11.2':
     resolution: {integrity: sha512-dwLvQJHm5XfNiUfrayIE65xVD1Kq6jM7BX0Q4azKlPb+fVkeUahVpcdJtn4Lp2cByoLxCHPtaCqGnVfP7ua+UA==}
@@ -827,9 +827,6 @@ packages:
 
   '@jridgewell/source-map@0.3.11':
     resolution: {integrity: sha512-ZMp1V8ZFcPG5dIWnQLr3NSI1MiCU7UETdS/A0G8V/XWHvJv3ZsFqutJn1Y5RPmAPX6F3BiE397OqveU/9NCuIA==}
-
-  '@jridgewell/sourcemap-codec@1.5.5':
-    resolution: {integrity: sha512-cYQ9310grqxueWbl+WuIUIaiUaDcj7WOq5fVhEljNVgRfOUhY9fy2zTvfoqWsnebh8Sl70VScFbICvJnLKB0Og==}
 
   '@jridgewell/sourcemap-codec@1.6.0':
     resolution: {integrity: sha512-T7jf+5zgsZHwNJ4lvQ7/aezbyk0nNX+zJVWpmHA7VYsEx7a7qr5Rg5IbtJFqkgze5Y2sruq1RUY8Q837Od7iFw==}
@@ -1568,8 +1565,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@vitest/mocker@5.0.0':
-    resolution: {integrity: sha512-66PGTMIiVJP3t4a5yxU9qPtf7MdTBs8jmToMvy+HVflB3Yy13WJZTtPePdvU+wjRV02SKK5doLbSA6o9pwOmiA==}
+  '@vitest/mocker@5.0.1':
+    resolution: {integrity: sha512-6K1DoBNAPGvuOcSsGA4D6x+5zEEff/KmOOP3uetT2TrGpVfI+HRHRnJJfKi5ib/g1vx8IYHQD8s0pbJz8WQI7Q==}
     peerDependencies:
       msw: ^2.4.9
       vite: ^6.0.0 || ^7.0.0 || ^8.0.0
@@ -1579,8 +1576,8 @@ packages:
       vite:
         optional: true
 
-  '@vitest/spy@5.0.0':
-    resolution: {integrity: sha512-uy+luWBAPw9XfthoHi5AkfHUnuPYEESjl0p/r+meoBnU8bxg5GDQ3Ey8MjcJ6sqahkL4PFyrvfMJJBw7LbU06g==}
+  '@vitest/spy@5.0.1':
+    resolution: {integrity: sha512-rbto/mF/SGERxEgYOek7Xm6B9b+y+mVoo+f4b2LymYO8zM1b7uB5nHuhVMTP2hxdzgxvGiZYGxGIaMvL5y180Q==}
 
   '@webassemblyjs/ast@1.14.1':
     resolution: {integrity: sha512-nuBEDgQfm1ccRp/8bCQrx1frohyufl4JlbMMZ4P1wpeOfDhF6FQkxZJ1b/e+PLwr6X1Nhw6OLme5usuBWYBvuQ==}
@@ -3330,8 +3327,8 @@ packages:
   jws@4.0.1:
     resolution: {integrity: sha512-EKI/M/yqPncGUUh44xz0PxSidXFr/+r0pA70+gIYhjv+et7yxM+s29Y+VGDkovRofQem0fs7Uvf4+YmAdyRduA==}
 
-  kareem@3.3.0:
-    resolution: {integrity: sha512-kpSuLD3/7RenBnjnJdOHXCKC8dTd1JzeOiJhN0necWWci6cC+qX+VuwPnMVgb+a4+KNJSfgqahpnfWaeDXCimw==}
+  kareem@3.4.0:
+    resolution: {integrity: sha512-JAKhnR4S027v/8949QXNInRskgETCg9rFUMi1VjhGbjX+XltCAAEFcXykkSocNkom1kc66EMJfjWvhj87BDQKg==}
     engines: {node: '>=18.0.0'}
 
   keygrip@1.1.0:
@@ -3873,8 +3870,35 @@ packages:
       socks:
         optional: true
 
-  mongoose@9.9.5:
-    resolution: {integrity: sha512-t/kUoeDjlHmav7yCaq//YKU3wiIgUPaTj4GrluiTHUw4jQ77/CXtdMDSor4f1u3SKLhIK6NgCF+AzzUqU02Aag==}
+  mongodb@7.6.0:
+    resolution: {integrity: sha512-WbZ6OCjYw2c53LOjfkQa+reXr7kIiOVpXXglnASFuiMtif0BvsMwHe3ClJHLm1/r7wJFwaasfFtD6iYIktB01g==}
+    engines: {node: '>=20.19.0'}
+    peerDependencies:
+      '@aws-sdk/credential-providers': ^3.806.0
+      '@mongodb-js/zstd': ^7.0.0
+      gcp-metadata: ^7.0.1
+      kerberos: ^7.0.0
+      mongodb-client-encryption: ^7.2.0
+      snappy: ^7.3.2
+      socks: ^2.8.6
+    peerDependenciesMeta:
+      '@aws-sdk/credential-providers':
+        optional: true
+      '@mongodb-js/zstd':
+        optional: true
+      gcp-metadata:
+        optional: true
+      kerberos:
+        optional: true
+      mongodb-client-encryption:
+        optional: true
+      snappy:
+        optional: true
+      socks:
+        optional: true
+
+  mongoose@9.10.1:
+    resolution: {integrity: sha512-rRIEGbM3rUgXAY554CEsgp+IxImo6D3ILUr3SJDnC2PLPNTcNe2xxYvazSLtvvTjv3A4MgqvsxCj3ViF4mHUUQ==}
     engines: {node: '>=20.19.0'}
 
   mpath@0.9.0:
@@ -4115,10 +4139,6 @@ packages:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
     engines: {node: '>=8.6'}
 
-  picomatch@4.0.3:
-    resolution: {integrity: sha512-5gTmgEY/sqK6gFXLIsQNH19lWb4ebPDLA4SdLP7dsWkIXHWlG66oPuVvXSGFPppYZz8ZDZq0dYYrbHfBCVUb1Q==}
-    engines: {node: '>=12'}
-
   picomatch@4.0.7:
     resolution: {integrity: sha512-qcJu88Q2IWqJsDD529JKMdwGm/dvInW4HvQnRwiH9JtihJvzGOscDtHE3x1pBKeUOTysQ8kVmLnJ2kJu7yhcGA==}
     engines: {node: '>=12'}
@@ -4146,8 +4166,8 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
-  prettier@3.7.4:
-    resolution: {integrity: sha512-v6UNi1+3hSlVvv8fSaoUbggEM5VErKmmpGA7Pl3HF8V6uKY7rvClBOJlH6yNwQtfTueNkGVpOv/mtWL9L4bgRA==}
+  prettier@3.9.6:
+    resolution: {integrity: sha512-OpN0zzVdiaiAhxpuuj5efpIS4sY9j7bY6uR5mnj5yPzGkdkjNKSJeUThPb60Jw29QuAZgA4o+/iB49kFiaBX6g==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -4208,8 +4228,8 @@ packages:
     resolution: {integrity: sha512-+Owyggi9IxT1ePKGafcI87ubSmxol6smwJ+RAHDQlx9+9cPwFWDiKFFCPuWhr9ignlGpZ9vDQLw67N4dcTVFEA==}
     engines: {node: '>=20'}
 
-  qs@6.14.1:
-    resolution: {integrity: sha512-4EK3+xJl8Ts67nLYNwqw/dsFVnCf+qR7RgXSK9jEEm9unao3njwMDdmsdvoKBKHzxd7tCYz5e5M+SnMjdtXGQQ==}
+  qs@6.16.0:
+    resolution: {integrity: sha512-h6fhOIaRrID2CbEY2fqs+7t+UXZo+MLAnU5gRIq85uFtdiUPCdsApMlHhXogKVM4HM2DVbIjGNTTYH2OcmP1vA==}
     engines: {node: '>=0.6'}
 
   querystringify@2.2.0:
@@ -4388,10 +4408,6 @@ packages:
   shimmer@1.2.1:
     resolution: {integrity: sha512-sQTKC1Re/rM6XyFM6fIAGHRPVGvyXfgzIDvzoq608vM+jeyVD0Tu1E6Np0Kc2zAIFWIj963V2800iF/9LPieQw==}
 
-  side-channel-list@1.0.0:
-    resolution: {integrity: sha512-FCLHtRD/gnpCiCHEiJLOwdmFP+wzCmDEkc9y7NsYxeF4u7Btsn1ZuwgwJGxImImHicJArLP4R0yX4c2KCrMrTA==}
-    engines: {node: '>= 0.4'}
-
   side-channel-list@1.0.1:
     resolution: {integrity: sha512-mjn/0bi/oUURjc5Xl7IaWi/OJJJumuoJFQJfDDyO46+hBWsfaVM65TBHq2eoZBhzl9EchxOijpkbRC8SVBQU0w==}
     engines: {node: '>= 0.4'}
@@ -4402,10 +4418,6 @@ packages:
 
   side-channel-weakmap@1.0.2:
     resolution: {integrity: sha512-WPS/HvHQTYnHisLo9McqBHOJk2FkHO/tlpvldyrnem4aeQp4hai3gythswg6p01oSoTl58rcpiFAjF2br2Ak2A==}
-    engines: {node: '>= 0.4'}
-
-  side-channel@1.1.0:
-    resolution: {integrity: sha512-ZX99e6tRweoUXqR+VBrslhda51Nh5MTQwou5tnUDgbtyM0dBgmhEDtWGP/xbKn6hqfPRHujUNwz5fy/wbbhnpw==}
     engines: {node: '>= 0.4'}
 
   side-channel@1.1.1:
@@ -4908,20 +4920,20 @@ packages:
       yaml:
         optional: true
 
-  vitest@5.0.0:
-    resolution: {integrity: sha512-gpsMNoRhMjMktVxPtstOH4/PJuPyovVaMDr4oDilXaGH1EcqM2OE96SoHT2VIQ6fTGtTjqmHDrEu2X9RQiXf8Q==}
+  vitest@5.0.1:
+    resolution: {integrity: sha512-iA95lQbKEkvrtTkdAgnWbXfbipWiiWe/hDl2P5tMi6WFwD76G0NxXAGp/M9EOcYupeGJRr6wppMc7CoA41TQjg==}
     engines: {node: ^22.12.0 || ^24.0.0 || >=26.0.0}
     hasBin: true
     peerDependencies:
       '@edge-runtime/vm': '*'
       '@opentelemetry/api': ^1.9.0
       '@types/node': ^22.0.0 || >=24.0.0
-      '@vitest/browser-playwright': 5.0.0
-      '@vitest/browser-preview': 5.0.0
+      '@vitest/browser-playwright': 5.0.1
+      '@vitest/browser-preview': 5.0.1
       '@vitest/browser-webdriverio': ^5.0.0-beta.5 || >=5.0.0
-      '@vitest/coverage-istanbul': 5.0.0
-      '@vitest/coverage-v8': 5.0.0
-      '@vitest/ui': 5.0.0
+      '@vitest/coverage-istanbul': 5.0.1
+      '@vitest/coverage-v8': 5.0.1
+      '@vitest/ui': 5.0.1
       happy-dom: '*'
       jsdom: '*'
       vite: ^6.4.0 || ^7.0.0 || ^8.0.0
@@ -5317,7 +5329,9 @@ snapshots:
   '@bcoe/v8-coverage@0.2.3':
     optional: true
 
-  '@bedrockio/chrono@0.8.0': {}
+  '@bedrockio/chrono@0.12.3':
+    dependencies:
+      lodash.memoize: 4.1.2
 
   '@bedrockio/config@3.0.0': {}
 
@@ -5348,14 +5362,14 @@ snapshots:
       - supports-color
       - webpack
 
-  '@bedrockio/fixtures@1.5.3(@bedrockio/model@0.23.0(@bedrockio/yada@1.11.2)(mongoose@9.9.5)(supports-color@9.4.0))(mongoose@9.9.5)(supports-color@9.4.0)':
+  '@bedrockio/fixtures@1.5.3(@bedrockio/model@0.24.3(@bedrockio/yada@1.11.2)(mongoose@9.10.1)(supports-color@9.4.0))(mongoose@9.10.1)(supports-color@9.4.0)':
     dependencies:
       '@bedrockio/logger': 1.3.1(supports-color@9.4.0)
-      '@bedrockio/model': 0.23.0(@bedrockio/yada@1.11.2)(mongoose@9.9.5)(supports-color@9.4.0)
+      '@bedrockio/model': 0.24.3(@bedrockio/yada@1.11.2)(mongoose@9.10.1)(supports-color@9.4.0)
       glob: 11.1.0
       jszip: 3.10.2
       lodash-es: 4.18.1
-      mongoose: 9.9.5
+      mongoose: 9.10.1
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -5380,22 +5394,22 @@ snapshots:
       - encoding
       - supports-color
 
-  '@bedrockio/model@0.23.0(@bedrockio/yada@1.11.2)(mongoose@9.9.5)(supports-color@9.4.0)':
+  '@bedrockio/model@0.24.3(@bedrockio/yada@1.11.2)(mongoose@9.10.1)(supports-color@9.4.0)':
     dependencies:
       '@bedrockio/logger': 1.3.1(supports-color@9.4.0)
       '@bedrockio/yada': 1.11.2
       jsonc-parser: 3.3.1
       lodash: 4.18.1
-      mongoose: 9.9.5
+      mongoose: 9.10.1
     transitivePeerDependencies:
       - encoding
       - supports-color
 
   '@bedrockio/prettier-config@1.1.1': {}
 
-  '@bedrockio/templates@0.2.1':
+  '@bedrockio/templates@0.3.3':
     dependencies:
-      '@bedrockio/chrono': 0.8.0
+      '@bedrockio/chrono': 0.12.3
       front-matter: 4.0.2
       handlebars: 4.7.9
       lodash.memoize: 4.1.2
@@ -5928,7 +5942,7 @@ snapshots:
 
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
-      '@jridgewell/sourcemap-codec': 1.5.5
+      '@jridgewell/sourcemap-codec': 1.6.0
       '@jridgewell/trace-mapping': 0.3.31
 
   '@jridgewell/remapping@2.3.5':
@@ -5944,14 +5958,12 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.13
       '@jridgewell/trace-mapping': 0.3.31
 
-  '@jridgewell/sourcemap-codec@1.5.5': {}
-
   '@jridgewell/sourcemap-codec@1.6.0': {}
 
   '@jridgewell/trace-mapping@0.3.31':
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
-      '@jridgewell/sourcemap-codec': 1.5.5
+      '@jridgewell/sourcemap-codec': 1.6.0
 
   '@js-sdsl/ordered-map@4.4.2': {}
 
@@ -6765,16 +6777,16 @@ snapshots:
   '@unrs/resolver-binding-win32-x64-msvc@1.11.1':
     optional: true
 
-  '@vitest/mocker@5.0.0(vite@8.3.0(@types/node@25.0.3)(terser@5.51.2)(yaml@2.9.0))':
+  '@vitest/mocker@5.0.1(vite@8.3.0(@types/node@25.0.3)(terser@5.51.2)(yaml@2.9.0))':
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
-      '@vitest/spy': 5.0.0
+      '@vitest/spy': 5.0.1
       estree-walker: 3.0.3
       magic-string: 1.3.1
     optionalDependencies:
       vite: 8.3.0(@types/node@25.0.3)(terser@5.51.2)(yaml@2.9.0)
 
-  '@vitest/spy@5.0.0': {}
+  '@vitest/spy@5.0.1': {}
 
   '@webassemblyjs/ast@1.14.1':
     dependencies:
@@ -7265,7 +7277,7 @@ snapshots:
     dependencies:
       '@hapi/bourne': 3.0.0
       inflation: 2.1.0
-      qs: 6.14.1
+      qs: 6.16.0
       raw-body: 2.5.3
       type-is: 1.6.18
 
@@ -8936,7 +8948,7 @@ snapshots:
       chalk: 4.1.2
       ci-info: 4.4.0
       graceful-fs: 4.2.11
-      picomatch: 4.0.3
+      picomatch: 4.0.7
     optional: true
 
   jest-validate@30.2.0:
@@ -9067,7 +9079,7 @@ snapshots:
       jwa: 2.0.1
       safe-buffer: 5.2.1
 
-  kareem@3.3.0: {}
+  kareem@3.4.0: {}
 
   keygrip@1.1.0:
     dependencies:
@@ -9709,11 +9721,17 @@ snapshots:
       bson: 7.3.2
       mongodb-connection-string-url: 7.0.2
 
-  mongoose@9.9.5:
+  mongodb@7.6.0:
+    dependencies:
+      '@mongodb-js/saslprep': 1.5.4
+      bson: 7.3.2
+      mongodb-connection-string-url: 7.0.2
+
+  mongoose@9.10.1:
     dependencies:
       '@standard-schema/spec': 1.1.0
-      kareem: 3.3.0
-      mongodb: 7.5.0
+      kareem: 3.4.0
+      mongodb: 7.6.0
       mpath: 0.9.0
       mquery: 6.0.0
       ms: 2.1.3
@@ -9968,9 +9986,6 @@ snapshots:
   picomatch@2.3.1:
     optional: true
 
-  picomatch@4.0.3:
-    optional: true
-
   picomatch@4.0.7: {}
 
   pirates@4.0.7:
@@ -9996,7 +10011,7 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier@3.7.4: {}
+  prettier@3.9.6: {}
 
   pretty-format@30.2.0:
     dependencies:
@@ -10054,9 +10069,10 @@ snapshots:
     dependencies:
       hookified: 2.2.0
 
-  qs@6.14.1:
+  qs@6.16.0:
     dependencies:
-      side-channel: 1.1.0
+      es-define-property: 1.0.1
+      side-channel: 1.1.1
 
   querystringify@2.2.0: {}
 
@@ -10296,11 +10312,6 @@ snapshots:
 
   shimmer@1.2.1: {}
 
-  side-channel-list@1.0.0:
-    dependencies:
-      es-errors: 1.3.0
-      object-inspect: 1.13.4
-
   side-channel-list@1.0.1:
     dependencies:
       es-errors: 1.3.0
@@ -10320,14 +10331,6 @@ snapshots:
       get-intrinsic: 1.3.0
       object-inspect: 1.13.4
       side-channel-map: 1.0.1
-
-  side-channel@1.1.0:
-    dependencies:
-      es-errors: 1.3.0
-      object-inspect: 1.13.4
-      side-channel-list: 1.0.0
-      side-channel-map: 1.0.1
-      side-channel-weakmap: 1.0.2
 
   side-channel@1.1.1:
     dependencies:
@@ -10525,7 +10528,7 @@ snapshots:
       formidable: 3.5.4
       methods: 1.1.2
       mime: 2.6.0
-      qs: 6.14.1
+      qs: 6.16.0
     transitivePeerDependencies:
       - supports-color
 
@@ -10665,7 +10668,7 @@ snapshots:
       dayjs: 1.11.23
       https-proxy-agent: 5.0.1(supports-color@9.4.0)
       jsonwebtoken: 9.0.3
-      qs: 6.14.1
+      qs: 6.16.0
       scmp: 2.1.0
       url-parse: 1.5.10
       xmlbuilder: 13.0.2
@@ -10941,10 +10944,10 @@ snapshots:
       terser: 5.51.2
       yaml: 2.9.0
 
-  vitest@5.0.0(@opentelemetry/api@1.9.1)(@types/node@25.0.3)(vite@8.3.0(@types/node@25.0.3)(terser@5.51.2)(yaml@2.9.0)):
+  vitest@5.0.1(@opentelemetry/api@1.9.1)(@types/node@25.0.3)(vite@8.3.0(@types/node@25.0.3)(terser@5.51.2)(yaml@2.9.0)):
     dependencies:
       '@types/chai': 5.2.3
-      '@vitest/mocker': 5.0.0(vite@8.3.0(@types/node@25.0.3)(terser@5.51.2)(yaml@2.9.0))
+      '@vitest/mocker': 5.0.1(vite@8.3.0(@types/node@25.0.3)(terser@5.51.2)(yaml@2.9.0))
       chai: 6.2.2
       es-module-lexer: 2.3.2
       expect-type: 1.4.0
