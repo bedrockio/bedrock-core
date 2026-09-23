@@ -59,6 +59,18 @@ describe('/1/audit-entries', () => {
       expect(response.body.data.map((e) => e.id).sort()).toEqual([asActor.id, asObject.id].sort());
     });
 
+    it('should export as csv', async () => {
+      const admin = await createAdmin();
+      const response = await request('POST', '/1/audit-entries/search', { format: 'csv' }, { user: admin });
+      expect(response).toHaveStatus(200);
+    });
+
+    it('should reject a user that is not an object id', async () => {
+      const admin = await createAdmin();
+      const response = await request('POST', '/1/audit-entries/search', { user: 'not-an-id' }, { user: admin });
+      expect(response).toHaveStatus(400);
+    });
+
     it('should deny access to non-admins', async () => {
       const user = await createUser({});
       const response = await request('POST', '/1/audit-entries/search', {}, { user });
