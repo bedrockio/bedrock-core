@@ -1,0 +1,45 @@
+#!/usr/bin/env node
+
+// Mints an auth token for a user and prints it, so a browser session or an HTTP
+// client can be authenticated without going through the login form.
+
+import { parseArgs } from 'node:util';
+
+import config from '@bedrockio/config';
+
+import { initialize } from '../../src/utils/database.js';
+import { createAuthToken } from '../../src/utils/tokens.js';
+import { User } from '../../src/models/index.js';
+
+const ENV_NAME = config.get('ENV_NAME');
+const allowedEnvironments = ['test', 'development'];
+
+const { values: options } = parseArgs({
+  options: {
+    email: { type: 'string' },
+  },
+});
+
+// createAuthToken records the request that minted the token on the user.
+const ctx = { ip: '127.0.0.1', get: () => undefined };
+
+(async () => {
+  if (!allowedEnvironments.includes(ENV_NAME)) {
+    throw new Error(`Not allowed in ENV_NAME other than ${allowedEnvironments.join(', ')} (ENV_NAME=${ENV_NAME})`);
+  }
+
+  const email = options.email || config.get('ADMIN_EMAIL');
+
+  await initialize();
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new Error(`No user found with email ${email}.`);
+  }
+
+  const token = createAuthToken(ctx, user);
+  await user.save();
+
+  console.log(token);
+  process.exit(0);
+})();

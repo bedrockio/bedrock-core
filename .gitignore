@@ -13,7 +13,9 @@ services/api/data
 .terraform/
 .eslintcache
 .vscode
-.claude
+.claude/.cc-writes/
+.claude/settings.local.json
+.claude/worktrees/
 secrets
 .env.*
 
