@@ -14,7 +14,7 @@ Reference implementation: `Product`. Mirror it unless a requirement forces a dev
 | Routes | [`src/routes/products.js`](../../../services/api/src/routes/products.js) |
 | Mount | [`src/routes/index.js`](../../../services/api/src/routes/index.js) |
 | Tests | [`src/routes/products.test.js`](../../../services/api/src/routes/products.test.js) |
-| Audit log | [`src/models/audit-entry.js`](../../../services/api/src/models/audit-entry.js) |
+| Audit log | [audit-log](../audit-log/SKILL.md) skill |
 | Permissions | [`src/roles.json`](../../../services/api/src/roles.json) |
 | API docs | [`src/docs/pages/Products.mdx`](../../../services/web/src/docs/pages/Products.mdx) |
 
@@ -67,9 +67,9 @@ Mount it in `src/routes/index.js` (import + `router.use('/products', products.ro
   `../utils/middleware/permissions.js` when the resource is not readable by every authenticated user. See
   [`organizations.js`](../../../services/api/src/routes/organizations.js) (split read/write) and
   [`audit-entries.js`](../../../services/api/src/routes/audit-entries.js). Products deliberately has none.
-- **Creating user** — take it from the token, never the body:
-  `Shop.create({ ...ctx.request.body, user: ctx.state.authUser._id })`. The field is named `user`, not
-  `owner` — `Upload.owner` is the one legacy exception.
+- **Creating user** — take it from the token, never the body: `Shop.create({ ...ctx.request.body, user:
+  ctx.state.authUser._id })`. The field is named `user`, not `owner` — `Upload.owner` is the one legacy
+  exception.
 - **Multi-tenancy** — set `organization: ctx.state.organization` on create and gate with
   `requirePermissions('<resources>.write', 'organization')`.
 - **Guarded delete** — `validateDelete(Model.getDeleteValidation())` plus `try/catch` around `delete()`
@@ -81,39 +81,10 @@ Mount it in `src/routes/index.js` (import + `router.use('/products', products.ro
 
 ## 2. Audit log
 
-Decide up front whether the resource is audited, then cover **all three** mutating endpoints — a resource
-audited on create and update but not delete is the usual bug.
-[`shops.js`](../../../services/api/src/routes/shops.js) is the full example;
-[`users.js`](../../../services/api/src/routes/users.js) and
-[`templates.js`](../../../services/api/src/routes/templates.js) follow it. Products is unaudited.
-
-```js
-// create — after Model.create()
-await AuditEntry.append('Created Shop', { ctx, object: shop, fields: ['name', 'user', 'country'] });
-
-// update — snapshot BEFORE assign(), or the diff is empty
-const snapshot = new Shop(shop);
-shop.assign(ctx.request.body);
-await shop.save();
-await AuditEntry.append('Updated Shop', { ctx, object: shop, fields: ['name', 'user', 'country'], snapshot });
-
-// delete — after delete() succeeds
-await AuditEntry.append('Deleted Shop', { ctx, object: shop });
-```
-
-Rules that decide whether the entry is right:
-
-- `activity` is `'<Verb> <ModelName>'` and must match across the three endpoints — the audit screen and
-  [`audit-entries.js`](../../../services/api/src/routes/audit-entries.js) filter on this string.
-- `fields` is the list diffed into `objectBefore`/`objectAfter`. Omit it and the entry records that something
-  changed but not what. List the fields that matter for review, not every attribute.
-- `append()` returns without writing when `fields` is given and nothing in it changed, so an update that
-  touches only unlisted fields logs nothing. Pick `fields` accordingly.
-- `actor` comes from `ctx.state.authUser`; pass `actor`/`user` explicitly only when acting on behalf of
-  someone else (see `'Authenticated as user'` in `users.js`).
-- `ownerId`/`ownerType` are inferred from the model's `owner` path, then `user`. A model with neither records
-  no owner — pass `ownerPath: 'nested.user'` to point at it.
-- `object` must be the mongoose document, not an id.
+Decide explicitly whether the resource is audited. If it is, follow the [audit-log](../audit-log/SKILL.md)
+skill — it covers the `AuditEntry.append()` calls for create, update and delete, and the quiet failures around
+`fields` and `snapshot`. `Product` is unaudited; [`shops.js`](../../../services/api/src/routes/shops.js) is
+the audited equivalent.
 
 ## 3. Tests
 
