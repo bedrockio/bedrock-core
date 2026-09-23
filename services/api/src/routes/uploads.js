@@ -24,7 +24,7 @@ router
         if (ctx.method === 'GET') {
           return true;
         } else {
-          return upload.owner?.equals(ctx.state.authUser.id);
+          return upload.user?.equals(ctx.state.authUser.id);
         }
       },
     }),
@@ -84,7 +84,7 @@ router
     const { authUser } = ctx.state;
     try {
       const uploads = await createUploads(file, {
-        owner: authUser,
+        user: authUser,
       });
       ctx.body = {
         data: uploads,
@@ -99,7 +99,7 @@ router
     try {
       const result = await createResumableUpload({
         ...ctx.request.body,
-        owner: authUser,
+        user: authUser,
       });
       ctx.body = {
         data: result,
@@ -113,7 +113,7 @@ router
     const { authUser } = ctx.state;
     try {
       const uploads = await createUploads(file, {
-        owner: authUser,
+        user: authUser,
         private: true,
       });
       ctx.body = {

@@ -47,7 +47,7 @@ async function createUpload(attributes) {
     filename: 'test.png',
     storageType: 'local',
     mimeType: 'image/png',
-    owner: new mongoose.Types.ObjectId(),
+    user: new mongoose.Types.ObjectId(),
     ...attributes,
   });
 }
