@@ -14,7 +14,7 @@ import { notify } from 'utils/notify';
 import { useSearch } from './Context';
 
 export default function ExportButton(props) {
-  const { children = 'Export', limit = 10000, ...rest } = props;
+  const { children = 'Export', limit = 10000, filename, ...rest } = props;
 
   const { meta, filters, onDataNeeded } = useSearch();
 
@@ -23,6 +23,7 @@ export default function ExportButton(props) {
       const response = await onDataNeeded({
         ...filters,
         format: 'csv',
+        filename,
         limit,
       });
       await downloadResponse(response);

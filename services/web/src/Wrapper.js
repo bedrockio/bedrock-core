@@ -41,10 +41,12 @@ function AppSwitch() {
 
 export default function Wrapper() {
   return (
-    <SessionProvider>
-      <ThemeProvider>
-        <Toaster />
-        <BrowserRouter>
+    // SessionProvider is wrapped in withRouter, so it has to resolve the
+    // router context.
+    <BrowserRouter>
+      <SessionProvider>
+        <ThemeProvider>
+          <Toaster />
           <HelmetProvider>
             <SessionSwitch>
               <Suspense fallback={<LoadingScreen />}>
@@ -57,8 +59,8 @@ export default function Wrapper() {
               </Suspense>
             </SessionSwitch>
           </HelmetProvider>
-        </BrowserRouter>
-      </ThemeProvider>
-    </SessionProvider>
+        </ThemeProvider>
+      </SessionProvider>
+    </BrowserRouter>
   );
 }

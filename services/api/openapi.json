@@ -1942,7 +1942,7 @@
                     "required": [],
                     "additionalProperties": false
                   },
-                  "owner": {
+                  "user": {
                     "$ref": "#/components/schemas/Reference"
                   }
                 },
@@ -2111,7 +2111,7 @@
                     "required": [],
                     "additionalProperties": true
                   },
-                  "owner": {
+                  "user": {
                     "anyOf": [
                       {
                         "$ref": "#/components/schemas/Reference"
@@ -2448,7 +2448,7 @@
                     "required": [],
                     "additionalProperties": false
                   },
-                  "owner": {
+                  "user": {
                     "anyOf": [
                       {
                         "anyOf": [
@@ -4595,7 +4595,8 @@
                     ]
                   },
                   "user": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "mongo-object-id"
                   }
                 },
                 "required": [],
@@ -5336,7 +5337,7 @@
             "required": [],
             "additionalProperties": false
           },
-          "owner": {
+          "user": {
             "$ref": "#/components/schemas/ObjectId"
           },
           "createdAt": {
@@ -5412,7 +5413,7 @@
           "storageType": {
             "type": "string"
           },
-          "owner": {
+          "user": {
             "$ref": "#/components/schemas/ObjectId"
           },
           "createdAt": {
@@ -5427,7 +5428,7 @@
           "filename",
           "mimeType",
           "storageType",
-          "owner"
+          "user"
         ],
         "additionalProperties": false
       },
