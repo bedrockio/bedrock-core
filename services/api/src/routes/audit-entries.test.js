@@ -8,6 +8,18 @@ describe('/1/audit-entries', () => {
       expect(response).toHaveStatus(200);
     });
 
+    it('should use the requested filename when exporting', async () => {
+      const admin = await createAdmin();
+      const response = await request(
+        'POST',
+        '/1/audit-entries/search',
+        { format: 'csv', filename: 'audit-log' },
+        { user: admin },
+      );
+      expect(response).toHaveStatus(200);
+      expect(response.headers['content-disposition']).toBe('attachment; filename="audit-log.csv"');
+    });
+
     it('should deny access to non-admins', async () => {
       const user = await createUser({});
       const response = await request('POST', '/1/audit-entries/search', {}, { user });

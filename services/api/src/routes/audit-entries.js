@@ -43,7 +43,7 @@ router
       });
 
       if (format === 'csv') {
-        return csvExport(ctx, data);
+        return csvExport(ctx, data, { filename });
       }
       ctx.body = {
         data,
