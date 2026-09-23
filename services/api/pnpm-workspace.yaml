@@ -5,3 +5,5 @@ allowBuilds:
   mongodb-memory-server: true
   protobufjs: true
   unrs-resolver: true
+minimumReleaseAgeExclude:
+  - '@bedrockio/eslint-plugin@1.6.0'
