@@ -112,7 +112,7 @@ describe('/1/shops', () => {
       let shop = await Shop.create({
         name: 'shop name',
         description: 'Some description',
-        owner,
+        user: owner,
       });
       shop.name = 'new name';
       const response = await request('PATCH', `/1/shops/${shop.id}`, shop.toJSON(), { user: owner });
@@ -191,7 +191,7 @@ describe('/1/shops', () => {
       let shop = await Shop.create({
         name: 'test 1',
         description: 'Some description',
-        owner: owner.id,
+        user: owner.id,
       });
       const response = await request('DELETE', `/1/shops/${shop.id}`, {}, { user: admin });
       expect(response).toHaveStatus(204);
@@ -211,7 +211,7 @@ describe('/1/shops', () => {
       let shop = await Shop.create({
         name: 'test 1',
         description: 'Some description',
-        owner: owner.id,
+        user: owner.id,
       });
       const response = await request('DELETE', `/1/shops/${shop.id}`, {}, { user: owner });
       expect(response).toHaveStatus(204);
@@ -232,7 +232,7 @@ describe('/1/shops', () => {
       let shop = await Shop.create({
         name: 'test 1',
         description: 'Some description',
-        owner: owner.id,
+        user: owner.id,
       });
       const response = await request('DELETE', `/1/shops/${shop.id}`, {}, { user });
       expect(response).toHaveStatus(401);
