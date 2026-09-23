@@ -20,4 +20,13 @@ generated from a schema must look and behave identically to hand-built ones.
   (visual system), `THEME.md` (branding + theming), and `src/styles/globals.css` (tokens). Brand is
   a single white-label knob (`--primary`, Indigo by default). Never hard-code brand colours.
 
+## Skills
+
+Shared agent skills live in `.agents/skills/<name>/SKILL.md` and are tracked. Tool-specific skill
+directories (`.claude/`, `.github/skills/`) are gitignored, so point your tool at the shared ones:
+
+```bash
+mkdir -p .claude && ln -sfn ../.agents/skills .claude/skills
+```
+
 Work inside the relevant service; prefer its own AGENTS.md and existing patterns over global assumptions.
