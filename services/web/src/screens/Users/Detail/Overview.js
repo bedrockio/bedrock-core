@@ -32,7 +32,7 @@ export default function UserOverview() {
     method: 'POST',
     path: '/1/shops/search',
     body: {
-      user: user.id,
+      owner: user.id,
       limit: 3,
     },
   });

@@ -1942,7 +1942,7 @@
                     "required": [],
                     "additionalProperties": false
                   },
-                  "user": {
+                  "owner": {
                     "$ref": "#/components/schemas/Reference"
                   }
                 },
@@ -2111,7 +2111,7 @@
                     "required": [],
                     "additionalProperties": true
                   },
-                  "user": {
+                  "owner": {
                     "anyOf": [
                       {
                         "$ref": "#/components/schemas/Reference"
@@ -2448,7 +2448,7 @@
                     "required": [],
                     "additionalProperties": false
                   },
-                  "user": {
+                  "owner": {
                     "anyOf": [
                       {
                         "anyOf": [
@@ -5337,7 +5337,7 @@
             "required": [],
             "additionalProperties": false
           },
-          "user": {
+          "owner": {
             "$ref": "#/components/schemas/ObjectId"
           },
           "createdAt": {
@@ -5413,7 +5413,7 @@
           "storageType": {
             "type": "string"
           },
-          "user": {
+          "owner": {
             "$ref": "#/components/schemas/ObjectId"
           },
           "createdAt": {
@@ -5428,7 +5428,7 @@
           "filename",
           "mimeType",
           "storageType",
-          "user"
+          "owner"
         ],
         "additionalProperties": false
       },

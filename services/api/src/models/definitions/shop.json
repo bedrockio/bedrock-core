@@ -52,7 +52,7 @@
         ]
       }
     },
-    "user": {
+    "owner": {
       "type": "ObjectId",
       "ref": "User"
     }
@@ -66,12 +66,12 @@
   },
   "access": {
     "update": [
-      "user",
+      "owner",
       "admin",
       "superAdmin"
     ],
     "delete": [
-      "user",
+      "owner",
       "admin",
       "superAdmin"
     ]
