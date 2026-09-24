@@ -48,7 +48,7 @@ async function revokeTotp(user) {
 async function verifyTotp(user, code) {
   const authenticator = assertAuthenticator(user, 'totp');
   verifyCode(authenticator.secret, code);
-  // TOTP is only ever a second factor after password login.
+  // Without this, email + TOTP code alone would be a full login.
   verifyRecentPassword(user);
 
   authenticator.lastUsedAt = new Date();
