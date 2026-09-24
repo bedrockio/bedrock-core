@@ -19,6 +19,8 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Spinner } from '@/components/ui/spinner';
 
+import { canShowAppleSignin } from 'utils/auth/apple';
+import { canShowGoogleSignin } from 'utils/auth/google';
 import {
   canShowPasskey,
   createPasskey,
@@ -113,6 +115,8 @@ export default function Security() {
     (authenticator) => authenticator.type === 'passkey',
   );
   const canAddPasskey = canShowPasskey();
+  const showGoogle = canShowGoogleSignin() || hasAuthenticator('google');
+  const showApple = canShowAppleSignin() || hasAuthenticator('apple');
 
   return (
     <div className="flex flex-col gap-4">
@@ -123,6 +127,7 @@ export default function Security() {
             <Spinner className="size-6" />
           </div>
         )}
+        <ErrorMessage error={error} />
         <div className="grid grid-cols-1 items-start gap-6 sm:grid-cols-2">
           {(canAddPasskey || passkeys.length > 0) && (
             <Card>
@@ -181,41 +186,49 @@ export default function Security() {
           </Card>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Sign-in with</CardTitle>
-            <CardDescription>
-              Connect a provider to sign in faster.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ErrorMessage error={error} />
-
-            <p className="text-sm font-semibold">Google</p>
-            <div className="mt-1">
-              {hasAuthenticator('google') ? (
-                <GoogleDisableButton onDisabled={onGoogleDisabled} />
-              ) : (
-                <p className="text-muted-foreground text-sm">
-                  Sign in with Google to enable.
-                </p>
+        {(showGoogle || showApple) && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Sign-in with</CardTitle>
+              <CardDescription>
+                Connect a provider to sign in faster.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {showGoogle && (
+                <>
+                  <p className="text-sm font-semibold">Google</p>
+                  <div className="mt-1">
+                    {hasAuthenticator('google') ? (
+                      <GoogleDisableButton onDisabled={onGoogleDisabled} />
+                    ) : (
+                      <p className="text-muted-foreground text-sm">
+                        Sign in with Google to enable.
+                      </p>
+                    )}
+                  </div>
+                </>
               )}
-            </div>
 
-            <Separator className="my-4" />
+              {showGoogle && showApple && <Separator className="my-4" />}
 
-            <p className="text-sm font-semibold">Apple</p>
-            <div className="mt-1">
-              {hasAuthenticator('apple') ? (
-                <AppleDisableButton onDisabled={onAppleDisabled} />
-              ) : (
-                <p className="text-muted-foreground text-sm">
-                  Sign in with Apple to enable.
-                </p>
+              {showApple && (
+                <>
+                  <p className="text-sm font-semibold">Apple</p>
+                  <div className="mt-1">
+                    {hasAuthenticator('apple') ? (
+                      <AppleDisableButton onDisabled={onAppleDisabled} />
+                    ) : (
+                      <p className="text-muted-foreground text-sm">
+                        Sign in with Apple to enable.
+                      </p>
+                    )}
+                  </div>
+                </>
               )}
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        )}
 
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
