@@ -369,9 +369,7 @@ so generated and hand-built screens match.
 **The One Primary Rule.** Exactly one primary button per view. **The Seven
 States Rule.** Every interactive component defines default, hover,
 focus-visible, active, disabled, loading, and error; tables add skeleton-loading
-and teaching empty states. **The Parity Rule.** A generator-scaffolded screen
-must be visually and structurally indistinguishable from a hand-built one — same
-components, same tokens. Bedrock's defining constraint.
+and teaching empty states.
 
 ## Do's and Don'ts
 
@@ -387,8 +385,6 @@ components, same tokens. Bedrock's defining constraint.
   mono.
 - **Do** give tables an uppercase header row, a clear sort affordance, density,
   skeletons, and teaching empty states.
-- **Do** keep generated and hand-built screens on the exact same components and
-  tokens (Parity Rule).
 
 ### Don't:
 

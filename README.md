@@ -53,16 +53,6 @@ share the `.pnpm` symlink farm across worktrees. It is **not enabled** here; the
 store above already makes worktree installs fast and cheap. It can be turned on per machine via
 global pnpm config if wanted, since these packages use pnpm's default `node_modules` layout.
 
-### API Documentation
+## API Documentation
 
-Full portal with examples:
-
-http://localhost:2200/docs/getting-started
-
-Code documentation:
-
-[services/api](services/api)
-
-### Web Documentation
-
-[services/web](services/web)
+Full portal with examples: http://localhost:2200/docs/getting-started

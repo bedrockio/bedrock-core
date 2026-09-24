@@ -22,12 +22,12 @@ indicator and (optionally) the focus ring — nothing else needs to change.
 
 ## Font
 
-The app ships [Geist](https://vercel.com/font) (bundled via
-`@fontsource-variable/geist`, so it's stable across platforms). It's wired in
-two places — swap both to use a different font:
+The app ships [Geist](https://vercel.com/font) for UI and data, and Bricolage
+Grotesque for headings, bundled via `@fontsource-variable/*` so they are stable
+across platforms. Each is wired in two places — swap both to change a font:
 
-- the imports in `src/Wrapper.js` (`@fontsource-variable/geist*`)
-- the `--font-sans` / `--font-mono` tokens in `src/styles/globals.css`
+- the imports in `src/Wrapper.js` (`@fontsource-variable/*`)
+- the `--font-sans` / `--font-mono` / `--font-heading` tokens in `src/styles/globals.css`
 
 ## Dark mode
 

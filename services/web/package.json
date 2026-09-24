@@ -13,7 +13,6 @@
     "static": "node ./serve/static",
     "lint": "eslint",
     "test": "vitest",
-    "generate": "cd ../../generator && pnpm install && pnpm generate",
     "postinstall": "cd serve && pnpm install"
   },
   "dependencies": {
