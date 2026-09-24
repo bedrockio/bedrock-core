@@ -3,3 +3,6 @@ trustLockfile: true
 blockExoticSubdeps: true
 allowBuilds:
   protobufjs: true
+
+overrides:
+  '@opentelemetry/propagator-jaeger': '2.9.0'
