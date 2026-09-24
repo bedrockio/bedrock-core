@@ -1463,7 +1463,11 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "x-permissions": {
+          "endpoint": "products",
+          "permission": "write"
+        }
       }
     },
     "/1/products/:id": {
@@ -1562,7 +1566,11 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "x-permissions": {
+          "endpoint": "products",
+          "permission": "write"
+        }
       },
       "delete": {
         "summary": "Delete product",
@@ -1581,7 +1589,11 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "x-permissions": {
+          "endpoint": "products",
+          "permission": "write"
+        }
       }
     },
     "/1/products/search": {
