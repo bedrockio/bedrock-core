@@ -341,7 +341,29 @@ describe('/1/auth', () => {
 
       user = await User.findById(user.id);
       await expect(verifyPassword(user, password)).resolves.not.toThrow();
+      expect(user.emailVerified).toBe(true);
 
+      expect(user.authTokens).toEqual([
+        expect.objectContaining({
+          jti: getJti(response.body.data.token),
+        }),
+      ]);
+    });
+
+    it('should remove sessions created before the email was verified', async () => {
+      let user = await createUser();
+      createAuthToken(context(), user);
+      const token = createAccessToken(user, {
+        action: 'reset-password',
+        duration: '30m',
+      });
+      await user.save();
+
+      const response = await request('POST', '/1/auth/password/update', { password: 'new password' }, { token });
+      expect(response).toHaveStatus(200);
+
+      user = await User.findById(user.id);
+      expect(user.emailVerified).toBe(true);
       expect(user.authTokens).toEqual([
         expect.objectContaining({
           jti: getJti(response.body.data.token),

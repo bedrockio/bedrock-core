@@ -4,7 +4,7 @@ import { validateBody } from '../../utils/middleware/validate.js';
 
 import { sendOtp } from '../../utils/auth/otp.js';
 import { verifyOtp } from '../../utils/auth/otp.js';
-import { login, verifyLoginAttempts } from '../../utils/auth/index.js';
+import { login, verifyLoginAttempts, claimUnverifiedUser } from '../../utils/auth/index.js';
 
 import { AuditEntry } from '../../models/index.js';
 import { findUser, validateIdentity } from './utils.js';
@@ -78,7 +78,12 @@ router
 
       // Verify the channel the code was delivered to, not the one used to look up the user.
       if (authenticator.channel === 'email') {
-        user.emailVerified = true;
+        // An MFA code follows a password login, so this user already owns the account.
+        if (authenticator.isMfa) {
+          user.emailVerified = true;
+        } else {
+          claimUnverifiedUser(user);
+        }
       } else if (authenticator.channel === 'sms') {
         user.phoneVerified = true;
       }
