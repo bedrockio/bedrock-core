@@ -83,8 +83,8 @@
         }
       }
     ],
-    "$staff": {
-      "type": "Scope",
+    "roles": {
+      "type": "Array",
       "readAccess": [
         "self",
         "viewer",
@@ -96,31 +96,37 @@
         "superAdmin"
       ],
       "attributes": {
-        "roles": [
-          {
-            "role": {
-              "type": "String",
-              "required": true
-            },
-            "scope": {
-              "type": "String",
-              "required": true,
-              "enum": [
-                "global",
-                "organization"
-              ]
-            },
-            "scopeRef": {
-              "type": "ObjectId",
-              "ref": "Organization"
-            }
-          }
-        ],
-        "isTester": {
-          "type": "Boolean",
-          "default": false
+        "role": {
+          "type": "String",
+          "required": true
+        },
+        "scope": {
+          "type": "String",
+          "required": true,
+          "enum": [
+            "global",
+            "organization"
+          ]
+        },
+        "scopeRef": {
+          "type": "ObjectId",
+          "ref": "Organization"
         }
       }
+    },
+    "isTester": {
+      "type": "Boolean",
+      "default": false,
+      "readAccess": [
+        "self",
+        "viewer",
+        "admin",
+        "superAdmin"
+      ],
+      "writeAccess": [
+        "admin",
+        "superAdmin"
+      ]
     },
     "$readOnly": {
       "type": "Scope",

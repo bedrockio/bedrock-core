@@ -878,40 +878,6 @@
                     "required": [],
                     "additionalProperties": false
                   },
-                  "createdAt": {
-                    "anyOf": [
-                      {
-                        "$ref": "#/components/schemas/DateTime"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/DateTime"
-                        }
-                      },
-                      {
-                        "$ref": "#/components/schemas/DateRange"
-                      }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
-                  },
-                  "updatedAt": {
-                    "anyOf": [
-                      {
-                        "$ref": "#/components/schemas/DateTime"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/DateTime"
-                        }
-                      },
-                      {
-                        "$ref": "#/components/schemas/DateRange"
-                      }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
-                  },
                   "roles": {
                     "type": "object",
                     "properties": {
@@ -996,6 +962,40 @@
                   },
                   "isTester": {
                     "type": "boolean"
+                  },
+                  "createdAt": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "updatedAt": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
                   },
                   "include": {
                     "$ref": "#/components/schemas/Includes"
@@ -3894,40 +3894,6 @@
                     "required": [],
                     "additionalProperties": false
                   },
-                  "createdAt": {
-                    "anyOf": [
-                      {
-                        "$ref": "#/components/schemas/DateTime"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/DateTime"
-                        }
-                      },
-                      {
-                        "$ref": "#/components/schemas/DateRange"
-                      }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
-                  },
-                  "updatedAt": {
-                    "anyOf": [
-                      {
-                        "$ref": "#/components/schemas/DateTime"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/DateTime"
-                        }
-                      },
-                      {
-                        "$ref": "#/components/schemas/DateRange"
-                      }
-                    ],
-                    "description": "Allows searching by a date, array of dates, or a range."
-                  },
                   "roles": {
                     "type": "object",
                     "properties": {
@@ -4012,6 +3978,40 @@
                   },
                   "isTester": {
                     "type": "boolean"
+                  },
+                  "createdAt": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
+                  },
+                  "updatedAt": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/DateTime"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/DateTime"
+                        }
+                      },
+                      {
+                        "$ref": "#/components/schemas/DateRange"
+                      }
+                    ],
+                    "description": "Allows searching by a date, array of dates, or a range."
                   },
                   "include": {
                     "$ref": "#/components/schemas/Includes"
@@ -4996,12 +4996,6 @@
               "additionalProperties": false
             }
           },
-          "createdAt": {
-            "$ref": "#/components/schemas/DateTime"
-          },
-          "updatedAt": {
-            "$ref": "#/components/schemas/DateTime"
-          },
           "roles": {
             "type": "array",
             "items": {
@@ -5030,6 +5024,12 @@
           },
           "isTester": {
             "type": "boolean"
+          },
+          "createdAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "updatedAt": {
+            "$ref": "#/components/schemas/DateTime"
           }
         },
         "required": [
