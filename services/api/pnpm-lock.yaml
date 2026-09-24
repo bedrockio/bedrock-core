@@ -174,13 +174,13 @@ importers:
         version: 3.0.0
       '@bedrockio/fixtures':
         specifier: ^1.4.5
-        version: 1.5.3(@bedrockio/model@0.24.3(@bedrockio/yada@1.11.2)(mongoose@9.10.1)(supports-color@9.4.0))(mongoose@9.10.1)(supports-color@9.4.0)
+        version: 1.5.3(@bedrockio/model@0.24.2(@bedrockio/yada@1.11.2)(mongoose@9.10.1)(supports-color@9.4.0))(mongoose@9.10.1)(supports-color@9.4.0)
       '@bedrockio/logger':
         specifier: ^1.1.3
         version: 1.3.1(supports-color@9.4.0)
       '@bedrockio/model':
-        specifier: ^0.24.3
-        version: 0.24.3(@bedrockio/yada@1.11.2)(mongoose@9.10.1)(supports-color@9.4.0)
+        specifier: 0.24.2
+        version: 0.24.2(@bedrockio/yada@1.11.2)(mongoose@9.10.1)(supports-color@9.4.0)
       '@bedrockio/templates':
         specifier: ^0.3.3
         version: 0.3.3
@@ -490,8 +490,8 @@ packages:
   '@bedrockio/logger@1.3.1':
     resolution: {integrity: sha512-ggUy8rBZbHCWWmhSL2BjDmGhHpfXP7u6dqPhzr0qt0hbwz+TW8NC2XtuzscWocui7oTxRFRQfpQg88+Z7inleQ==}
 
-  '@bedrockio/model@0.24.3':
-    resolution: {integrity: sha512-w0u6l4cs1p2Mz+X1HnAkxsGurINOL0rjke5qzIgyOHpLaLB8+5E3qLTnRjRJwBYM+GrKJunVtwHQiXJnLQtO5g==}
+  '@bedrockio/model@0.24.2':
+    resolution: {integrity: sha512-SnnHxa673bbu1bO/F89/nfmakrLbpLsOs9IZzUGB3Q4h1RCXDskhlVzdJNuWXP11MWbMnT4OiyHCSZ9ecjvhiA==}
     peerDependencies:
       '@bedrockio/yada': 1.x
       mongoose: 9.x
@@ -5362,10 +5362,10 @@ snapshots:
       - supports-color
       - webpack
 
-  '@bedrockio/fixtures@1.5.3(@bedrockio/model@0.24.3(@bedrockio/yada@1.11.2)(mongoose@9.10.1)(supports-color@9.4.0))(mongoose@9.10.1)(supports-color@9.4.0)':
+  '@bedrockio/fixtures@1.5.3(@bedrockio/model@0.24.2(@bedrockio/yada@1.11.2)(mongoose@9.10.1)(supports-color@9.4.0))(mongoose@9.10.1)(supports-color@9.4.0)':
     dependencies:
       '@bedrockio/logger': 1.3.1(supports-color@9.4.0)
-      '@bedrockio/model': 0.24.3(@bedrockio/yada@1.11.2)(mongoose@9.10.1)(supports-color@9.4.0)
+      '@bedrockio/model': 0.24.2(@bedrockio/yada@1.11.2)(mongoose@9.10.1)(supports-color@9.4.0)
       glob: 11.1.0
       jszip: 3.10.2
       lodash-es: 4.18.1
@@ -5394,7 +5394,7 @@ snapshots:
       - encoding
       - supports-color
 
-  '@bedrockio/model@0.24.3(@bedrockio/yada@1.11.2)(mongoose@9.10.1)(supports-color@9.4.0)':
+  '@bedrockio/model@0.24.2(@bedrockio/yada@1.11.2)(mongoose@9.10.1)(supports-color@9.4.0)':
     dependencies:
       '@bedrockio/logger': 1.3.1(supports-color@9.4.0)
       '@bedrockio/yada': 1.11.2

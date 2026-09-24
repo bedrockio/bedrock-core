@@ -16,8 +16,6 @@ const DEFAULT_OPTIONS = {
 };
 
 function csvExport(ctx, data, options) {
-  const { filename } = options;
-
   const csvStream = csv.format({
     headers: true,
     objectMode: true,
@@ -42,10 +40,18 @@ function csvExport(ctx, data, options) {
     csvStream.write(row);
   });
 
-  ctx.set('Content-Disposition', `attachment; filename="${filename}"`);
+  ctx.set('Content-Disposition', `attachment; filename="${getFilename(options)}"`);
   ctx.set('Content-Type', 'text/csv');
 
   csvStream.end();
+}
+
+// The filename arrives from the request body, so strip anything
+// that could break out of the Content-Disposition header.
+function getFilename(options) {
+  const { filename = '' } = options;
+  const name = filename.replace(/[^\w.-]/g, '') || 'export';
+  return name.endsWith('.csv') ? name : `${name}.csv`;
 }
 
 function exportRow(item, options) {

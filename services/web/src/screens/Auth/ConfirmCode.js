@@ -3,10 +3,12 @@ import React, { useEffect, useMemo, useState } from 'react';
 
 import { useSession } from 'stores/session';
 
+import AuthLogo from 'components/AuthLogo';
 import ErrorMessage from 'components/ErrorMessage';
 import Meta from 'components/Meta';
 
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Card } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import {
   InputOTP,
   InputOTPGroup,
@@ -95,35 +97,43 @@ export default function ConfirmCode() {
   return (
     <React.Fragment>
       <Meta title="Confirm Code" />
-      <h1 className="mb-4 text-2xl font-bold tracking-tight">Confirm Code</h1>
-      <div className="flex flex-col gap-4">
-        <Alert variant="success">
-          <AlertDescription>{renderMessage()}</AlertDescription>
-        </Alert>
-        {showInput && (
-          <InputOTP
-            maxLength={6}
-            value={code}
-            onChange={setCode}
-            disabled={loading}
-            onComplete={(value) => login(value)}>
-            <InputOTPGroup>
-              <InputOTPSlot index={0} />
-              <InputOTPSlot index={1} />
-              <InputOTPSlot index={2} />
-              <InputOTPSlot index={3} />
-              <InputOTPSlot index={4} />
-              <InputOTPSlot index={5} />
-            </InputOTPGroup>
-          </InputOTP>
-        )}
-        <ErrorMessage error={error} />
-      </div>
-      <div className="mt-4">
-        <Link className="text-foreground no-underline hover:underline" to="/login">
-          Back
-        </Link>
-      </div>
+      <AuthLogo />
+      <Card className="w-full p-6">
+        <div className="mb-4 flex flex-col items-center gap-1 text-center">
+          <h1 className="text-2xl font-bold tracking-tight">Confirm Code</h1>
+          <p className="text-muted-foreground text-sm">{renderMessage()}</p>
+        </div>
+        <div className="flex flex-col gap-4">
+          {showInput && (
+            <InputOTP
+              containerClassName="justify-center"
+              maxLength={6}
+              value={code}
+              onChange={setCode}
+              disabled={loading}
+              onComplete={(value) => login(value)}>
+              <InputOTPGroup>
+                <InputOTPSlot index={0} />
+                <InputOTPSlot index={1} />
+                <InputOTPSlot index={2} />
+                <InputOTPSlot index={3} />
+                <InputOTPSlot index={4} />
+                <InputOTPSlot index={5} />
+              </InputOTPGroup>
+            </InputOTP>
+          )}
+          <ErrorMessage error={error} />
+        </div>
+        <Separator />
+
+        <p className="text-muted-foreground text-center text-xs">
+          <Link
+            className="text-foreground font-medium no-underline hover:underline"
+            to="/login">
+            Back to login
+          </Link>
+        </p>
+      </Card>
     </React.Fragment>
   );
 }

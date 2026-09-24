@@ -687,7 +687,38 @@ describe('csvExport', () => {
       });
     });
   });
+
+  describe('filename', () => {
+    it('should default to export.csv', async () => {
+      expect(await runDisposition([user], {})).toBe('attachment; filename="export.csv"');
+    });
+
+    it('should append a csv extension', async () => {
+      expect(await runDisposition([user], { filename: 'products' })).toBe('attachment; filename="products.csv"');
+    });
+
+    it('should not append a duplicate extension', async () => {
+      expect(await runDisposition([user], { filename: 'products.csv' })).toBe('attachment; filename="products.csv"');
+    });
+
+    it('should strip characters unsafe for the header', async () => {
+      expect(await runDisposition([user], { filename: 'my "report"\r\n' })).toBe('attachment; filename="myreport.csv"');
+    });
+  });
 });
+
+async function runDisposition(arr, options) {
+  const headers = {};
+  const ctx = {
+    set: (key, value) => {
+      headers[key] = value;
+    },
+    state: {},
+  };
+  csvExport(ctx, arr, options);
+  await streamToString(ctx.body);
+  return headers['Content-Disposition'];
+}
 
 async function run(arr, options = {}) {
   const { authUser, ...rest } = options;

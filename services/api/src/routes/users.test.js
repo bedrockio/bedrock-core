@@ -497,7 +497,7 @@ describe('/1/users', () => {
 
       await Shop.create({
         name: 'My Shop',
-        user,
+        owner: user,
       });
 
       const response = await request('DELETE', `/1/users/${user.id}`, {}, { user: admin });

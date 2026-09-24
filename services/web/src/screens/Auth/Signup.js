@@ -26,24 +26,22 @@ import { Separator } from '@/components/ui/separator';
 
 import { useRequest } from 'utils/api';
 import { AUTH_CHANNEL, AUTH_TYPE } from 'utils/env';
-import { COUNTRIES, formatPhone } from 'utils/phone';
+import { formatPhone, normalizePhone } from 'utils/phone';
 
-// Normalise a typed phone number to a prefixed value (ported from
-// components/form-fields/Phone.js — that shared field migrates in Phase 4).
-function normalizePhone(value, country = 'us') {
-  let v = value
-    .trim()
-    .replace(/[ ()@.+-]/g, '')
-    .replace(/^[01](\d)/, '$1')
-    .replace(/[a-z]/gi, '');
-  return v ? `${COUNTRIES[country].prefix}${v}` : '';
-}
+// The signup route requires the identifier matching the channel. A password
+// account also needs an email, as password login only accepts one.
+const NEEDS_EMAIL = AUTH_CHANNEL === 'email' || AUTH_TYPE === 'password';
+const NEEDS_PHONE = AUTH_CHANNEL === 'sms';
 
 const schema = z.object({
   firstName: z.string().optional(),
   lastName: z.string().optional(),
-  email: z.string().min(1, 'Email is required').email('Invalid email'),
-  phone: z.string().optional(),
+  email: NEEDS_EMAIL
+    ? z.string().min(1, 'Email is required').email('Invalid email')
+    : z.union([z.literal(''), z.string().email('Invalid email')]).optional(),
+  phone: NEEDS_PHONE
+    ? z.string().min(1, 'Phone is required')
+    : z.string().optional(),
   password:
     AUTH_TYPE === 'password'
       ? z.string().min(1, 'Password is required')
