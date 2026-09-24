@@ -19,7 +19,13 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Spinner } from '@/components/ui/spinner';
 
-import { createPasskey, removePasskey } from 'utils/auth/passkey';
+import { canShowAppleSignin } from 'utils/auth/apple';
+import { canShowGoogleSignin } from 'utils/auth/google';
+import {
+  canShowPasskey,
+  createPasskey,
+  removePasskey,
+} from 'utils/auth/passkey';
 import { formatDate, fromNow } from 'utils/date';
 
 import Sessions from './Sessions';
@@ -105,6 +111,13 @@ export default function Security() {
 
   const { loading, error } = state;
 
+  const passkeys = user.authenticators.filter(
+    (authenticator) => authenticator.type === 'passkey',
+  );
+  const canAddPasskey = canShowPasskey();
+  const showGoogle = canShowGoogleSignin() || hasAuthenticator('google');
+  const showApple = canShowAppleSignin() || hasAuthenticator('apple');
+
   return (
     <div className="flex flex-col gap-4">
       <PageHeader title="Security" />
@@ -114,18 +127,18 @@ export default function Security() {
             <Spinner className="size-6" />
           </div>
         )}
+        <ErrorMessage error={error} />
         <div className="grid grid-cols-1 items-start gap-6 sm:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle>Passkey</CardTitle>
-              <CardDescription>
-                Sign in without a password using a passkey on your device.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3">
-              {user.authenticators
-                .filter((authenticator) => authenticator.type === 'passkey')
-                .map((passkey) => {
+          {(canAddPasskey || passkeys.length > 0) && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Passkey</CardTitle>
+                <CardDescription>
+                  Sign in without a password using a passkey on your device.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex flex-col gap-3">
+                {passkeys.map((passkey) => {
                   const { id, name, createdAt, lastUsedAt } = passkey;
                   return (
                     <div
@@ -149,13 +162,16 @@ export default function Security() {
                     </div>
                   );
                 })}
-              <div className="flex">
-                <Button variant="outline" onClick={onCreatePasskeyClick}>
-                  Add Passkey
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+                {canAddPasskey && (
+                  <div className="flex">
+                    <Button variant="outline" onClick={onCreatePasskeyClick}>
+                      Add Passkey
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
 
           <Card>
             <CardHeader>
@@ -170,41 +186,49 @@ export default function Security() {
           </Card>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Sign-in with</CardTitle>
-            <CardDescription>
-              Connect a provider to sign in faster.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ErrorMessage error={error} />
-
-            <p className="text-sm font-semibold">Google</p>
-            <div className="mt-1">
-              {hasAuthenticator('google') ? (
-                <GoogleDisableButton onDisabled={onGoogleDisabled} />
-              ) : (
-                <p className="text-muted-foreground text-sm">
-                  Sign in with Google to enable.
-                </p>
+        {(showGoogle || showApple) && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Sign-in with</CardTitle>
+              <CardDescription>
+                Connect a provider to sign in faster.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {showGoogle && (
+                <>
+                  <p className="text-sm font-semibold">Google</p>
+                  <div className="mt-1">
+                    {hasAuthenticator('google') ? (
+                      <GoogleDisableButton onDisabled={onGoogleDisabled} />
+                    ) : (
+                      <p className="text-muted-foreground text-sm">
+                        Sign in with Google to enable.
+                      </p>
+                    )}
+                  </div>
+                </>
               )}
-            </div>
 
-            <Separator className="my-4" />
+              {showGoogle && showApple && <Separator className="my-4" />}
 
-            <p className="text-sm font-semibold">Apple</p>
-            <div className="mt-1">
-              {hasAuthenticator('apple') ? (
-                <AppleDisableButton onDisabled={onAppleDisabled} />
-              ) : (
-                <p className="text-muted-foreground text-sm">
-                  Sign in with Apple to enable.
-                </p>
+              {showApple && (
+                <>
+                  <p className="text-sm font-semibold">Apple</p>
+                  <div className="mt-1">
+                    {hasAuthenticator('apple') ? (
+                      <AppleDisableButton onDisabled={onAppleDisabled} />
+                    ) : (
+                      <p className="text-muted-foreground text-sm">
+                        Sign in with Apple to enable.
+                      </p>
+                    )}
+                  </div>
+                </>
               )}
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        )}
 
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">

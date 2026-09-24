@@ -44,6 +44,7 @@ export default function AppleSignInButton({
   if (type === 'login') {
     return (
       <Button
+        type="button"
         variant="outline"
         size="icon"
         className="size-[42px] rounded-full"
@@ -55,7 +56,11 @@ export default function AppleSignInButton({
   }
 
   return (
-    <Button variant="outline" className="w-full" onClick={onClick}>
+    <Button
+      type="button"
+      variant="outline"
+      className="w-full"
+      onClick={onClick}>
       <AppleIcon />
       Sign in with Apple
     </Button>
