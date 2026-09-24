@@ -54,12 +54,13 @@ async function createOtp(user, options = {}) {
   clearAuthenticators(user, 'otp');
 
   const code = user.isTester ? TESTER_CODE : generateCode();
-  const { isMfa = false } = options;
+  const { isMfa = false, channel } = options;
 
   addAuthenticator(user, {
     type: 'otp',
     code,
     isMfa,
+    channel,
     expiresAt: new Date(Date.now() + EXPIRE),
   });
 
@@ -85,6 +86,7 @@ async function verifyOtp(user, code) {
   }
 
   clearAuthenticators(user, 'otp');
+  return authenticator;
 }
 
 export { sendOtp, createOtp, verifyOtp };
