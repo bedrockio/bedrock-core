@@ -17,10 +17,12 @@ const renderer = new TemplateRenderer({
 
 async function renderTemplate(options) {
   const { dir, ...rest } = resolveOptions(options);
-  const template = await resolveTemplateArg(options);
+  const { template, isFile } = await resolveTemplateArg(options);
 
   return renderer.run({
-    dir,
+    // A body loaded from the database is the template source itself, so
+    // resolving it against "dir" would read it as a (very long) filename.
+    dir: isFile ? dir : undefined,
     template,
     params: {
       ...rest,
@@ -50,16 +52,16 @@ async function resolveTemplateArg(options) {
 
   if (typeof template === 'string' && path.extname(template) !== '') {
     // Return template filename if an extension if found.
-    return template;
+    return { template, isFile: true };
   } else if (template) {
     const templateBody = await resolveTemplateBody(options);
 
     // If the template arg is a name then find the template
     // and return the body for the channel. Fall back to the
     // template name to find it as a file.
-    return templateBody || template;
+    return templateBody ? { template: templateBody } : { template, isFile: true };
   } else {
-    return body;
+    return { template: body };
   }
 }
 
