@@ -7,6 +7,7 @@ import { authenticate } from '../utils/middleware/authenticate.js';
 import { requirePermissions } from '../utils/middleware/permissions.js';
 
 import { createAuthToken } from '../utils/tokens.js';
+import { claimUnverifiedUser } from '../utils/auth/index.js';
 import { Invite, User, AuditEntry } from '../models/index.js';
 
 import { sendMessage, sendMail } from '../utils/messaging/index.js';
@@ -62,6 +63,7 @@ router
       });
 
       if (user) {
+        claimUnverifiedUser(user);
         const token = createAuthToken(ctx, user);
         await user.save();
         ctx.body = {
@@ -74,6 +76,7 @@ router
         const user = new User({
           ...ctx.request.body,
           email,
+          emailVerified: true,
           ...(role && {
             roles: [
               {

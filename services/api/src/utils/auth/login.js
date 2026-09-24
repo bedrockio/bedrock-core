@@ -33,6 +33,18 @@ async function login(ctx, user, options = {}) {
   return token;
 }
 
+// Call once the user proves they own the email (OAuth, reset link, invite).
+// Until then anyone could have signed up with this address, so its existing
+// logins (password, passkeys, TOTP, sessions) are removed rather than trusted.
+function claimUnverifiedUser(user) {
+  if (!user.emailVerified) {
+    user.authenticators = [];
+    user.authTokens = [];
+    user.mfaMethod = 'none';
+    user.emailVerified = true;
+  }
+}
+
 async function verifyLoginAttempts(user, ctx) {
   let { loginAttempts = 0, lastLoginAttemptAt } = user;
 
@@ -63,4 +75,4 @@ async function verifyLoginAttempts(user, ctx) {
   }
 }
 
-export { login, verifyLoginAttempts };
+export { login, claimUnverifiedUser, verifyLoginAttempts };

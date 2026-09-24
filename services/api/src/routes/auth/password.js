@@ -7,7 +7,7 @@ import { validateBody } from '../../utils/middleware/validate.js';
 import { authenticate } from '../../utils/middleware/authenticate.js';
 
 import { createAuthToken, createAccessToken } from '../../utils/tokens.js';
-import { login, verifyLoginAttempts } from '../../utils/auth/index.js';
+import { login, verifyLoginAttempts, claimUnverifiedUser } from '../../utils/auth/index.js';
 import { verifyPassword } from '../../utils/auth/password.js';
 import { sendOtp } from '../../utils/auth/otp.js';
 import { sendMail } from '../../utils/messaging/index.js';
@@ -127,6 +127,8 @@ router
     async (ctx) => {
       const { authUser } = ctx.state;
       const { password } = ctx.request.body;
+
+      claimUnverifiedUser(authUser);
       authUser.password = password;
       authUser.loginAttempts = 0;
 

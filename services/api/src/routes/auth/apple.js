@@ -3,7 +3,7 @@ import yd from '@bedrockio/yada';
 import { validateBody } from '../../utils/middleware/validate.js';
 import { authenticate } from '../../utils/middleware/authenticate.js';
 
-import { login } from '../../utils/auth/index.js';
+import { login, claimUnverifiedUser } from '../../utils/auth/index.js';
 import { createAuthToken } from '../../utils/tokens.js';
 import { verifyToken, upsertAppleAuthenticator, removeAppleAuthenticator } from '../../utils/auth/apple.js';
 import { User, AuditEntry } from '../../models/index.js';
@@ -36,6 +36,7 @@ router
       let result;
 
       if (user) {
+        claimUnverifiedUser(user);
         token = await login(ctx, user, {
           message: 'Logged in with Apple',
         });
