@@ -37,6 +37,7 @@ export default function GoogleSignInButton({
   if (type === 'login') {
     return (
       <Button
+        type="button"
         variant="outline"
         size="icon"
         className="size-[42px] rounded-full"
@@ -48,7 +49,11 @@ export default function GoogleSignInButton({
   }
 
   return (
-    <Button variant="outline" className="w-full" onClick={onClick}>
+    <Button
+      type="button"
+      variant="outline"
+      className="w-full"
+      onClick={onClick}>
       <img src={logo} alt="Google" height={13} />
       Sign in with Google
     </Button>
