@@ -120,6 +120,7 @@ router
     '/update',
     authenticate({
       type: 'access',
+      action: 'reset-password',
     }),
     validateBody({
       password: yd.string().password().required(),

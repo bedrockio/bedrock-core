@@ -4,13 +4,11 @@ import { unsubscribe } from '../utils/notifications.js';
 
 const router = new Router();
 
-router.post('/', authenticate({ type: 'access' }), async (ctx) => {
+router.post('/', authenticate({ type: 'access', action: 'unsubscribe' }), async (ctx) => {
   const { jwt, authUser } = ctx.state;
-  const { action, type, channel } = jwt;
+  const { type, channel } = jwt;
 
-  if (action !== 'unsubscribe') {
-    ctx.throw(400, 'Invalid token.');
-  } else if (!type) {
+  if (!type) {
     ctx.throw(400, 'No type found.');
   } else if (!channel) {
     ctx.throw(400, 'No channel found.');
