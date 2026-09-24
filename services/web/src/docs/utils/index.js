@@ -23,7 +23,7 @@ export function getModelPath(route) {
 
 export function getRoutePath(route) {
   const { method, path } = expandRoute(route);
-  return ['paths', path, method.toLowerCase()];
+  return ['paths', path.replace(/:(\w+)\??/g, '{$1}'), method.toLowerCase()];
 }
 
 export function expandRef($ref) {

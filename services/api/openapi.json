@@ -373,7 +373,7 @@
         ]
       }
     },
-    "/1/auth/passkey/:id": {
+    "/1/auth/passkey/{id}": {
       "delete": {
         "parameters": [
           {
@@ -666,7 +666,7 @@
         ]
       }
     },
-    "/1/users/:id/authenticate": {
+    "/1/users/{id}/authenticate": {
       "post": {
         "parameters": [
           {
@@ -1108,7 +1108,7 @@
         }
       }
     },
-    "/1/users/:id": {
+    "/1/users/{id}": {
       "get": {
         "summary": "Get user by id",
         "x-model": "User",
@@ -1466,7 +1466,7 @@
         ]
       }
     },
-    "/1/products/:id": {
+    "/1/products/{id}": {
       "get": {
         "summary": "Get product by id",
         "x-model": "Product",
@@ -1961,7 +1961,7 @@
         ]
       }
     },
-    "/1/shops/:id": {
+    "/1/shops/{id}": {
       "get": {
         "summary": "Get shop by id",
         "x-model": "Shop",
@@ -2622,7 +2622,7 @@
         ]
       }
     },
-    "/1/uploads/:id": {
+    "/1/uploads/{id}": {
       "get": {
         "summary": "Get upload by id",
         "x-model": "Upload",
@@ -2663,7 +2663,7 @@
         ]
       }
     },
-    "/1/uploads/:id/url": {
+    "/1/uploads/{id}/url": {
       "get": {
         "parameters": [
           {
@@ -2683,7 +2683,7 @@
         ]
       }
     },
-    "/1/uploads/:id/raw": {
+    "/1/uploads/{id}/raw": {
       "get": {
         "parameters": [
           {
@@ -3095,7 +3095,7 @@
         }
       }
     },
-    "/1/invites/:id/resend": {
+    "/1/invites/{id}/resend": {
       "post": {
         "parameters": [
           {
@@ -3118,7 +3118,7 @@
         }
       }
     },
-    "/1/invites/:id": {
+    "/1/invites/{id}": {
       "delete": {
         "summary": "Delete invite",
         "x-model": "Invite",
@@ -3265,7 +3265,7 @@
         }
       }
     },
-    "/1/templates/:id": {
+    "/1/templates/{id}": {
       "get": {
         "summary": "Get template by id",
         "x-model": "Template",
@@ -3627,7 +3627,7 @@
         }
       }
     },
-    "/1/templates/:id/params": {
+    "/1/templates/{id}/params": {
       "get": {
         "parameters": [
           {
@@ -3650,7 +3650,7 @@
         }
       }
     },
-    "/1/templates/:id/preview": {
+    "/1/templates/{id}/preview": {
       "get": {
         "parameters": [
           {
@@ -3673,7 +3673,7 @@
         }
       }
     },
-    "/1/templates/:id/send": {
+    "/1/templates/{id}/send": {
       "post": {
         "requestBody": {
           "content": {
@@ -4663,7 +4663,7 @@
         ]
       }
     },
-    "/1/organizations/:id": {
+    "/1/organizations/{id}": {
       "get": {
         "summary": "Get organization by id",
         "x-model": "Organization",

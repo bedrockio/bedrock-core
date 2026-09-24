@@ -191,8 +191,10 @@ function generatePaths(routes) {
       item.parameters = parameters;
     }
 
-    if (!paths[koaPath]) {
-      paths[koaPath] = {};
+    const openApiPath = toOpenApiPath(koaPath);
+
+    if (!paths[openApiPath]) {
+      paths[openApiPath] = {};
     }
 
     // Authentication description. Note that in OpenAPI 3.0 bearerAuth MUST
@@ -213,7 +215,7 @@ function generatePaths(routes) {
       item['x-permissions'] = permissions;
     }
 
-    paths[koaPath][method.toLowerCase()] = item;
+    paths[openApiPath][method.toLowerCase()] = item;
   }
 
   return paths;
@@ -362,7 +364,7 @@ async function recordRequest(ctx) {
 
   const data = {
     paths: {
-      [routerPath]: {
+      [toOpenApiPath(routerPath)]: {
         [method.toLowerCase()]: {
           requestBody: {
             ...(hasRequest && {
@@ -425,6 +427,11 @@ function getRequestId(ctx) {
 }
 
 // Utils
+
+// Koa's "/users/:id" becomes OpenAPI's "/users/{id}".
+function toOpenApiPath(koaPath) {
+  return koaPath.replace(/:(\w+)\??/g, '{$1}');
+}
 
 function walkFields(arg, fn, path = []) {
   if (arg && typeof arg === 'object') {
