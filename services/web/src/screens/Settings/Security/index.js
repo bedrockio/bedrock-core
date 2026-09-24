@@ -19,7 +19,11 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Spinner } from '@/components/ui/spinner';
 
-import { createPasskey, removePasskey } from 'utils/auth/passkey';
+import {
+  canShowPasskey,
+  createPasskey,
+  removePasskey,
+} from 'utils/auth/passkey';
 import { formatDate, fromNow } from 'utils/date';
 
 import Sessions from './Sessions';
@@ -105,6 +109,11 @@ export default function Security() {
 
   const { loading, error } = state;
 
+  const passkeys = user.authenticators.filter(
+    (authenticator) => authenticator.type === 'passkey',
+  );
+  const canAddPasskey = canShowPasskey();
+
   return (
     <div className="flex flex-col gap-4">
       <PageHeader title="Security" />
@@ -115,17 +124,16 @@ export default function Security() {
           </div>
         )}
         <div className="grid grid-cols-1 items-start gap-6 sm:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle>Passkey</CardTitle>
-              <CardDescription>
-                Sign in without a password using a passkey on your device.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3">
-              {user.authenticators
-                .filter((authenticator) => authenticator.type === 'passkey')
-                .map((passkey) => {
+          {(canAddPasskey || passkeys.length > 0) && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Passkey</CardTitle>
+                <CardDescription>
+                  Sign in without a password using a passkey on your device.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex flex-col gap-3">
+                {passkeys.map((passkey) => {
                   const { id, name, createdAt, lastUsedAt } = passkey;
                   return (
                     <div
@@ -149,13 +157,16 @@ export default function Security() {
                     </div>
                   );
                 })}
-              <div className="flex">
-                <Button variant="outline" onClick={onCreatePasskeyClick}>
-                  Add Passkey
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+                {canAddPasskey && (
+                  <div className="flex">
+                    <Button variant="outline" onClick={onCreatePasskeyClick}>
+                      Add Passkey
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
 
           <Card>
             <CardHeader>
