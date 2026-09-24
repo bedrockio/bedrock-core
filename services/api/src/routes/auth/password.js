@@ -5,6 +5,7 @@ import yd from '@bedrockio/yada';
 
 import { validateBody } from '../../utils/middleware/validate.js';
 import { authenticate } from '../../utils/middleware/authenticate.js';
+import documentation from '../../utils/documentation.js';
 
 import { createAuthToken, createAccessToken } from '../../utils/tokens.js';
 import { login, verifyLoginAttempts } from '../../utils/auth/index.js';
@@ -24,6 +25,37 @@ router
       email: yd.string().email().required(),
       password: yd.string().password().required(),
     }),
+    documentation.include(
+      documentation.description(
+        'Password Login',
+        'Authenticates with email and password, returning a token or a multi-factor challenge to complete.',
+      ),
+      documentation.success(200, {
+        description: 'Password accepted and no MFA is configured.',
+        schema: { data: { token: yd.string() } },
+        example: { data: { token: 'eyJhbGciOi...' } },
+      }),
+      documentation.success(200, {
+        description:
+          'User has MFA enabled; complete the challenge via OTP or TOTP login. `code` is only returned for testers.',
+        schema: {
+          data: {
+            challenge: {
+              type: yd.string(),
+              channel: yd.string().allow('email', 'sms', 'authenticator'),
+              email: yd.string(),
+              phone: yd.string(),
+              code: yd.string(),
+            },
+          },
+        },
+        example: { data: { challenge: { type: 'code', channel: 'authenticator', email: 'jane@example.com' } } },
+      }),
+      documentation.error(
+        401,
+        'Wrong email or password, or too many recent attempts. An unknown email gets the same response, so it never reveals whether an account exists.',
+      ),
+    ),
     async (ctx) => {
       const { email, password } = ctx.request.body;
 
@@ -90,6 +122,13 @@ router
     validateBody({
       email: yd.string().email().required(),
     }),
+    documentation.include(
+      documentation.description(
+        'Request Password Reset',
+        'Emails a password reset link if an account exists; the response does not reveal whether it does.',
+      ),
+      documentation.success(204),
+    ),
     async (ctx) => {
       const { email } = ctx.request.body;
       const user = await User.findOne({ email });
@@ -124,6 +163,17 @@ router
     validateBody({
       password: yd.string().password().required(),
     }),
+    documentation.include(
+      documentation.description(
+        'Update Password',
+        'Sets a new password using a reset access token and returns a fresh auth token.',
+      ),
+      documentation.success(200, {
+        description: 'Password updated.',
+        schema: { data: { token: yd.string() } },
+        example: { data: { token: 'eyJhbGciOi...' } },
+      }),
+    ),
     async (ctx) => {
       const { authUser } = ctx.state;
       const { password } = ctx.request.body;

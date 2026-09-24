@@ -140,9 +140,11 @@ resource also asserts its entries.
 
 ## 6. Documentation
 
-Regenerate the OpenAPI definition so it picks up the new paths, then add the portal page under
-`services/web/src/docs/pages` and register it in that directory's index. One section per endpoint: a heading,
-a one-line description, and the route reference that renders the generated request and response schemas.
+CRUD responses are inferred from the model; annotate only a route that deviates or that you added beyond
+the five, following the [api-documentation](../api-documentation/SKILL.md) skill. Regenerate the OpenAPI
+definition, then add the portal page under `services/web/src/docs/pages` and register it in that directory's
+index. One section per endpoint: a heading, a one-line description, and the route reference that renders the
+generated request and response schemas.
 
 ## 7. Verify
 

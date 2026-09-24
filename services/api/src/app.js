@@ -4,7 +4,6 @@ import packageJson from '../package.json' with { type: 'json' };
 import errorHandler from './utils/middleware/error-handler.js';
 import corsMiddleware from './utils/middleware/cors.js';
 import bodyMiddleware from './utils/middleware/body.js';
-import recordMiddleware from './utils/middleware/record.js';
 import serializeMiddleware from './utils/middleware/serialize.js';
 import organizationMiddleware from './utils/middleware/organization.js';
 import { loadDefinition } from './utils/openapi.js';
@@ -21,13 +20,6 @@ app.use(corsMiddleware());
 
 app.use(serializeMiddleware);
 app.use(organizationMiddleware);
-
-// Record middleware must occur before serialization to
-// derive model names but after errorHandler to capture
-// error responses.
-if (['development'].includes(ENV_NAME)) {
-  app.use(recordMiddleware);
-}
 
 app.use(errorHandler);
 

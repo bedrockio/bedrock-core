@@ -1,7 +1,6 @@
 import Router from '@koa/router';
 
 import meta from './meta.js';
-import docs from './docs.js';
 import auth from './auth/index.js';
 import users from './users.js';
 import products from './products.js';
@@ -21,7 +20,6 @@ const router = new Router({
 });
 
 router.use('/meta', meta.routes());
-router.use('/docs', docs.routes());
 router.use('/auth', auth.routes());
 router.use('/users', users.routes());
 router.use('/products', products.routes());

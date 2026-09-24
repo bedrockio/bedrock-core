@@ -6,6 +6,7 @@ import { requirePermissions } from '../utils/middleware/permissions.js';
 import { validateBody, validateDelete } from '../utils/middleware/validate.js';
 import { sendMessage } from '../utils/messaging/index.js';
 import { getMailParams } from '../utils/messaging/mail.js';
+import documentation from '../utils/documentation.js';
 import { Template, User, AuditEntry } from '../models/index.js';
 
 const router = new Router();
@@ -53,29 +54,67 @@ router
       meta,
     };
   })
-  .get('/:id/params', async (ctx) => {
-    const params = await getPreviewParams();
-    ctx.body = {
-      data: params,
-    };
-  })
-  .get('/:id/preview', async (ctx) => {
-    const { template } = ctx.state;
-    const params = await getPreviewParams();
-
-    try {
-      const result = await getMailParams({
-        validate: true,
-        template: template.name,
-        ...params,
-      });
+  .get(
+    '/:id/params',
+    documentation.include(
+      documentation.description(
+        'Get Template Preview Params',
+        'Returns the sample users used to render template previews.',
+      ),
+      documentation.success(200, {
+        schema: { data: { user: User, sender: User } },
+      }),
+    ),
+    async (ctx) => {
+      const params = await getPreviewParams();
       ctx.body = {
-        data: result,
+        data: params,
       };
-    } catch (error) {
-      ctx.throw(400, error);
-    }
-  })
+    },
+  )
+  .get(
+    '/:id/preview',
+    documentation.include(
+      documentation.description('Preview Template', 'Renders the template as an email using sample users.'),
+      documentation.success(200, {
+        schema: {
+          data: {
+            html: yd.string(),
+            text: yd.string(),
+            body: yd.string(),
+            subject: yd.string(),
+            template: yd.string(),
+          },
+        },
+        example: {
+          data: {
+            html: '<html><body><p>Hello Jane</p></body></html>',
+            text: 'Hello Jane',
+            body: 'Hello Jane',
+            subject: 'Welcome',
+            template: 'welcome',
+          },
+        },
+      }),
+    ),
+    async (ctx) => {
+      const { template } = ctx.state;
+      const params = await getPreviewParams();
+
+      try {
+        const result = await getMailParams({
+          validate: true,
+          template: template.name,
+          ...params,
+        });
+        ctx.body = {
+          data: result,
+        };
+      } catch (error) {
+        ctx.throw(400, error);
+      }
+    },
+  )
   .post(
     '/:id/send',
     validateBody({
@@ -84,6 +123,13 @@ router
       userId: yd.string().mongo(),
       channel: yd.string().allow('email', 'sms', 'push').required(),
     }),
+    documentation.include(
+      documentation.description(
+        'Send Test Template',
+        'Sends the template through the given channel using sample users.',
+      ),
+      documentation.success(204),
+    ),
     async (ctx) => {
       const { template } = ctx.state;
       const { body } = ctx.request;
@@ -117,19 +163,35 @@ router
       ctx.status = 204;
     },
   )
-  .post('/push-users/search', validateBody(User.getSearchValidation()), async (ctx) => {
-    const { data, meta } = await User.search({
-      ...ctx.request.body,
-      deviceToken: {
-        $exists: true,
-      },
-    });
+  .post(
+    '/push-users/search',
+    validateBody(User.getSearchValidation()),
+    documentation.include(
+      documentation.description(
+        'Search Push Users',
+        'Searches users that have registered a device for push notifications.',
+      ),
+      documentation.success(200, {
+        schema: {
+          data: [User],
+          meta: { total: yd.number(), skip: yd.number(), limit: yd.number() },
+        },
+      }),
+    ),
+    async (ctx) => {
+      const { data, meta } = await User.search({
+        ...ctx.request.body,
+        deviceToken: {
+          $exists: true,
+        },
+      });
 
-    ctx.body = {
-      data,
-      meta,
-    };
-  })
+      ctx.body = {
+        data,
+        meta,
+      };
+    },
+  )
   .patch('/:id', validateBody(Template.getUpdateValidation()), async (ctx) => {
     const { template } = ctx.state;
     const snapshot = new Template(template);

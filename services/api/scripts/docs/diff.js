@@ -5,7 +5,7 @@ import fs from 'fs';
 const METHODS = ['get', 'put', 'post', 'patch', 'delete', 'head', 'options'];
 
 // Hand-edited docs content, not API shape.
-const IGNORED_KEYS = ['title', 'summary', 'description', 'examples', 'responses', 'x-generated'];
+const IGNORED_KEYS = ['title', 'summary', 'description', 'examples'];
 
 /**
  * Diffs two OpenAPI definition files and returns Markdown lines

@@ -2,6 +2,7 @@ import Router from '@koa/router';
 import yd from '@bedrockio/yada';
 import { validateBody } from '../../utils/middleware/validate.js';
 import { authenticate } from '../../utils/middleware/authenticate.js';
+import documentation from '../../utils/documentation.js';
 
 import { login } from '../../utils/auth/index.js';
 import { createAuthToken } from '../../utils/tokens.js';
@@ -18,6 +19,17 @@ router
       firstName: yd.string(),
       lastName: yd.string(),
     }),
+    documentation.include(
+      documentation.description(
+        'Apple Login',
+        'Logs in with an Apple identity token, creating a new user when no account matches its email.',
+      ),
+      documentation.success(200, {
+        description: '`result` is `login` for an existing user or `signup` for a newly created one.',
+        schema: { data: { token: yd.string(), result: yd.string().allow('login', 'signup') } },
+        example: { data: { token: 'eyJhbGciOi...', result: 'login' } },
+      }),
+    ),
     async (ctx) => {
       const { token: appleToken, firstName, lastName } = ctx.request.body;
 
@@ -79,6 +91,13 @@ router
     validateBody({
       token: yd.string().required(),
     }),
+    documentation.include(
+      documentation.description('Enable Apple Login', 'Links Sign in with Apple to the authenticated user.'),
+      documentation.success(200, {
+        description: 'Apple linked; returns the updated user.',
+        schema: { data: User },
+      }),
+    ),
     async (ctx) => {
       const { token } = ctx.request.body;
       const { authUser } = ctx.state;
@@ -96,18 +115,28 @@ router
       };
     },
   )
-  .post('/disable', async (ctx) => {
-    const { authUser } = ctx.state;
-    // Note that AppleId allows for revoking tokens, however this does
-    // not seem to remove it from the "Sign in with Apple" list or have
-    // any effect on subsequent logins, so skipping this step and simply
-    // remove the authenticator.
-    removeAppleAuthenticator(authUser);
-    await authUser.save();
+  .post(
+    '/disable',
+    documentation.include(
+      documentation.description('Disable Apple Login', 'Unlinks Sign in with Apple from the authenticated user.'),
+      documentation.success(200, {
+        description: 'Apple unlinked; returns the updated user.',
+        schema: { data: User },
+      }),
+    ),
+    async (ctx) => {
+      const { authUser } = ctx.state;
+      // Note that AppleId allows for revoking tokens, however this does
+      // not seem to remove it from the "Sign in with Apple" list or have
+      // any effect on subsequent logins, so skipping this step and simply
+      // remove the authenticator.
+      removeAppleAuthenticator(authUser);
+      await authUser.save();
 
-    ctx.body = {
-      data: authUser,
-    };
-  });
+      ctx.body = {
+        data: authUser,
+      };
+    },
+  );
 
 export default router;

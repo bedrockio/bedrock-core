@@ -4,7 +4,7 @@ import { Separator } from '@/components/ui/separator';
 
 import { expandRef } from 'docs/utils';
 
-import EditableField from './EditableField';
+import DocsText from './DocsText';
 import Properties from './Properties';
 import { DocsContext } from '../utils/context';
 
@@ -30,7 +30,7 @@ export default class VisitedSchemas extends React.Component {
 
                 <div id={name}>
                   <h3>{name}</h3>
-                  <EditableField type="description" path={path} />
+                  <DocsText type="description" path={path} />
                   <Properties path={[...path, 'properties']} />
                 </div>
               </React.Fragment>

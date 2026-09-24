@@ -33,7 +33,6 @@ See http://localhost:2200/docs for full documentation on this API (requires runn
 - `src/**/__tests__` - Unit tests
 - `src/utils` - Various utilities, helpers and middleware extensions
 - `src/routes` - API Routes
-- `src/routes/__openapi__` - OpenAPI descriptions for use in documentation portal
 - `src/models` - [Mongoose ORM models](src/models/README.md) (code and JSON) based on
   [@bedrockio/model](https://github.com/bedrockio/model).
 - `src/app.js` - Entrypoint into API (does not bind, so can be used in unit tests)
@@ -303,78 +302,24 @@ with `LOG_LEVEL`. In Google Cloud environments all levels are output.
 
 ## Documentation
 
-Good API documentation needs love, so make sure to take the time to describe parameters, create examples, etc. The
-[Bedrock CLI](https://github.com/bedrockio/bedrock-cli) can generate documentation using the command:
+`openapi.json` is generated from the routes with `pnpm docs:generate` and committed; CI fails when it is out of date.
+Request schemas come from the `validate*` middleware and CRUD responses from the model. Any other response is
+declared on the route with `documentation.include` from `src/utils/documentation.js`:
 
-```
-bedrock generate docs
-```
-
-After generation, documentation can be found and augmented in the files:
-
-```
-services/api/src/routes/__openapi__/resource.json
-services/web/src/docs/RESOURCE.md
-```
-
-The format in `src/routes/__openapi__` is using a slimmed down version of the OpenAPI spec to make editing easier. API
-calls can be defined in the `paths` array and Object definitions can be defined in the `objects` array.
-
-Here's an example of an API call definition:
-
-```json
-{
-  "method": "POST",
-  "path": "/login",
-  "requestBody": [
-    {
-      "name": "email",
-      "description": "E-mail address of the user trying to log in",
-      "required": true,
-      "schema": {
-        "type": "string",
-        "format": "email"
-      }
-    },
-    {
-      "name": "password",
-      "description": "Password associated with the e-mail address",
-      "required": true,
-      "schema": {
-        "type": "string"
-      }
-    }
-  ],
-  "responseBody": [
-    {
-      "name": "data.token",
-      "description": "JWT token that can be used to authenticate user",
-      "schema": {
-        "type": "string"
-      }
-    }
-  ],
-  "examples": [
-    {
-      "name": "A new login from John Doe",
-      "requestBody": {
-        "email": "john.doe@gmail.com",
-        "password": "AN$.37127"
-      },
-      "responseBody": {
-        "data": {
-          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZTZhOWMwMDBmYzY3NjQ0N2RjOTkzNmEiLCJ0eXBlIjoidXNlciIsImtpZCI6InVzZXIiLCJpYXQiOjE1ODk1NjgyODQsImV4cCI6MTU5MjE2MDI4NH0.I0DhLK9mBHCy8sJglzyLHYQHFfr34UYyCFyTaEgFFG"
-        }
-      }
-    }
-  ]
-}
+```js
+documentation.include(
+  documentation.description('Login', 'Authenticates with email and password.'),
+  documentation.success(200, {
+    description: 'Password accepted.',
+    schema: { data: { token: yd.string() } },
+    example: { data: { token: 'eyJhbGciOi...' } },
+  }),
+);
 ```
 
-All information in `src/routes/__openapi__` is exposed through the API and used by the Markdown-powered documentation
-portal in `/services/web/src/docs`.
-
-See [../../services/web](../../services/web) for more info on customizing documentation.
+Examples are validated against their schema on generation, and tests fail when a response does not match its
+declared variants. `documentation.error(status, description)` is reserved for errors a client must handle specially.
+The portal pages live in `services/web/src/docs/pages`; see [../../services/web](../../services/web).
 
 ## Authentication
 

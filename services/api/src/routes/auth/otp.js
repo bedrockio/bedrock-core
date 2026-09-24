@@ -1,6 +1,7 @@
 import Router from '@koa/router';
 import yd from '@bedrockio/yada';
 import { validateBody } from '../../utils/middleware/validate.js';
+import documentation from '../../utils/documentation.js';
 
 import { sendOtp } from '../../utils/auth/otp.js';
 import { verifyOtp } from '../../utils/auth/otp.js';
@@ -20,6 +21,28 @@ router
       email: yd.string().email(),
       phone: yd.string().phone(),
     }),
+    documentation.include(
+      documentation.description(
+        'Send OTP',
+        'Sends a one-time login code or link to the given email or phone and returns the challenge to complete.',
+      ),
+      documentation.success(200, {
+        description:
+          'Challenge issued. The same shape is returned when no user matches. `code` is only returned for testers.',
+        schema: {
+          data: {
+            challenge: {
+              type: yd.string(),
+              channel: yd.string(),
+              email: yd.string(),
+              phone: yd.string(),
+              code: yd.string(),
+            },
+          },
+        },
+        example: { data: { challenge: { type: 'code', channel: 'email', email: 'jane@example.com' } } },
+      }),
+    ),
     async (ctx) => {
       const { body } = ctx.request;
       const user = await findUser(ctx);
@@ -43,6 +66,18 @@ router
       email: yd.string().email(),
       phone: yd.string().phone(),
     }),
+    documentation.include(
+      documentation.description('OTP Login', 'Exchanges a one-time code sent by email or SMS for an auth token.'),
+      documentation.success(200, {
+        description: 'Code accepted.',
+        schema: { data: { token: yd.string() } },
+        example: { data: { token: 'eyJhbGciOi...' } },
+      }),
+      documentation.error(
+        401,
+        'Wrong or expired code, or too many recent attempts. Each failure extends a timeout before the next attempt is accepted.',
+      ),
+    ),
     async (ctx) => {
       const { code, email, phone } = ctx.request.body;
       const user = await findUser(ctx);

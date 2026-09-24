@@ -13,7 +13,7 @@ import { useClass } from 'helpers/bem';
 import { JumpLink } from 'components/Link';
 
 import { expandRef } from '../utils';
-import EditableField from './EditableField';
+import DocsText from './DocsText';
 import './properties.less';
 import { useDocs } from '../utils/context';
 
@@ -173,9 +173,8 @@ export default function DocsProperties(props) {
           )}
           {description && <div className={getElementClass('divider')} />}
 
-          <EditableField
+          <DocsText
             type="description"
-            model={model}
             path={path ? [...path, name] : getPath(name)}
             modelPath={getModelPath(name)}
           />

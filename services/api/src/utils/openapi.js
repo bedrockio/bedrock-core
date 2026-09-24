@@ -1,19 +1,41 @@
 import fs from 'fs/promises';
 import path from 'path';
-import crypto from 'crypto';
-import { Stream } from 'stream';
+import http from 'http';
 import mongoose from 'mongoose';
 import config from '@bedrockio/config';
 import Router from '@koa/router';
 
-import { get, set, merge, isEmpty, without, camelCase, kebabCase, startCase } from 'lodash-es';
+import { set, without, groupBy, camelCase, kebabCase, startCase, uniqBy } from 'lodash-es';
 import packageJson from '../../package.json' with { type: 'json' };
 
 const pluralize = mongoose.pluralize();
 
 const DEFINITION_FILE = path.resolve(import.meta.dirname, '../../openapi.json');
 
-const EDITABLE_FIELDS = ['title', 'summary', 'description'];
+const SHARED_SCHEMAS = {
+  SearchMeta: {
+    type: 'object',
+    properties: {
+      total: { type: 'number' },
+      skip: { type: 'number' },
+      limit: { type: 'number' },
+    },
+  },
+  Error: {
+    type: 'object',
+    properties: {
+      error: {
+        type: 'object',
+        properties: {
+          type: { type: 'string' },
+          message: { type: 'string' },
+          status: { type: 'number' },
+          details: { type: 'array', items: { type: 'object' } },
+        },
+      },
+    },
+  },
+};
 
 let definition;
 
@@ -36,22 +58,6 @@ async function saveDefinition(updated) {
   definition = updated;
 }
 
-// Definition update
-
-async function updateDefinitionPath(path, value) {
-  const definition = await loadDefinition();
-  if (value === null) {
-    // Unset field using undefined here.
-    value = undefined;
-  }
-  const field = path[path.length - 1];
-  set(definition, path, value);
-  if (EDITABLE_FIELDS.includes(field)) {
-    set(definition, [...path.slice(0, -1), 'x-generated'], undefined);
-  }
-  await saveDefinition(definition);
-}
-
 // Generation
 
 async function generateDefinition() {
@@ -68,9 +74,12 @@ async function generateDefinition() {
         url: config.get('API_URL'),
       },
     ],
-    paths: generatePaths(routes),
+    paths: await generatePaths(routes),
     components: {
-      schemas: generateModelSchemas(),
+      schemas: {
+        ...generateModelSchemas(),
+        ...SHARED_SCHEMAS,
+      },
       // Describes JWT tokens by Bearer
       // https://swagger.io/docs/specification/authentication/bearer-authentication/
       securitySchemes: {
@@ -83,7 +92,6 @@ async function generateDefinition() {
     },
   };
 
-  await copyEditableFields(definition);
   extractSchemas(definition);
   await saveDefinition(definition);
   return definition;
@@ -91,7 +99,7 @@ async function generateDefinition() {
 
 // Route generation
 
-function generatePaths(routes) {
+async function generatePaths(routes) {
   const paths = {};
 
   let currentContext = {};
@@ -131,7 +139,12 @@ function generatePaths(routes) {
       return item.validation;
     });
 
-    Object.assign(item, getPathMeta(koaPath, method));
+    const documentationLayer = layer.stack.find((item) => {
+      return item.documentation;
+    });
+
+    const { crudAction, ...meta } = getPathMeta(koaPath, method);
+    Object.assign(item, meta);
 
     const parameters = layer.paramNames.map((param) => {
       const { name, modifier } = param;
@@ -149,17 +162,7 @@ function generatePaths(routes) {
     if (validationLayer) {
       const { type, schema } = validationLayer.validation;
 
-      const openApi = schema.toOpenApi({
-        tag(meta) {
-          if (meta.format === 'date-time') {
-            return {
-              'x-schema': 'DateTime',
-              'x-description':
-                'A `string` in [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format.',
-            };
-          }
-        },
-      });
+      const openApi = toOpenApi(schema);
       if (type === 'body') {
         item.requestBody = {
           content: {
@@ -190,6 +193,19 @@ function generatePaths(routes) {
     if (parameters.length) {
       item.parameters = parameters;
     }
+
+    const parts = documentationLayer?.documentation || [];
+    const descriptionPart = parts.find((part) => {
+      return part.type === 'description';
+    });
+    if (descriptionPart) {
+      item.summary = descriptionPart.summary;
+      item.description = descriptionPart.description;
+    }
+
+    const formats = item.requestBody?.content['application/json']?.schema.properties?.format?.enum;
+    const inferred = getInferredResponses(crudAction, meta['x-model'], formats?.includes('csv'));
+    item.responses = await generateResponses(koaPath, method, parts, inferred);
 
     if (!paths[koaPath]) {
       paths[koaPath] = {};
@@ -266,24 +282,198 @@ function getPathMeta(koaPath, method) {
     if (method === 'GET' && isId) {
       meta.summary = `Get ${modelNameLower} by id`;
       meta['x-model'] = modelName;
+      meta.crudAction = 'get';
     } else if (method === 'POST' && !suffix) {
       meta.summary = `Create new ${modelNameLower}`;
       meta['x-model'] = modelName;
+      meta.crudAction = 'create';
     } else if (method === 'PATCH' && isId) {
       meta.summary = `Update ${modelNameLower}`;
       meta['x-model'] = modelName;
+      meta.crudAction = 'update';
     } else if (method === 'DELETE' && isId) {
       meta.summary = `Delete ${modelNameLower}`;
       meta['x-model'] = modelName;
+      meta.crudAction = 'delete';
     } else if (method === 'POST' && suffix === 'search') {
       meta.summary = `Search ${modelNamePlural}`;
       meta['x-model'] = modelName;
+      meta.crudAction = 'search';
     } else if (method === 'POST' && suffix === 'mine/search') {
       meta.summary = `Search ${modelNamePlural} for authenticated user.`;
       meta['x-model'] = modelName;
+      meta.crudAction = 'search';
     }
   }
   return meta;
+}
+
+// Response generation
+
+function getInferredResponses(crudAction, modelName, allowExport) {
+  const ref = {
+    $ref: `#/components/schemas/${modelName}`,
+  };
+  if (crudAction === 'delete') {
+    return { 204: {} };
+  } else if (crudAction === 'search') {
+    return {
+      200: {
+        allowExport,
+        schema: {
+          type: 'object',
+          properties: {
+            data: { type: 'array', items: ref },
+            meta: { $ref: '#/components/schemas/SearchMeta' },
+          },
+        },
+      },
+    };
+  } else if (crudAction) {
+    return {
+      200: {
+        schema: {
+          type: 'object',
+          properties: {
+            data: ref,
+          },
+        },
+      },
+    };
+  }
+  return {};
+}
+
+async function generateResponses(koaPath, method, parts, inferred) {
+  const declared = groupBy(
+    parts.filter((part) => {
+      return part.type !== 'description';
+    }),
+    'status',
+  );
+
+  const responses = {};
+  const statuses = new Set([...Object.keys(inferred), ...Object.keys(declared)]);
+
+  for (let status of statuses) {
+    const variants = declared[status] || [{}];
+    const inferredSchema = inferred[status]?.schema;
+
+    const entries = variants
+      .map((variant) => {
+        let schema;
+        if (variant.type === 'error') {
+          schema = { $ref: '#/components/schemas/Error' };
+        } else if (variant.schema) {
+          schema = toOpenApi(variant.schema);
+        } else {
+          schema = inferredSchema;
+        }
+        return { schema, description: variant.description };
+      })
+      .filter((entry) => entry.schema);
+
+    const unique = uniqBy(entries, (entry) => JSON.stringify(entry.schema));
+
+    let schema;
+    if (unique.length > 1) {
+      schema = {
+        oneOf: unique.map((entry) => {
+          return { ...entry.schema, description: entry.description };
+        }),
+      };
+    } else {
+      schema = unique[0]?.schema;
+    }
+
+    const description = variants
+      .map((variant) => variant.description)
+      .filter(Boolean)
+      .join('\n\n');
+
+    const examples = await getExamples(`${method} ${koaPath} ${status}`, variants);
+
+    responses[status] = {
+      description: description || http.STATUS_CODES[status],
+      ...((schema || examples) && {
+        content: {
+          'application/json': {
+            ...(schema && { schema }),
+            ...(examples && { examples }),
+          },
+          ...(inferred[status]?.allowExport && {
+            'text/csv': {
+              schema: { type: 'string' },
+            },
+          }),
+        },
+      }),
+    };
+  }
+
+  return responses;
+}
+
+async function getExamples(label, variants) {
+  const examples = {};
+  for (let variant of variants) {
+    const { name, description, example, schema } = variant;
+    if (example === undefined) {
+      continue;
+    }
+    const key = name || kebabCase(description) || 'default';
+    if (examples[key]) {
+      throw new Error(`${label}: duplicate example "${key}".`);
+    }
+    if (schema) {
+      try {
+        await schema.validate(example, { stripUnknown: true });
+      } catch (error) {
+        throw new Error(
+          `${label}: example "${key}" does not match its schema: ${error.getFullMessage?.() || error.message}`,
+          {
+            cause: error,
+          },
+        );
+      }
+    }
+    examples[key] = {
+      summary: description,
+      value: example,
+    };
+  }
+  return Object.keys(examples).length ? examples : undefined;
+}
+
+function toOpenApi(schema) {
+  const openApi = schema.toOpenApi({
+    tag(meta) {
+      if (meta.format === 'date-time') {
+        return {
+          'x-schema': 'DateTime',
+          'x-description': 'A `string` in [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format.',
+        };
+      }
+    },
+  });
+  return replaceModelRefs(openApi);
+}
+
+// Models in documented schemas are tagged "x-ref" by utils/documentation.
+function replaceModelRefs(value) {
+  if (Array.isArray(value)) {
+    return value.map(replaceModelRefs);
+  } else if (value && typeof value === 'object') {
+    if (value['x-ref']) {
+      return { $ref: `#/components/schemas/${value['x-ref']}` };
+    }
+    const result = {};
+    for (let [key, val] of Object.entries(value)) {
+      result[key] = replaceModelRefs(val);
+    }
+    return result;
+  }
+  return value;
 }
 
 // Component generation
@@ -339,91 +529,6 @@ function extractSchemas(definition) {
   });
 }
 
-// Recording
-
-async function recordRequest(ctx) {
-  const { method, routerPath } = ctx;
-  const { type: requestType, body: requestBody } = ctx.request;
-  const { type: responseType, headers: responseHeaders, status } = ctx.response;
-  const requestId = getRequestId(ctx);
-  const schema = getResponseSchema(ctx);
-
-  let { body: responseBody } = ctx.response;
-
-  if (responseBody instanceof Stream) {
-    responseBody = '[Binary Data]';
-  } else {
-    // Ensure the body is properly converted to raw data.
-    responseBody = JSON.parse(JSON.stringify(ctx.response.body || {}));
-  }
-
-  const hasRequest = requestType && !isEmpty(requestBody);
-  const hasResponse = status < 500;
-
-  const data = {
-    paths: {
-      [routerPath]: {
-        [method.toLowerCase()]: {
-          requestBody: {
-            ...(hasRequest && {
-              content: {
-                [requestType]: {
-                  examples: {
-                    [requestId]: {
-                      value: requestBody,
-                    },
-                  },
-                },
-              },
-            }),
-          },
-          responses: {
-            [status]: {
-              headers: {
-                ...responseHeaders,
-                'access-control-allow-origin': '<Origin>',
-                'request-id': '<RequestId>',
-              },
-              ...(hasResponse && {
-                content: {
-                  [responseType]: {
-                    ...(schema && {
-                      schema,
-                    }),
-                    examples: {
-                      [requestId]: {
-                        value: responseBody,
-                        'x-path': ctx.path,
-                      },
-                    },
-                  },
-                },
-              }),
-            },
-          },
-        },
-      },
-    },
-  };
-
-  const definition = merge(await loadDefinition(), data);
-  await saveDefinition(definition);
-  return definition;
-}
-
-function getRequestId(ctx) {
-  // Note that although in real-life applications responses may
-  // vary as a function of time, for the purposes of documentation
-  // we are assuming that they do not so any request with the same
-  // signature will always generate the same request id.
-  const obj = {
-    method: ctx.method,
-    path: ctx.path,
-    body: ctx.request.body,
-  };
-  return crypto.createHash('md5').update(JSON.stringify(obj)).digest('hex');
-}
-
 // Utils
 
 function walkFields(arg, fn, path = []) {
@@ -437,78 +542,6 @@ function walkFields(arg, fn, path = []) {
         path: p,
       });
     }
-  }
-}
-
-function getResponseSchema(ctx) {
-  const modelName = ctx.response.body?.data?.constructor?.modelName;
-  if (modelName) {
-    return {
-      $ref: `#/components/schemas/${modelName}`,
-    };
-  }
-}
-
-// Editable fields
-
-const JSON_SCHEMA_PRIMITIVE_TYPES = ['string', 'number', 'boolean'];
-
-async function copyEditableFields(target) {
-  const source = await loadDefinition();
-  walkFields(target, (field) => {
-    const { path } = field;
-
-    if (isJsonSchemaPrimitive(field)) {
-      const hasSource = EDITABLE_FIELDS.some((field) => {
-        return get(source, [...path, field]);
-      });
-      const hasTarget = EDITABLE_FIELDS.some((field) => {
-        return get(target, [...path, field]);
-      });
-      const xGenerated = get(source, [...path, 'x-generated']);
-
-      if (hasSource && !xGenerated) {
-        copyField(target, source, path, 'summary');
-        copyField(target, source, path, 'description');
-      } else if (hasTarget) {
-        set(target, [...path, 'x-generated'], true);
-      }
-    } else if (isBodyField(field)) {
-      copyField(target, source, path, 'examples');
-    } else if (isOperationField(field)) {
-      copyField(target, source, path, 'responses');
-    }
-  });
-  return target;
-}
-
-function isJsonSchemaPrimitive(field) {
-  return JSON_SCHEMA_PRIMITIVE_TYPES.includes(field.value?.type);
-}
-
-function isBodyField(field) {
-  return matchPath(field.path, 'paths|*|*|requestBody|content|*');
-}
-
-function isOperationField(field) {
-  return matchPath(field.path, 'paths|*|*');
-}
-
-function matchPath(path, str) {
-  const split = str.split('|');
-  if (split.length !== path.length) {
-    return false;
-  }
-  return split.every((token, i) => {
-    return token === '*' || path[i] === token;
-  });
-}
-
-function copyField(target, source, path, field) {
-  const fPath = [...path, field];
-  const sValue = get(source, fPath);
-  if (sValue) {
-    set(target, fPath, sValue);
   }
 }
 
@@ -535,4 +568,4 @@ function applyRouterHack() {
   };
 }
 
-export { DEFINITION_FILE, loadDefinition, generateDefinition, updateDefinitionPath, recordRequest, saveDefinition };
+export { DEFINITION_FILE, loadDefinition, generateDefinition, saveDefinition };

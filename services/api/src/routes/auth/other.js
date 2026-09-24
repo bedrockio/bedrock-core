@@ -4,7 +4,8 @@ import { validateBody } from '../../utils/middleware/validate.js';
 import { authenticate } from '../../utils/middleware/authenticate.js';
 import { expandRoles } from '../../utils/permissions.js';
 import { removeAuthToken } from '../../utils/tokens.js';
-import { AuditEntry } from '../../models/index.js';
+import documentation from '../../utils/documentation.js';
+import { User, AuditEntry } from '../../models/index.js';
 
 const router = new Router();
 
@@ -17,6 +18,13 @@ router
       jti: yd.string(),
     }),
     authenticate(),
+    documentation.include(
+      documentation.description(
+        'Logout',
+        'Revokes the current auth token, a specific token by `jti`, or all tokens when `all` is set.',
+      ),
+      documentation.success(204),
+    ),
     async (ctx) => {
       const user = ctx.state.authUser;
       const { body } = ctx.request;
@@ -40,6 +48,13 @@ router
     validateBody({
       method: yd.string().allow(['none', 'sms', 'email', 'totp']),
     }),
+    documentation.include(
+      documentation.description('Set MFA Method', 'Sets the multi-factor method the authenticated user logs in with.'),
+      documentation.success(200, {
+        description: 'MFA method updated; returns the updated user.',
+        schema: { data: User },
+      }),
+    ),
     async (ctx) => {
       const { authUser } = ctx.state;
       const { method } = ctx.request.body;

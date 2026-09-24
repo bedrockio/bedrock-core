@@ -1,7 +1,7 @@
 import { get, set } from 'lodash';
 import React, { useState } from 'react';
 
-import { Circle, Minus, Play, Plus, Trash2 } from 'lucide-react';
+import { Minus, Play, Plus, Trash2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -59,11 +59,10 @@ export default function RequestBuilder(props) {
 
   const { route, trigger } = props;
 
-  const { docs, loadDocs, canEditDocs } = useDocs();
+  const { docs } = useDocs();
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [recorded, setRecorded] = useState(false);
   const [req, setReq] = useState({});
   const [res, setRes] = useState({});
   const [activeTab, setActiveTab] = useState(0);
@@ -109,29 +108,14 @@ export default function RequestBuilder(props) {
     }
   }
 
-  function onPlayClick() {
-    performRequest();
-  }
-
-  async function onRecordClick() {
-    await performRequest({
-      headers: {
-        'Api-Record': 'on',
-      },
-    });
-    await loadDocs();
-  }
-
-  async function performRequest(options) {
+  async function onPlayClick() {
     try {
       setError(null);
       setLoading(true);
-      setRecorded(false);
       const { method, path } = resolveRoute();
 
       const response = await request({
         ...req,
-        ...options,
         method,
         path,
       });
@@ -139,12 +123,10 @@ export default function RequestBuilder(props) {
       setLoading(false);
       setRes(response);
       setActiveTab(1);
-      setRecorded(options?.record);
     } catch (error) {
       setLoading(false);
       setRes(error.response);
       setActiveTab(1);
-      setRecorded(options?.record);
       setError(!error.response && error);
     }
   }
@@ -433,7 +415,6 @@ export default function RequestBuilder(props) {
         <div className="flex flex-col gap-4">
           <ErrorMessage error={error} />
           {res && <Code language="json">{JSON.stringify(res, null, 2)}</Code>}
-          {recorded && <p className="text-sm font-bold">Response Recorded</p>}
         </div>
       );
     }
@@ -476,15 +457,6 @@ export default function RequestBuilder(props) {
             </Tabs>
           </div>
           <div className="absolute right-0 bottom-0 flex justify-end gap-4 p-2">
-            {canEditDocs() && (
-              <Button
-                variant="outline"
-                size="icon"
-                title="Perform request and record as example"
-                onClick={onRecordClick}>
-                <Circle />
-              </Button>
-            )}
             <Button
               variant="outline"
               size="icon"

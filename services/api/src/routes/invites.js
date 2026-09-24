@@ -7,6 +7,7 @@ import { authenticate } from '../utils/middleware/authenticate.js';
 import { requirePermissions } from '../utils/middleware/permissions.js';
 
 import { createAuthToken } from '../utils/tokens.js';
+import documentation from '../utils/documentation.js';
 import { Invite, User, AuditEntry } from '../models/index.js';
 
 import { sendMessage, sendMail } from '../utils/messaging/index.js';
@@ -25,17 +26,28 @@ function sendInvite(sender, invite) {
 }
 
 router
-  .post('/check', validateToken({ type: 'invite' }), async (ctx) => {
-    const invite = await Invite.findOne({
-      email: ctx.state.jwt.sub,
-    });
+  .post(
+    '/check',
+    validateToken({ type: 'invite' }),
+    documentation.include(
+      documentation.description(
+        'Check Invite',
+        'Confirms that the invite token belongs to an invite that has not been accepted.',
+      ),
+      documentation.success(204),
+    ),
+    async (ctx) => {
+      const invite = await Invite.findOne({
+        email: ctx.state.jwt.sub,
+      });
 
-    if (invite.status === 'accepted') {
-      return ctx.throw(400, 'Invite has already been accepted.');
-    }
+      if (invite.status === 'accepted') {
+        return ctx.throw(400, 'Invite has already been accepted.');
+      }
 
-    ctx.status = 204;
-  })
+      ctx.status = 204;
+    },
+  )
   .post(
     '/accept',
     validateBody({
@@ -44,6 +56,16 @@ router
       password: yd.string().password().required(),
     }),
     validateToken({ type: 'invite' }),
+    documentation.include(
+      documentation.description(
+        'Accept Invite',
+        'Accepts the invite, creating the user if needed, and returns an auth token.',
+      ),
+      documentation.success(200, {
+        schema: { data: { token: yd.string() } },
+        example: { data: { token: 'eyJhbGciOi...' } },
+      }),
+    ),
     async (ctx) => {
       const invite = await Invite.findOneAndUpdate(
         {
@@ -122,6 +144,10 @@ router
       emails: yd.array(yd.string().email()).required(),
       role: yd.string(),
     }),
+    documentation.include(
+      documentation.description('Create Invites', 'Invites each email address and sends it an invite email.'),
+      documentation.success(204),
+    ),
     async (ctx) => {
       const { authUser } = ctx.state;
       const { emails, role } = ctx.request.body;
@@ -154,11 +180,18 @@ router
       ctx.status = 204;
     },
   )
-  .post('/:id/resend', async (ctx) => {
-    const { invite, authUser } = ctx.state;
-    await sendInvite(authUser, invite);
-    ctx.status = 204;
-  })
+  .post(
+    '/:id/resend',
+    documentation.include(
+      documentation.description('Resend Invite', 'Sends the invite email again.'),
+      documentation.success(204),
+    ),
+    async (ctx) => {
+      const { invite, authUser } = ctx.state;
+      await sendInvite(authUser, invite);
+      ctx.status = 204;
+    },
+  )
   .delete('/:id', async (ctx) => {
     const { invite } = ctx.state;
     await invite.delete();

@@ -5,6 +5,7 @@ import { sendOtp } from '../utils/auth/otp.js';
 import { sendMessage } from '../utils/messaging/index.js';
 import { createAuthToken } from '../utils/tokens.js';
 import { validateBody } from '../utils/middleware/validate.js';
+import documentation from '../utils/documentation.js';
 
 import { User, AuditEntry } from '../models/index.js';
 
@@ -52,6 +53,32 @@ router.post(
         }
       }),
   }),
+  documentation.include(
+    documentation.description(
+      'Sign Up',
+      'Creates a user and either signs them in or sends a one-time password challenge.',
+    ),
+    documentation.success(200, {
+      description: 'Password provided; the user is signed in.',
+      schema: { data: { token: yd.string() } },
+      example: { data: { token: 'eyJhbGciOi...' } },
+    }),
+    documentation.success(200, {
+      description: 'No password; a one-time password was sent and must be verified.',
+      schema: {
+        data: {
+          challenge: {
+            type: yd.string().allow('link', 'code'),
+            channel: yd.string().allow('email', 'sms'),
+            email: yd.string(),
+            phone: yd.string(),
+            code: yd.string(),
+          },
+        },
+      },
+      example: { data: { challenge: { type: 'link', channel: 'email', email: 'jane@example.com' } } },
+    }),
+  ),
   async (ctx) => {
     const { type, channel, password, ...rest } = ctx.request.body;
     const user = await User.create({

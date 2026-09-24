@@ -12,36 +12,85 @@
   "paths": {
     "/1/meta": {
       "get": {
-        "security": []
-      }
-    },
-    "/1/docs": {
-      "patch": {
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "path": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
+        "summary": "Get App Meta",
+        "description": "Returns the role definitions and notification types configured for the app.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "roles": {
+                          "type": "object"
+                        },
+                        "notifications": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string"
+                              },
+                              "label": {
+                                "type": "string"
+                              },
+                              "email": {
+                                "type": "boolean"
+                              },
+                              "sms": {
+                                "type": "boolean"
+                              },
+                              "push": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": [],
+                      "additionalProperties": false
                     }
                   },
-                  "value": {}
+                  "required": [],
+                  "additionalProperties": false
                 },
-                "required": [],
-                "additionalProperties": false
+                "examples": {
+                  "default": {
+                    "value": {
+                      "data": {
+                        "roles": {
+                          "admin": {
+                            "name": "Admin",
+                            "allowScopes": [
+                              "global"
+                            ],
+                            "permissions": {
+                              "users": "all"
+                            }
+                          }
+                        },
+                        "notifications": [
+                          {
+                            "type": "product-updated",
+                            "label": "Product Updated",
+                            "email": true
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
               }
             }
           }
         },
-        "security": []
-      }
-    },
-    "/1/docs/generate": {
-      "post": {
         "security": []
       }
     },
@@ -76,12 +125,72 @@
                   "phone": {
                     "type": "string",
                     "format": "phone",
-                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
-                    "x-generated": true
+                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format."
                   }
                 },
                 "required": [],
                 "additionalProperties": false
+              }
+            }
+          }
+        },
+        "summary": "Send OTP",
+        "description": "Sends a one-time login code or link to the given email or phone and returns the challenge to complete.",
+        "responses": {
+          "200": {
+            "description": "Challenge issued. The same shape is returned when no user matches. `code` is only returned for testers.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "challenge": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string"
+                            },
+                            "channel": {
+                              "type": "string"
+                            },
+                            "email": {
+                              "type": "string"
+                            },
+                            "phone": {
+                              "type": "string"
+                            },
+                            "code": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "challenge-issued-the-same-shape-is-returned-when-no-user-matches-code-is-only-returned-for-testers": {
+                    "summary": "Challenge issued. The same shape is returned when no user matches. `code` is only returned for testers.",
+                    "value": {
+                      "data": {
+                        "challenge": {
+                          "type": "code",
+                          "channel": "email",
+                          "email": "jane@example.com"
+                        }
+                      }
+                    }
+                  }
+                }
               }
             }
           }
@@ -107,14 +216,61 @@
                   "phone": {
                     "type": "string",
                     "format": "phone",
-                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
-                    "x-generated": true
+                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format."
                   }
                 },
                 "required": [
                   "code"
                 ],
                 "additionalProperties": false
+              }
+            }
+          }
+        },
+        "summary": "OTP Login",
+        "description": "Exchanges a one-time code sent by email or SMS for an auth token.",
+        "responses": {
+          "200": {
+            "description": "Code accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "code-accepted": {
+                    "summary": "Code accepted.",
+                    "value": {
+                      "data": {
+                        "token": "eyJhbGciOi..."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Wrong or expired code, or too many recent attempts. Each failure extends a timeout before the next attempt is accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
               }
             }
           }
@@ -133,8 +289,7 @@
                   "phone": {
                     "type": "string",
                     "format": "phone",
-                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
-                    "x-generated": true
+                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format."
                   },
                   "email": {
                     "type": "string",
@@ -152,11 +307,101 @@
             }
           }
         },
+        "summary": "TOTP Login",
+        "description": "Exchanges a code from an authenticator app for an auth token.",
+        "responses": {
+          "200": {
+            "description": "Code accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "code-accepted": {
+                    "summary": "Code accepted.",
+                    "value": {
+                      "data": {
+                        "token": "eyJhbGciOi..."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Wrong or expired code, or too many recent attempts. Each failure extends a timeout before the next attempt is accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
         "security": []
       }
     },
     "/1/auth/totp/request": {
       "post": {
+        "summary": "Request TOTP Secret",
+        "description": "Generates a new authenticator secret and otpauth URL for the user to scan before enabling TOTP.",
+        "responses": {
+          "200": {
+            "description": "Secret generated. It is not stored until TOTP is enabled.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "url": {
+                          "type": "string"
+                        },
+                        "secret": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "secret-generated-it-is-not-stored-until-totp-is-enabled": {
+                    "summary": "Secret generated. It is not stored until TOTP is enabled.",
+                    "value": {
+                      "data": {
+                        "url": "otpauth://totp/Bedrock?secret=JBSWY3DPEHPK3PXP",
+                        "secret": "JBSWY3DPEHPK3PXP"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -188,6 +433,27 @@
             }
           }
         },
+        "summary": "Enable TOTP",
+        "description": "Verifies a code against the requested secret and stores it as the TOTP authenticator of the authenticated user.",
+        "responses": {
+          "200": {
+            "description": "TOTP enabled; returns the updated user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -197,6 +463,27 @@
     },
     "/1/auth/totp/disable": {
       "post": {
+        "summary": "Disable TOTP",
+        "description": "Removes the TOTP authenticator of the authenticated user and resets TOTP multi-factor to none.",
+        "responses": {
+          "200": {
+            "description": "TOTP disabled; returns the updated user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -230,6 +517,52 @@
             }
           }
         },
+        "summary": "Apple Login",
+        "description": "Logs in with an Apple identity token, creating a new user when no account matches its email.",
+        "responses": {
+          "200": {
+            "description": "`result` is `login` for an existing user or `signup` for a newly created one.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string"
+                        },
+                        "result": {
+                          "type": "string",
+                          "enum": [
+                            "login",
+                            "signup"
+                          ]
+                        }
+                      },
+                      "required": [],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "result-is-login-for-an-existing-user-or-signup-for-a-newly-created-one": {
+                    "summary": "`result` is `login` for an existing user or `signup` for a newly created one.",
+                    "value": {
+                      "data": {
+                        "token": "eyJhbGciOi...",
+                        "result": "login"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "security": []
       }
     },
@@ -253,6 +586,27 @@
             }
           }
         },
+        "summary": "Enable Apple Login",
+        "description": "Links Sign in with Apple to the authenticated user.",
+        "responses": {
+          "200": {
+            "description": "Apple linked; returns the updated user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -262,6 +616,27 @@
     },
     "/1/auth/apple/disable": {
       "post": {
+        "summary": "Disable Apple Login",
+        "description": "Unlinks Sign in with Apple from the authenticated user.",
+        "responses": {
+          "200": {
+            "description": "Apple unlinked; returns the updated user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -289,11 +664,78 @@
             }
           }
         },
+        "summary": "Google Login",
+        "description": "Logs in with a Google credential, creating a new user when no account matches its email.",
+        "responses": {
+          "200": {
+            "description": "`result` is `login` for an existing user or `signup` for a newly created one.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string"
+                        },
+                        "result": {
+                          "type": "string",
+                          "enum": [
+                            "login",
+                            "signup"
+                          ]
+                        }
+                      },
+                      "required": [],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "result-is-login-for-an-existing-user-or-signup-for-a-newly-created-one": {
+                    "summary": "`result` is `login` for an existing user or `signup` for a newly created one.",
+                    "value": {
+                      "data": {
+                        "token": "eyJhbGciOi...",
+                        "result": "signup"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "security": []
       }
     },
     "/1/auth/google/disable": {
       "post": {
+        "summary": "Disable Google Login",
+        "description": "Unlinks Google sign-in from the authenticated user.",
+        "responses": {
+          "200": {
+            "description": "Google unlinked; returns the updated user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -303,6 +745,52 @@
     },
     "/1/auth/passkey/generate-login": {
       "post": {
+        "summary": "Generate Passkey Login",
+        "description": "Generates WebAuthn authentication options and a signed challenge token to start a passkey login.",
+        "responses": {
+          "200": {
+            "description": "Pass `options` to the WebAuthn API and send `token` back with the response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string"
+                        },
+                        "options": {
+                          "type": "object"
+                        }
+                      },
+                      "required": [],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "pass-options-to-the-web-authn-api-and-send-token-back-with-the-response": {
+                    "summary": "Pass `options` to the WebAuthn API and send `token` back with the response.",
+                    "value": {
+                      "data": {
+                        "token": "eyJhbGciOi...",
+                        "options": {
+                          "challenge": "dGVzdC1jaGFsbGVuZ2U",
+                          "allowCredentials": [],
+                          "userVerification": "preferred"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "security": []
       }
     },
@@ -330,11 +818,101 @@
             }
           }
         },
+        "summary": "Verify Passkey Login",
+        "description": "Verifies a WebAuthn authentication response against its challenge token and returns an auth token.",
+        "responses": {
+          "200": {
+            "description": "Passkey accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "passkey-accepted": {
+                    "summary": "Passkey accepted.",
+                    "value": {
+                      "data": {
+                        "token": "eyJhbGciOi..."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "security": []
       }
     },
     "/1/auth/passkey/generate-new": {
       "post": {
+        "summary": "Generate Passkey Registration",
+        "description": "Generates WebAuthn registration options and a signed challenge token to add a passkey to the authenticated user.",
+        "responses": {
+          "200": {
+            "description": "Pass `options` to the WebAuthn API and send `token` back with the response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string"
+                        },
+                        "options": {
+                          "type": "object"
+                        }
+                      },
+                      "required": [],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "pass-options-to-the-web-authn-api-and-send-token-back-with-the-response": {
+                    "summary": "Pass `options` to the WebAuthn API and send `token` back with the response.",
+                    "value": {
+                      "data": {
+                        "token": "eyJhbGciOi...",
+                        "options": {
+                          "challenge": "dGVzdC1jaGFsbGVuZ2U",
+                          "rp": {
+                            "id": "example.com",
+                            "name": "Bedrock"
+                          },
+                          "user": {
+                            "name": "jane@example.com"
+                          },
+                          "excludeCredentials": []
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -366,6 +944,27 @@
             }
           }
         },
+        "summary": "Verify Passkey Registration",
+        "description": "Verifies a WebAuthn registration response and adds the passkey to the authenticated user.",
+        "responses": {
+          "200": {
+            "description": "Passkey added; returns the updated user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -385,6 +984,27 @@
             }
           }
         ],
+        "summary": "Remove Passkey",
+        "description": "Removes a passkey from the authenticated user.",
+        "responses": {
+          "200": {
+            "description": "Passkey removed; returns the updated user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -406,8 +1026,7 @@
                   },
                   "password": {
                     "type": "string",
-                    "description": "A password of at least 12 characters.",
-                    "x-generated": true
+                    "description": "A password of at least 12 characters."
                   }
                 },
                 "required": [
@@ -415,6 +1034,113 @@
                   "password"
                 ],
                 "additionalProperties": false
+              }
+            }
+          }
+        },
+        "summary": "Password Login",
+        "description": "Authenticates with email and password, returning a token or a multi-factor challenge to complete.",
+        "responses": {
+          "200": {
+            "description": "Password accepted and no MFA is configured.\n\nUser has MFA enabled; complete the challenge via OTP or TOTP login. `code` is only returned for testers.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "token": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [],
+                      "additionalProperties": false,
+                      "description": "Password accepted and no MFA is configured."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "challenge": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                },
+                                "channel": {
+                                  "type": "string",
+                                  "enum": [
+                                    "email",
+                                    "sms",
+                                    "authenticator"
+                                  ]
+                                },
+                                "email": {
+                                  "type": "string"
+                                },
+                                "phone": {
+                                  "type": "string"
+                                },
+                                "code": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [],
+                      "additionalProperties": false,
+                      "description": "User has MFA enabled; complete the challenge via OTP or TOTP login. `code` is only returned for testers."
+                    }
+                  ]
+                },
+                "examples": {
+                  "password-accepted-and-no-mfa-is-configured": {
+                    "summary": "Password accepted and no MFA is configured.",
+                    "value": {
+                      "data": {
+                        "token": "eyJhbGciOi..."
+                      }
+                    }
+                  },
+                  "user-has-mfa-enabled-complete-the-challenge-via-otp-or-totp-login-code-is-only-returned-for-testers": {
+                    "summary": "User has MFA enabled; complete the challenge via OTP or TOTP login. `code` is only returned for testers.",
+                    "value": {
+                      "data": {
+                        "challenge": {
+                          "type": "code",
+                          "channel": "authenticator",
+                          "email": "jane@example.com"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Wrong email or password, or too many recent attempts. An unknown email gets the same response, so it never reveals whether an account exists.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
               }
             }
           }
@@ -443,6 +1169,13 @@
             }
           }
         },
+        "summary": "Request Password Reset",
+        "description": "Emails a password reset link if an account exists; the response does not reveal whether it does.",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
         "security": []
       }
     },
@@ -456,14 +1189,51 @@
                 "properties": {
                   "password": {
                     "type": "string",
-                    "description": "A password of at least 12 characters.",
-                    "x-generated": true
+                    "description": "A password of at least 12 characters."
                   }
                 },
                 "required": [
                   "password"
                 ],
                 "additionalProperties": false
+              }
+            }
+          }
+        },
+        "summary": "Update Password",
+        "description": "Sets a new password using a reset access token and returns a fresh auth token.",
+        "responses": {
+          "200": {
+            "description": "Password updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "password-updated": {
+                    "summary": "Password updated.",
+                    "value": {
+                      "data": {
+                        "token": "eyJhbGciOi..."
+                      }
+                    }
+                  }
+                }
               }
             }
           }
@@ -494,6 +1264,13 @@
                 "additionalProperties": false
               }
             }
+          }
+        },
+        "summary": "Logout",
+        "description": "Revokes the current auth token, a specific token by `jti`, or all tokens when `all` is set.",
+        "responses": {
+          "204": {
+            "description": "No Content"
           }
         },
         "security": [
@@ -527,6 +1304,27 @@
             }
           }
         },
+        "summary": "Set MFA Method",
+        "description": "Sets the multi-factor method the authenticated user logs in with.",
+        "responses": {
+          "200": {
+            "description": "MFA method updated; returns the updated user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -536,6 +1334,27 @@
     },
     "/1/users/me": {
       "get": {
+        "summary": "Get Self",
+        "description": "Returns the authenticated user with each role expanded to its definition.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -659,6 +1478,27 @@
             }
           }
         },
+        "summary": "Update Self",
+        "description": "Updates the authenticated user and returns it with each role expanded.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -678,6 +1518,53 @@
             }
           }
         ],
+        "summary": "Impersonate User",
+        "description": "Issues a short-lived token that authenticates as the given user.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "data": {
+                        "token": "eyJhbGciOi..."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The user holds a role that none of your roles lists in `allowAuthenticationOnRoles`, such as another super admin.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -691,6 +1578,73 @@
     },
     "/1/users/roles": {
       "get": {
+        "summary": "List Roles",
+        "description": "Returns every role definition that can be assigned to users.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "allowScopes": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "permissions": {
+                            "type": "object"
+                          },
+                          "allowAuthenticationOnRoles": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "required": [],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "data": [
+                        {
+                          "id": "admin",
+                          "name": "Admin",
+                          "allowScopes": [
+                            "global"
+                          ],
+                          "permissions": {
+                            "users": "all"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -704,6 +1658,25 @@
     },
     "/1/users/permissions": {
       "get": {
+        "summary": "List Permissions",
+        "description": "Placeholder that currently returns an empty object.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "default": {
+                    "value": {}
+                  }
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -799,8 +1772,7 @@
                         "items": {
                           "type": "string",
                           "format": "phone",
-                          "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
-                          "x-generated": true
+                          "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format."
                         }
                       },
                       {
@@ -1008,14 +1980,12 @@
                   },
                   "keyword": {
                     "type": "string",
-                    "description": "A keyword to perform a text search against.",
-                    "x-generated": true
+                    "description": "A keyword to perform a text search against."
                   },
                   "skip": {
                     "type": "number",
                     "default": 0,
-                    "description": "Number of records to skip.",
-                    "x-generated": true
+                    "description": "Number of records to skip."
                   },
                   "sort": {
                     "default": {
@@ -1074,13 +2044,11 @@
                     "type": "number",
                     "default": 50,
                     "description": "Limits the number of results.",
-                    "minimum": 0,
-                    "x-generated": true
+                    "minimum": 0
                   },
                   "filename": {
                     "type": "string",
-                    "description": "Filename when search is exported.",
-                    "x-generated": true
+                    "description": "Filename when search is exported."
                   },
                   "format": {
                     "type": "string",
@@ -1093,6 +2061,34 @@
                 },
                 "required": [],
                 "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/User"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/SearchMeta"
+                    }
+                  }
+                }
+              },
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
               }
             }
           }
@@ -1122,6 +2118,23 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -1261,6 +2274,23 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -1284,6 +2314,11 @@
             }
           }
         ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -1318,8 +2353,7 @@
                   "phone": {
                     "type": "string",
                     "format": "phone",
-                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
-                    "x-generated": true
+                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format."
                   },
                   "image": {
                     "$ref": "#/components/schemas/Reference"
@@ -1385,8 +2419,7 @@
                   },
                   "password": {
                     "type": "string",
-                    "description": "A password of at least 12 characters.",
-                    "x-generated": true
+                    "description": "A password of at least 12 characters."
                   }
                 },
                 "required": [
@@ -1394,6 +2427,23 @@
                   "lastName"
                 ],
                 "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
               }
             }
           }
@@ -1459,6 +2509,23 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Product"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -1480,6 +2547,23 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Product"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -1558,6 +2642,23 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Product"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -1577,6 +2678,11 @@
             }
           }
         ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -1767,14 +2873,12 @@
                   },
                   "keyword": {
                     "type": "string",
-                    "description": "A keyword to perform a text search against.",
-                    "x-generated": true
+                    "description": "A keyword to perform a text search against."
                   },
                   "skip": {
                     "type": "number",
                     "default": 0,
-                    "description": "Number of records to skip.",
-                    "x-generated": true
+                    "description": "Number of records to skip."
                   },
                   "sort": {
                     "default": {
@@ -1833,13 +2937,11 @@
                     "type": "number",
                     "default": 50,
                     "description": "Limits the number of results.",
-                    "minimum": 0,
-                    "x-generated": true
+                    "minimum": 0
                   },
                   "filename": {
                     "type": "string",
-                    "description": "Filename when search is exported.",
-                    "x-generated": true
+                    "description": "Filename when search is exported."
                   },
                   "format": {
                     "type": "string",
@@ -1852,6 +2954,34 @@
                 },
                 "required": [],
                 "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Product"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/SearchMeta"
+                    }
+                  }
+                }
+              },
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
               }
             }
           }
@@ -1954,6 +3084,23 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Shop"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -1975,6 +3122,23 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Shop"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -2141,6 +3305,23 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Shop"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -2160,6 +3341,11 @@
             }
           }
         ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -2526,14 +3712,12 @@
                   },
                   "keyword": {
                     "type": "string",
-                    "description": "A keyword to perform a text search against.",
-                    "x-generated": true
+                    "description": "A keyword to perform a text search against."
                   },
                   "skip": {
                     "type": "number",
                     "default": 0,
-                    "description": "Number of records to skip.",
-                    "x-generated": true
+                    "description": "Number of records to skip."
                   },
                   "sort": {
                     "default": {
@@ -2592,13 +3776,11 @@
                     "type": "number",
                     "default": 50,
                     "description": "Limits the number of results.",
-                    "minimum": 0,
-                    "x-generated": true
+                    "minimum": 0
                   },
                   "filename": {
                     "type": "string",
-                    "description": "Filename when search is exported.",
-                    "x-generated": true
+                    "description": "Filename when search is exported."
                   },
                   "format": {
                     "type": "string",
@@ -2611,6 +3793,34 @@
                 },
                 "required": [],
                 "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Shop"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/SearchMeta"
+                    }
+                  }
+                }
+              },
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
               }
             }
           }
@@ -2636,6 +3846,23 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Upload"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "security": [
           {},
           {
@@ -2656,6 +3883,11 @@
             }
           }
         ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -2675,6 +3907,34 @@
             }
           }
         ],
+        "summary": "Get Upload URL",
+        "description": "Returns a browser-usable URL for the file, signed or token-scoped when the upload is private.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "data": "https://api.example.com/1/uploads/64b7f0c2e4b0a1a2b3c4d5e6/raw"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "security": [
           {},
           {
@@ -2695,6 +3955,19 @@
             }
           }
         ],
+        "summary": "Get Upload File",
+        "description": "Serves the file bytes, or redirects to the storage URL for cloud-stored uploads.",
+        "responses": {
+          "200": {
+            "description": "Full file contents for locally stored uploads."
+          },
+          "206": {
+            "description": "Requested byte range for locally stored uploads."
+          },
+          "302": {
+            "description": "Redirect to the storage URL for cloud-stored uploads."
+          }
+        },
         "security": [
           {},
           {
@@ -2705,7 +3978,7 @@
     },
     "/1/uploads": {
       "post": {
-        "summary": "Create new upload",
+        "summary": "Create Uploads",
         "x-model": "Upload",
         "requestBody": {
           "content": {
@@ -2731,6 +4004,29 @@
                   "file"
                 ],
                 "additionalProperties": false
+              }
+            }
+          }
+        },
+        "description": "Stores one or more files and returns an upload for each.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Upload"
+                      }
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                }
               }
             }
           }
@@ -2765,6 +4061,37 @@
                   "mimeType"
                 ],
                 "additionalProperties": false
+              }
+            }
+          }
+        },
+        "summary": "Create Resumable Upload",
+        "description": "Creates an upload and returns a storage session URL the client writes the file to directly.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "url": {
+                          "type": "string"
+                        },
+                        "upload": {
+                          "$ref": "#/components/schemas/Upload"
+                        }
+                      },
+                      "required": [],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                }
               }
             }
           }
@@ -2806,6 +4133,30 @@
             }
           }
         },
+        "summary": "Create Private Uploads",
+        "description": "Stores one or more files readable only by permitted users and returns an upload for each.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Upload"
+                      }
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -2815,6 +4166,13 @@
     },
     "/1/invites/check": {
       "post": {
+        "summary": "Check Invite",
+        "description": "Confirms that the invite token belongs to an invite that has not been accepted.",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
         "security": []
       }
     },
@@ -2834,8 +4192,7 @@
                   },
                   "password": {
                     "type": "string",
-                    "description": "A password of at least 12 characters.",
-                    "x-generated": true
+                    "description": "A password of at least 12 characters."
                   }
                 },
                 "required": [
@@ -2844,6 +4201,43 @@
                   "password"
                 ],
                 "additionalProperties": false
+              }
+            }
+          }
+        },
+        "summary": "Accept Invite",
+        "description": "Accepts the invite, creating the user if needed, and returns an auth token.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "data": {
+                        "token": "eyJhbGciOi..."
+                      }
+                    }
+                  }
+                }
               }
             }
           }
@@ -2968,14 +4362,12 @@
                   },
                   "keyword": {
                     "type": "string",
-                    "description": "A keyword to perform a text search against.",
-                    "x-generated": true
+                    "description": "A keyword to perform a text search against."
                   },
                   "skip": {
                     "type": "number",
                     "default": 0,
-                    "description": "Number of records to skip.",
-                    "x-generated": true
+                    "description": "Number of records to skip."
                   },
                   "sort": {
                     "default": {
@@ -3034,12 +4426,34 @@
                     "type": "number",
                     "default": 50,
                     "description": "Limits the number of results.",
-                    "minimum": 0,
-                    "x-generated": true
+                    "minimum": 0
                   }
                 },
                 "required": [],
                 "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Invite"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/SearchMeta"
+                    }
+                  }
+                }
               }
             }
           }
@@ -3057,7 +4471,7 @@
     },
     "/1/invites": {
       "post": {
-        "summary": "Create new invite",
+        "summary": "Create Invites",
         "x-model": "Invite",
         "requestBody": {
           "content": {
@@ -3084,6 +4498,27 @@
             }
           }
         },
+        "description": "Invites each email address and sends it an invite email.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Invite"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -3107,6 +4542,13 @@
             }
           }
         ],
+        "summary": "Resend Invite",
+        "description": "Sends the invite email again.",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -3132,6 +4574,11 @@
             }
           }
         ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -3145,11 +4592,67 @@
     },
     "/1/status": {
       "get": {
+        "summary": "Get Status",
+        "description": "Reports whether the API is up.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "success": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "security": []
       }
     },
     "/1/status/mongodb": {
       "get": {
+        "summary": "Get MongoDB Status",
+        "description": "Reports whether the database is reachable and contains users.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "success": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "security": []
       }
     },
@@ -3186,8 +4689,7 @@
                   },
                   "password": {
                     "type": "string",
-                    "description": "A password of at least 12 characters.",
-                    "x-generated": true
+                    "description": "A password of at least 12 characters."
                   },
                   "email": {
                     "type": "string",
@@ -3196,8 +4698,7 @@
                   "phone": {
                     "type": "string",
                     "format": "phone",
-                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
-                    "x-generated": true
+                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format."
                   }
                 },
                 "required": [
@@ -3205,6 +4706,106 @@
                   "lastName"
                 ],
                 "additionalProperties": false
+              }
+            }
+          }
+        },
+        "summary": "Sign Up",
+        "description": "Creates a user and either signs them in or sends a one-time password challenge.",
+        "responses": {
+          "200": {
+            "description": "Password provided; the user is signed in.\n\nNo password; a one-time password was sent and must be verified.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "token": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [],
+                      "additionalProperties": false,
+                      "description": "Password provided; the user is signed in."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "challenge": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "link",
+                                    "code"
+                                  ]
+                                },
+                                "channel": {
+                                  "type": "string",
+                                  "enum": [
+                                    "email",
+                                    "sms"
+                                  ]
+                                },
+                                "email": {
+                                  "type": "string"
+                                },
+                                "phone": {
+                                  "type": "string"
+                                },
+                                "code": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [],
+                      "additionalProperties": false,
+                      "description": "No password; a one-time password was sent and must be verified."
+                    }
+                  ]
+                },
+                "examples": {
+                  "password-provided-the-user-is-signed-in": {
+                    "summary": "Password provided; the user is signed in.",
+                    "value": {
+                      "data": {
+                        "token": "eyJhbGciOi..."
+                      }
+                    }
+                  },
+                  "no-password-a-one-time-password-was-sent-and-must-be-verified": {
+                    "summary": "No password; a one-time password was sent and must be verified.",
+                    "value": {
+                      "data": {
+                        "challenge": {
+                          "type": "link",
+                          "channel": "email",
+                          "email": "jane@example.com"
+                        }
+                      }
+                    }
+                  }
+                }
               }
             }
           }
@@ -3254,6 +4855,23 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Template"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -3279,6 +4897,23 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Template"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -3347,6 +4982,23 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Template"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -3370,6 +5022,11 @@
             }
           }
         ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -3540,14 +5197,12 @@
                   },
                   "keyword": {
                     "type": "string",
-                    "description": "A keyword to perform a text search against.",
-                    "x-generated": true
+                    "description": "A keyword to perform a text search against."
                   },
                   "skip": {
                     "type": "number",
                     "default": 0,
-                    "description": "Number of records to skip.",
-                    "x-generated": true
+                    "description": "Number of records to skip."
                   },
                   "sort": {
                     "default": {
@@ -3606,12 +5261,34 @@
                     "type": "number",
                     "default": 50,
                     "description": "Limits the number of results.",
-                    "minimum": 0,
-                    "x-generated": true
+                    "minimum": 0
                   }
                 },
                 "required": [],
                 "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Template"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/SearchMeta"
+                    }
+                  }
+                }
               }
             }
           }
@@ -3639,6 +5316,37 @@
             }
           }
         ],
+        "summary": "Get Template Preview Params",
+        "description": "Returns the sample users used to render template previews.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user": {
+                          "$ref": "#/components/schemas/User"
+                        },
+                        "sender": {
+                          "$ref": "#/components/schemas/User"
+                        }
+                      },
+                      "required": [],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -3662,6 +5370,59 @@
             }
           }
         ],
+        "summary": "Preview Template",
+        "description": "Renders the template as an email using sample users.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "html": {
+                          "type": "string"
+                        },
+                        "text": {
+                          "type": "string"
+                        },
+                        "body": {
+                          "type": "string"
+                        },
+                        "subject": {
+                          "type": "string"
+                        },
+                        "template": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "data": {
+                        "html": "<html><body><p>Hello Jane</p></body></html>",
+                        "text": "Hello Jane",
+                        "body": "Hello Jane",
+                        "subject": "Welcome",
+                        "template": "welcome"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -3688,8 +5449,7 @@
                   "phone": {
                     "type": "string",
                     "format": "phone",
-                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
-                    "x-generated": true
+                    "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format."
                   },
                   "userId": {
                     "type": "string",
@@ -3722,6 +5482,13 @@
             }
           }
         ],
+        "summary": "Send Test Template",
+        "description": "Sends the template through the given channel using sample users.",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -3815,8 +5582,7 @@
                         "items": {
                           "type": "string",
                           "format": "phone",
-                          "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
-                          "x-generated": true
+                          "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format."
                         }
                       },
                       {
@@ -4024,14 +5790,12 @@
                   },
                   "keyword": {
                     "type": "string",
-                    "description": "A keyword to perform a text search against.",
-                    "x-generated": true
+                    "description": "A keyword to perform a text search against."
                   },
                   "skip": {
                     "type": "number",
                     "default": 0,
-                    "description": "Number of records to skip.",
-                    "x-generated": true
+                    "description": "Number of records to skip."
                   },
                   "sort": {
                     "default": {
@@ -4090,12 +5854,51 @@
                     "type": "number",
                     "default": 50,
                     "description": "Limits the number of results.",
-                    "minimum": 0,
-                    "x-generated": true
+                    "minimum": 0
                   }
                 },
                 "required": [],
                 "additionalProperties": false
+              }
+            }
+          }
+        },
+        "summary": "Search Push Users",
+        "description": "Searches users that have registered a device for push notifications.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/User"
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "number"
+                        },
+                        "skip": {
+                          "type": "number"
+                        },
+                        "limit": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                }
               }
             }
           }
@@ -4183,14 +5986,12 @@
                   },
                   "keyword": {
                     "type": "string",
-                    "description": "A keyword to perform a text search against.",
-                    "x-generated": true
+                    "description": "A keyword to perform a text search against."
                   },
                   "skip": {
                     "type": "number",
                     "default": 0,
-                    "description": "Number of records to skip.",
-                    "x-generated": true
+                    "description": "Number of records to skip."
                   },
                   "sort": {
                     "default": {
@@ -4249,12 +6050,34 @@
                     "type": "number",
                     "default": 50,
                     "description": "Limits the number of results.",
-                    "minimum": 0,
-                    "x-generated": true
+                    "minimum": 0
                   }
                 },
                 "required": [],
                 "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Category"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/SearchMeta"
+                    }
+                  }
+                }
               }
             }
           }
@@ -4268,6 +6091,13 @@
     },
     "/1/unsubscribe": {
       "post": {
+        "summary": "Unsubscribe",
+        "description": "Turns off a notification type on a channel for the user in the unsubscribe token.",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -4512,14 +6342,12 @@
                   },
                   "keyword": {
                     "type": "string",
-                    "description": "A keyword to perform a text search against.",
-                    "x-generated": true
+                    "description": "A keyword to perform a text search against."
                   },
                   "skip": {
                     "type": "number",
                     "default": 0,
-                    "description": "Number of records to skip.",
-                    "x-generated": true
+                    "description": "Number of records to skip."
                   },
                   "sort": {
                     "default": {
@@ -4578,13 +6406,11 @@
                     "type": "number",
                     "default": 50,
                     "description": "Limits the number of results.",
-                    "minimum": 0,
-                    "x-generated": true
+                    "minimum": 0
                   },
                   "filename": {
                     "type": "string",
-                    "description": "Filename when search is exported.",
-                    "x-generated": true
+                    "description": "Filename when search is exported."
                   },
                   "format": {
                     "type": "string",
@@ -4601,6 +6427,34 @@
                 },
                 "required": [],
                 "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AuditEntry"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/SearchMeta"
+                    }
+                  }
+                }
+              },
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
               }
             }
           }
@@ -4641,6 +6495,40 @@
             }
           }
         },
+        "summary": "Get Audit Entry Search Options",
+        "description": "Returns the distinct values recorded for an audit entry field.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "data": [
+                        "Created template",
+                        "Updated template"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -4656,6 +6544,29 @@
       "post": {
         "summary": "Search organizations for authenticated user.",
         "x-model": "Organization",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Organization"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/SearchMeta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -4677,6 +6588,23 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Organization"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -4712,6 +6640,23 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Organization"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -4735,6 +6680,11 @@
             }
           }
         ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -4818,14 +6768,12 @@
                   },
                   "keyword": {
                     "type": "string",
-                    "description": "A keyword to perform a text search against.",
-                    "x-generated": true
+                    "description": "A keyword to perform a text search against."
                   },
                   "skip": {
                     "type": "number",
                     "default": 0,
-                    "description": "Number of records to skip.",
-                    "x-generated": true
+                    "description": "Number of records to skip."
                   },
                   "sort": {
                     "default": {
@@ -4884,12 +6832,34 @@
                     "type": "number",
                     "default": 50,
                     "description": "Limits the number of results.",
-                    "minimum": 0,
-                    "x-generated": true
+                    "minimum": 0
                   }
                 },
                 "required": [],
                 "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Organization"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/SearchMeta"
+                    }
+                  }
+                }
               }
             }
           }
@@ -4923,6 +6893,23 @@
                   "name"
                 ],
                 "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Organization"
+                    }
+                  }
+                }
               }
             }
           }
@@ -4963,8 +6950,7 @@
           "phone": {
             "type": "string",
             "format": "phone",
-            "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.",
-            "x-generated": true
+            "description": "A phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format."
           },
           "phoneVerified": {
             "type": "boolean"
@@ -5432,6 +7418,45 @@
         ],
         "additionalProperties": false
       },
+      "SearchMeta": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "number"
+          },
+          "skip": {
+            "type": "number"
+          },
+          "limit": {
+            "type": "number"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "status": {
+                "type": "number"
+              },
+              "details": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
       "ObjectId": {
         "type": "string",
         "format": "mongo-object-id",
@@ -5462,23 +7487,19 @@
         "properties": {
           "lt": {
             "type": "string",
-            "description": "Select values less than.",
-            "x-generated": true
+            "description": "Select values less than."
           },
           "gt": {
             "type": "string",
-            "description": "Select values greater than.",
-            "x-generated": true
+            "description": "Select values greater than."
           },
           "lte": {
             "type": "string",
-            "description": "Select values less than or equal.",
-            "x-generated": true
+            "description": "Select values less than or equal."
           },
           "gte": {
             "type": "string",
-            "description": "Select values greater than or equal.",
-            "x-generated": true
+            "description": "Select values greater than or equal."
           }
         },
         "required": [],
@@ -5533,23 +7554,19 @@
         "properties": {
           "lt": {
             "type": "number",
-            "description": "Select values less than.",
-            "x-generated": true
+            "description": "Select values less than."
           },
           "gt": {
             "type": "number",
-            "description": "Select values greater than.",
-            "x-generated": true
+            "description": "Select values greater than."
           },
           "lte": {
             "type": "number",
-            "description": "Select values less than or equal.",
-            "x-generated": true
+            "description": "Select values less than or equal."
           },
           "gte": {
             "type": "number",
-            "description": "Select values greater than or equal.",
-            "x-generated": true
+            "description": "Select values greater than or equal."
           }
         },
         "required": [],

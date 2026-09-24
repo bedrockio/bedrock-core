@@ -2,6 +2,7 @@ import Router from '@koa/router';
 import yd from '@bedrockio/yada';
 import { validateBody } from '../../utils/middleware/validate.js';
 import { authenticate } from '../../utils/middleware/authenticate.js';
+import documentation from '../../utils/documentation.js';
 
 import { login } from '../../utils/auth/index.js';
 import { createAuthToken } from '../../utils/tokens.js';
@@ -17,6 +18,17 @@ router
     validateBody({
       code: yd.string().required(),
     }),
+    documentation.include(
+      documentation.description(
+        'Google Login',
+        'Logs in with a Google credential, creating a new user when no account matches its email.',
+      ),
+      documentation.success(200, {
+        description: '`result` is `login` for an existing user or `signup` for a newly created one.',
+        schema: { data: { token: yd.string(), result: yd.string().allow('login', 'signup') } },
+        example: { data: { token: 'eyJhbGciOi...', result: 'signup' } },
+      }),
+    ),
     async (ctx) => {
       const { code } = ctx.request.body;
 
@@ -67,14 +79,24 @@ router
     },
   )
   .use(authenticate())
-  .post('/disable', async (ctx) => {
-    const { authUser } = ctx.state;
-    removeGoogleAuthenticator(authUser);
-    await authUser.save();
+  .post(
+    '/disable',
+    documentation.include(
+      documentation.description('Disable Google Login', 'Unlinks Google sign-in from the authenticated user.'),
+      documentation.success(200, {
+        description: 'Google unlinked; returns the updated user.',
+        schema: { data: User },
+      }),
+    ),
+    async (ctx) => {
+      const { authUser } = ctx.state;
+      removeGoogleAuthenticator(authUser);
+      await authUser.save();
 
-    ctx.body = {
-      data: authUser,
-    };
-  });
+      ctx.body = {
+        data: authUser,
+      };
+    },
+  );
 
 export default router;

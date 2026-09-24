@@ -5,6 +5,7 @@ import { validateBody } from '../utils/middleware/validate.js';
 import { authenticate } from '../utils/middleware/authenticate.js';
 import { requirePermissions } from '../utils/middleware/permissions.js';
 import { csvExport } from '../utils/csv.js';
+import documentation from '../utils/documentation.js';
 import { AuditEntry } from '../models/index.js';
 const router = new Router();
 
@@ -56,6 +57,16 @@ router
     validateBody({
       field: yd.string().allow('routeNormalizedPath', 'objectType', 'activity').required(),
     }),
+    documentation.include(
+      documentation.description(
+        'Get Audit Entry Search Options',
+        'Returns the distinct values recorded for an audit entry field.',
+      ),
+      documentation.success(200, {
+        schema: { data: yd.array(yd.string()) },
+        example: { data: ['Created template', 'Updated template'] },
+      }),
+    ),
     async (ctx) => {
       const values = await AuditEntry.distinct(ctx.request.body.field);
 
