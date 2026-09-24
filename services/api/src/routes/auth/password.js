@@ -120,19 +120,14 @@ router
     '/update',
     authenticate({
       type: 'access',
+      action: 'reset-password',
     }),
     validateBody({
       password: yd.string().password().required(),
     }),
     async (ctx) => {
-      const { authUser, jwt } = ctx.state;
+      const { authUser } = ctx.state;
       const { password } = ctx.request.body;
-
-      // Other access tokens (e.g. unsubscribe links) share this token type.
-      if (jwt.action !== 'reset-password') {
-        ctx.throw(401, 'Token is not valid for password reset.');
-      }
-
       authUser.password = password;
       authUser.loginAttempts = 0;
 
