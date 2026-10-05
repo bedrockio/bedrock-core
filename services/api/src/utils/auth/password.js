@@ -6,7 +6,7 @@ import { clearAuthenticators, addAuthenticator, assertAuthenticator } from './au
 // 5 minutes
 const MFA_THRESHOLD = 5 * 60 * 1000;
 
-const BCRYPT_COST = config.has('PASSWORD_BCRYPT_COST') ? config.get('PASSWORD_BCRYPT_COST', 'number') : 12;
+const BCRYPT_SALT_PASSES = config.has('BCRYPT_SALT_PASSES') ? config.get('BCRYPT_SALT_PASSES', 'number') : 12;
 
 async function verifyPassword(user, password) {
   const authenticator = assertAuthenticator(user, 'password');
@@ -37,7 +37,7 @@ function verifyRecentPassword(user) {
 }
 
 async function setPassword(user, password) {
-  const salt = await bcrypt.genSalt(BCRYPT_COST);
+  const salt = await bcrypt.genSalt(BCRYPT_SALT_PASSES);
   const hash = await bcrypt.hash(password, salt);
 
   clearAuthenticators(user, 'password');
