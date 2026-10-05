@@ -2,7 +2,7 @@ import { defineConfig } from 'vitest/config';
 
 process.env.ENV_NAME = 'test';
 process.env.LOG_LEVEL ||= 'warn';
-process.env.BCRYPT_SALT_PASSES ||= '4';
+process.env.BCRYPT_SALT_PASSES ||= '1';
 
 export default defineConfig({
   test: {
