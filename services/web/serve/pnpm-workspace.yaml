@@ -3,3 +3,5 @@ trustLockfile: true
 blockExoticSubdeps: true
 allowBuilds:
   protobufjs: true
+minimumReleaseAgeExclude:
+  - '@bedrockio/logger@2.0.0'
