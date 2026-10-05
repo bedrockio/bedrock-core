@@ -1,9 +1,12 @@
 import bcrypt from 'bcryptjs';
+import config from '@bedrockio/config';
 
 import { clearAuthenticators, addAuthenticator, assertAuthenticator } from './authenticators.js';
 
 // 5 minutes
 const MFA_THRESHOLD = 5 * 60 * 1000;
+
+const BCRYPT_COST = config.has('PASSWORD_BCRYPT_COST') ? config.get('PASSWORD_BCRYPT_COST', 'number') : 12;
 
 async function verifyPassword(user, password) {
   const authenticator = assertAuthenticator(user, 'password');
@@ -34,7 +37,7 @@ function verifyRecentPassword(user) {
 }
 
 async function setPassword(user, password) {
-  const salt = await bcrypt.genSalt(12);
+  const salt = await bcrypt.genSalt(BCRYPT_COST);
   const hash = await bcrypt.hash(password, salt);
 
   clearAuthenticators(user, 'password');

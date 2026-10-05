@@ -2,6 +2,7 @@ import { defineConfig } from 'vitest/config';
 
 process.env.ENV_NAME = 'test';
 process.env.LOG_LEVEL ||= 'warn';
+process.env.PASSWORD_BCRYPT_COST ||= '4';
 
 export default defineConfig({
   test: {
