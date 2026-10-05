@@ -6,7 +6,7 @@ import { clearAuthenticators, addAuthenticator, assertAuthenticator } from './au
 // 5 minutes
 const MFA_THRESHOLD = 5 * 60 * 1000;
 
-const BCRYPT_SALT_PASSES = config.has('BCRYPT_SALT_PASSES') ? config.get('BCRYPT_SALT_PASSES', 'number') : 12;
+const BCRYPT_SALT_PASSES = config.get('BCRYPT_SALT_PASSES', 'number');
 
 async function verifyPassword(user, password) {
   const authenticator = assertAuthenticator(user, 'password');
