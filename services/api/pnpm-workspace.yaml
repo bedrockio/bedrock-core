@@ -7,4 +7,3 @@ allowBuilds:
   unrs-resolver: true
 minimumReleaseAgeExclude:
   - '@bedrockio/eslint-plugin@1.6.0'
-  - '@bedrockio/logger@2.0.0'
