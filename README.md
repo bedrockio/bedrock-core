@@ -19,10 +19,10 @@ Open the dashboard at http://localhost:2200/ - Admin login credentials can be se
 
 ## Package Management
 
-This repo uses [pnpm](https://pnpm.io/). Node is pinned via [Volta](https://volta.sh/);
-pnpm is pinned via the `packageManager` field in each `package.json`. Install pnpm once with
-`npm install -g pnpm` (Node 26 no longer bundles corepack). Each service is installed
-independently from its own directory:
+This repo uses [pnpm](https://pnpm.io/). Install it by following
+[pnpm.io/installation](https://pnpm.io/installation). Each service's `package.json` pins pnpm
+via `packageManager` and Node via `devEngines.runtime`, so `pnpm install` downloads the
+pinned Node. Each service is installed independently from its own directory:
 
 ```bash
 cd services/api && pnpm install   # likewise services/web

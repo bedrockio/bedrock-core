@@ -32,7 +32,7 @@ RUN wget -qO /usr/local/bin/yq \
 RUN mkdir -p /root/.config
 
 # Install pnpm (Node 26 no longer bundles corepack)
-RUN npm install -g pnpm@11.5.2
+RUN npm install -g pnpm@12.9.1
 
 # Set work directory
 WORKDIR /service

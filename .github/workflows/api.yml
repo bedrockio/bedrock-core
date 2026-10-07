@@ -14,24 +14,16 @@ jobs:
     defaults:
       run:
         working-directory: ./services/api
-    strategy:
-      matrix:
-        node-version: [26.x]
     steps:
       - name: Checkout repo
         uses: actions/checkout@v6
 
       - name: Install pnpm
-        uses: pnpm/action-setup@8912a9102ac27614460f54aedde9e1e7f9aec20d # v6.0.5
+        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
         with:
-          version: 11.5.2
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: pnpm
-          cache-dependency-path: services/api/pnpm-lock.yaml
+          package_json_file: services/api/package.json
+          cache: true
+          cache_dependency_path: services/api/pnpm-lock.yaml
 
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
