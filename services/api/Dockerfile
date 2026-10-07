@@ -5,7 +5,7 @@ FROM node:26.3.0-alpine AS deps
 ARG NODE_ENV=production
 
 # Install pnpm (Node 26 no longer bundles corepack)
-RUN npm install -g pnpm@11.5.2
+RUN npm install -g pnpm@12.9.1
 
 WORKDIR /service
 

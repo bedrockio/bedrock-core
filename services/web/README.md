@@ -20,7 +20,7 @@
 
 ## Install Dependencies
 
-Toolchain setup (Volta, pnpm): [root README](../../README.md#package-management). Then:
+Toolchain setup (pnpm): [root README](../../README.md#package-management). Then:
 
 ```
 pnpm install

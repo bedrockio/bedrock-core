@@ -5,9 +5,16 @@
   "type": "module",
   "license": "MIT",
   "engines": {
-    "node": ">=24"
+    "node": ">=26"
   },
-  "packageManager": "pnpm@12.4.2",
+  "packageManager": "pnpm@12.9.1",
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "26.3.0",
+      "onFail": "download"
+    }
+  },
   "scripts": {
     "start": "scripts/start-dev",
     "debug": "MONGO_DEBUG=true pnpm start",
@@ -66,8 +73,5 @@
     "prettier": "^3.9.6",
     "supertest": "^7.1.4",
     "vitest": "^5.0.1"
-  },
-  "volta": {
-    "node": "26.3.0"
   }
 }

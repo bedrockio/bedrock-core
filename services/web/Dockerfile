@@ -11,7 +11,7 @@ WORKDIR /service
 FROM base AS build
 
 # Install pnpm (Node 26 no longer bundles corepack)
-RUN npm install -g pnpm@11.5.2
+RUN npm install -g pnpm@12.9.1
 
 ARG NODE_ENV=production
 
@@ -21,7 +21,7 @@ COPY serve/package.json serve/pnpm-lock.yaml serve/pnpm-workspace.yaml ./serve/
 # CI=true makes pnpm default to --frozen-lockfile, including web's postinstall
 # that installs serve — keeps the image reproducible without forcing frozen
 # installs in local dev. Scoped to this RUN so it doesn't leak into runtime.
-RUN --mount=type=cache,target=/root/.local/share/pnpm/store --mount=type=cache,target=/root/.cache/pnpm CI=true pnpm install --frozen-lockfile
+RUN --mount=type=cache,target=/root/.local/share/pnpm/store --mount=type=cache,target=/root/.cache/pnpm CI=true pnpm install --frozen-lockfile --no-runtime
 
 COPY . .
 
