@@ -16,6 +16,12 @@
       "writeAccess": [
         "admin",
         "superAdmin"
+      ],
+      "readAccess": [
+        "self",
+        "viewer",
+        "admin",
+        "superAdmin"
       ]
     },
     "emailVerified": {
@@ -28,6 +34,12 @@
       "validate": "phone",
       "unique": true,
       "writeAccess": [
+        "admin",
+        "superAdmin"
+      ],
+      "readAccess": [
+        "self",
+        "viewer",
         "admin",
         "superAdmin"
       ]
@@ -71,8 +83,19 @@
         }
       }
     ],
-    "roles": [
-      {
+    "roles": {
+      "type": "Array",
+      "readAccess": [
+        "self",
+        "viewer",
+        "admin",
+        "superAdmin"
+      ],
+      "writeAccess": [
+        "admin",
+        "superAdmin"
+      ],
+      "attributes": {
         "role": {
           "type": "String",
           "required": true
@@ -90,10 +113,20 @@
           "ref": "Organization"
         }
       }
-    ],
+    },
     "isTester": {
       "type": "Boolean",
-      "default": false
+      "default": false,
+      "readAccess": [
+        "self",
+        "viewer",
+        "admin",
+        "superAdmin"
+      ],
+      "writeAccess": [
+        "admin",
+        "superAdmin"
+      ]
     },
     "$readOnly": {
       "type": "Scope",
