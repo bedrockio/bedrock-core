@@ -176,8 +176,8 @@ importers:
         specifier: ^1.4.5
         version: 1.5.3(@bedrockio/model@0.24.2(@bedrockio/yada@1.11.2)(mongoose@9.10.1)(supports-color@9.4.0))(mongoose@9.10.1)(supports-color@9.4.0)
       '@bedrockio/logger':
-        specifier: ^1.1.3
-        version: 1.3.1(supports-color@9.4.0)
+        specifier: ^2.0.0
+        version: 2.0.0
       '@bedrockio/model':
         specifier: 0.24.2
         version: 0.24.2(@bedrockio/yada@1.11.2)(mongoose@9.10.1)(supports-color@9.4.0)
@@ -489,6 +489,9 @@ packages:
 
   '@bedrockio/logger@1.3.1':
     resolution: {integrity: sha512-ggUy8rBZbHCWWmhSL2BjDmGhHpfXP7u6dqPhzr0qt0hbwz+TW8NC2XtuzscWocui7oTxRFRQfpQg88+Z7inleQ==}
+
+  '@bedrockio/logger@2.0.0':
+    resolution: {integrity: sha512-lmSdcKp78IBT2/WaC81Zy6qctiWVmqrvWZNcAs3+kX/iwSP8iSBvlvyX6lGMJH1hKh758egZlKPIuaw7GmX/1g==}
 
   '@bedrockio/model@0.24.2':
     resolution: {integrity: sha512-SnnHxa673bbu1bO/F89/nfmakrLbpLsOs9IZzUGB3Q4h1RCXDskhlVzdJNuWXP11MWbMnT4OiyHCSZ9ecjvhiA==}
@@ -5393,6 +5396,12 @@ snapshots:
     transitivePeerDependencies:
       - encoding
       - supports-color
+
+  '@bedrockio/logger@2.0.0':
+    dependencies:
+      bytes: 3.1.2
+      kleur: 4.1.5
+      stdout-stream: 2.0.0
 
   '@bedrockio/model@0.24.2(@bedrockio/yada@1.11.2)(mongoose@9.10.1)(supports-color@9.4.0)':
     dependencies:

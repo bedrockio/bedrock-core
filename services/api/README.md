@@ -274,9 +274,8 @@ Handlebars will attempt to escape the http:`//` which causes issues. So when usi
 
 ## Logging
 
-`@bedrockio/logger` provides structured logging in the console and both [logging](https://cloud.google.com/logging/) and
-[tracing](https://cloud.google.com/trace) in Google Cloud environments. Importing it will by default enable tracing in a
-GCP environment.
+`@bedrockio/logger` provides structured logging in the console and [logging](https://cloud.google.com/logging/) in
+Google Cloud environments, where logs are grouped by request using the `traceparent` or `X-Cloud-Trace-Context` headers.
 
 In Google Cloud environments generally the server and jobs (`jobs/`) should use the above initialization to allow
 structured error reporting in the cloud console. Development environments and scripts (`scripts/`) meant to be run in a
@@ -288,7 +287,7 @@ The logger allows multiple log levels:
 logger.trace('Very verbose message.');
 logger.debug('Less verbose message.');
 logger.info('Normal message.');
-logger.warning('Warning message.');
+logger.warn('Warning message.');
 logger.error('Error message.');
 ```
 
