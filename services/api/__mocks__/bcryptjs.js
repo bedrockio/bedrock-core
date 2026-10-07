@@ -1,16 +1,10 @@
 // Real bcrypt at the production cost of 12 takes ~200ms per hash or compare,
-// which dominates the auth tests. Passwords are stored as `salt:<password>` here.
+// which dominates the auth tests. 4 is the minimum cost bcrypt accepts.
 
-async function genSalt() {
-  return 'salt';
+const { default: bcrypt } = await vi.importActual('bcryptjs');
+
+function genSalt() {
+  return bcrypt.genSalt(4);
 }
 
-async function hash(password, salt) {
-  return `${salt}:${password}`;
-}
-
-async function compare(password, hash) {
-  return hash === `salt:${password}`;
-}
-
-export default { genSalt, hash, compare };
+export default { ...bcrypt, genSalt };
