@@ -10,7 +10,7 @@ describe('/1/auth/totp', () => {
     it('should verify a code', async () => {
       mockTime('2020-01-01T00:00:00.000Z');
 
-      let user = await createUser();
+      let user = await createUser({ password: 'password' });
 
       const secret = createSecret();
       enableTotp(user, secret);
@@ -37,12 +37,26 @@ describe('/1/auth/totp', () => {
       assertAuthToken(user, response.body.data.token);
 
       user = await User.findById(user.id);
-      expect(user.authenticators.toObject()).toMatchObject([
-        {
-          type: 'totp',
-          lastUsedAt: new Date('2020-01-01T00:00:01.000Z'),
-        },
-      ]);
+      expect(user.authenticators.find((a) => a.type === 'totp').lastUsedAt).toEqual(
+        new Date('2020-01-01T00:00:01.000Z'),
+      );
+    });
+
+    it('should require a recent password login', async () => {
+      mockTime('2020-01-01T00:00:00.000Z');
+
+      const user = await createUser({ password: 'password' });
+      const secret = createSecret();
+      enableTotp(user, secret);
+      await user.save();
+
+      advanceTime(10 * 60 * 1000);
+
+      const response = await request('POST', '/1/auth/totp/login', {
+        email: user.email,
+        code: speakeasy.totp({ secret }),
+      });
+      expect(response).toHaveStatus(401);
     });
 
     it('should throttle logins', async () => {
@@ -51,6 +65,7 @@ describe('/1/auth/totp', () => {
       let code;
 
       const user = await createUser({
+        password: 'password',
         loginAttempts: 5,
         lastLoginAttemptAt: new Date(),
       });

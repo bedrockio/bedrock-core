@@ -48,10 +48,8 @@ async function revokeTotp(user) {
 async function verifyTotp(user, code) {
   const authenticator = assertAuthenticator(user, 'totp');
   verifyCode(authenticator.secret, code);
-
-  if (authenticator.isMfa) {
-    await verifyRecentPassword(user);
-  }
+  // Without this, email + TOTP code alone would be a full login.
+  verifyRecentPassword(user);
 
   authenticator.lastUsedAt = new Date();
 }
