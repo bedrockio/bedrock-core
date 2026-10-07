@@ -1,4 +1,5 @@
 import {
+  browserSupportsWebAuthn,
   startAuthentication,
   startRegistration,
 } from '@simplewebauthn/browser';
@@ -10,7 +11,7 @@ import { request } from '../api';
 const DIALOG_ERRORS = ['ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY'];
 
 export function canShowPasskey() {
-  return !!AUTH_PASSKEY;
+  return !!AUTH_PASSKEY && browserSupportsWebAuthn();
 }
 
 export async function login() {
