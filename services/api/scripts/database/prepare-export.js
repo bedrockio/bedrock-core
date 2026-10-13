@@ -4,6 +4,7 @@ import process from 'process';
 import fs from 'fs/promises';
 import { spawn } from 'child_process';
 
+import bcrypt from 'bcryptjs';
 import { glob } from 'glob';
 import mongoose from 'mongoose';
 import { program } from 'commander';
@@ -17,6 +18,9 @@ import { initialize } from '../../src/utils/database.js';
 const MONGO_URI = config.get('MONGO_URI');
 
 const DEFAULT_EXCLUDES = [];
+
+// Hard coded because this runs on the CLI deployment pod.
+const DEV_PASSWORD = 'development.now';
 
 program
   .description(
@@ -141,9 +145,15 @@ async function getLimitedUserIds() {
 
 async function getSanitizations(options) {
   if (options.raw) {
-    return [];
+    return await getLocalSanitizations();
+  } else {
+    const baseSanitizations = await loadSanitizations();
+    const localSanitizations = await getLocalSanitizations();
+    return mergeByCollection(baseSanitizations, localSanitizations);
   }
+}
 
+async function loadSanitizations() {
   const gl = path.resolve(import.meta.dirname, 'sanitizations/*.{json,js}');
   const files = await glob(gl);
   const result = [];
@@ -169,6 +179,57 @@ async function getSanitizations(options) {
   }
 
   return result;
+}
+
+// Applied with or without --raw so that an export can be logged into.
+async function getLocalSanitizations() {
+  return [
+    {
+      name: getSanitizedName('users'),
+      collection: 'users',
+      pipeline: [await setDevPassword()],
+    },
+  ];
+}
+
+async function setDevPassword() {
+  const salt = await bcrypt.genSalt(12);
+  const secret = await bcrypt.hash(DEV_PASSWORD, salt);
+  return {
+    $set: {
+      authenticators: {
+        // A bcrypt hash starts with "$", which a pipeline would read as a field path.
+        $literal: [
+          {
+            type: 'password',
+            secret,
+          },
+        ],
+      },
+    },
+  };
+}
+
+// One view per collection, so sanitizations of the same collection run as
+// one pipeline, the base stages before the local ones.
+function mergeByCollection(baseSanitizations, localSanitizations) {
+  const merged = baseSanitizations.map((sanitization) => {
+    return {
+      ...sanitization,
+      pipeline: [...sanitization.pipeline],
+    };
+  });
+  for (const local of localSanitizations) {
+    const base = merged.find((sanitization) => {
+      return sanitization.collection === local.collection;
+    });
+    if (base) {
+      base.pipeline.push(...local.pipeline);
+    } else {
+      merged.push(local);
+    }
+  }
+  return merged;
 }
 
 async function runSanitizations(connection, sanitizations) {
@@ -296,7 +357,7 @@ async function exportCollections(options) {
     const collections = await connection.db.listCollections().toArray();
     for (let collection of collections) {
       const { name } = collection;
-      if (name.endsWith('_sanitized')) {
+      if (name.endsWith('_sanitized') && !exclude.includes(name)) {
         exclude.push(name);
       }
     }

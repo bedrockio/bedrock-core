@@ -1,0 +1,63 @@
+{
+  "collection": "users",
+  "pipeline": [
+    {
+      "$set": {
+        "isAdmin": {
+          "$anyElementTrue": {
+            "$map": {
+              "input": "$roles",
+              "as": "role",
+              "in": {
+                "$in": [
+                  "$$role.role",
+                  [
+                    "superAdmin",
+                    "admin",
+                    "viewer"
+                  ]
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$set": {
+        "email": {
+          "$cond": {
+            "if": "$isAdmin",
+            "then": "$email",
+            "else": {
+              "$concat": [
+                {
+                  "$arrayElemAt": [
+                    {
+                      "$split": [
+                        "$email",
+                        "@"
+                      ]
+                    },
+                    0
+                  ]
+                },
+                "@bedrock.foundation"
+              ]
+            }
+          }
+        },
+        "lastName": {
+          "$cond": {
+            "if": "$isAdmin",
+            "then": "$lastName",
+            "else": "Doe"
+          }
+        }
+      }
+    },
+    {
+      "$unset": "isAdmin"
+    }
+  ]
+}
