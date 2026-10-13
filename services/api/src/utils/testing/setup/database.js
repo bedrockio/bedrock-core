@@ -6,6 +6,9 @@ import logger from '@bedrockio/logger';
 async function setupDb() {
   try {
     mongoose.set('strictQuery', false);
+    // Each file gets a fresh database; creating every model's collection and indexes in it was the cost.
+    mongoose.set('autoCreate', false);
+    mongoose.set('autoIndex', false);
     await mongoose.connect(inject('mongoUri'), {
       // Databases are unique per test file.
       dbName: crypto.randomUUID(),
