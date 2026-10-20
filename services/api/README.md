@@ -44,7 +44,7 @@ See http://localhost:2200/docs for full documentation on this API (requires runn
 
 ## Dependencies
 
-Toolchain setup (Volta, pnpm): [root README](../../README.md#package-management). Then:
+Toolchain setup (pnpm): [root README](../../README.md#package-management). Then:
 
 ```
 pnpm install

@@ -12,7 +12,7 @@ RUN apk add mongodb-tools;
 RUN apk add --update bash curl;
 
 # Install pnpm (Node 26 no longer bundles corepack)
-RUN npm install -g pnpm@11.5.2
+RUN npm install -g pnpm@12.9.1
 
 # Needed for Gcloud Storage resumable file uploads
 RUN mkdir -p /root/.config
