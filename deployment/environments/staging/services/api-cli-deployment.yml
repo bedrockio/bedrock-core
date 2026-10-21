@@ -23,6 +23,11 @@ spec:
               value: "production"
             - name: MONGO_URI
               value: "mongodb://mongo:27017/bedrock_staging"
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: JWT_SECRET
             - name: APP_URL
               value: "https://bedrock.foundation"
             - name: POSTMARK_FROM

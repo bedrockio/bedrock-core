@@ -5,6 +5,10 @@ import { nanoid } from 'nanoid';
 
 const JWT_SECRET = config.get('JWT_SECRET');
 
+if (!JWT_SECRET || JWT_SECRET.trim().length < 32) {
+  throw new Error('Set JWT_SECRET to a unique random secret of at least 32 characters (openssl rand -hex 32).');
+}
+
 const DURATIONS = {
   invite: '30d',
   regular: '30d',
