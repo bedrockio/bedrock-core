@@ -35,6 +35,7 @@ function createAuthToken(ctx, user, options = {}) {
     {
       ip,
       jti,
+      subject: user.id,
       country,
       userAgent,
       expiresAt: new Date(Date.now() + ms(duration)),
