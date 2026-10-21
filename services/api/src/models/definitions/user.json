@@ -151,6 +151,9 @@
               "type": "String",
               "required": true
             },
+            "subject": {
+              "type": "String"
+            },
             "expiresAt": {
               "type": "Date",
               "required": true

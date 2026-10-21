@@ -36,6 +36,9 @@ function authorizeUser() {
       if (jwt.kid === 'user') {
         const token = authUser.authTokens.find((token) => token.jti === jwt.jti);
         if (token) {
+          if ((token.subject || authUser.id) !== jwt.sub || !(token.expiresAt > new Date())) {
+            throw new Error();
+          }
           await updateAuthToken(ctx, authUser, token);
         } else {
           // Note that bearer user may not be the same
@@ -46,7 +49,11 @@ function authorizeUser() {
 
           if (bearerUser) {
             const token = bearerUser.authTokens.find((token) => token.jti === jwt.jti);
-            await updateAuthToken(ctx, authUser, token);
+            // Only the target recorded at issuance may use an impersonation token.
+            if (token.subject !== jwt.sub || !(token.expiresAt > new Date())) {
+              throw new Error();
+            }
+            await updateAuthToken(ctx, bearerUser, token);
           } else if (ENV_NAME !== 'test') {
             throw new Error();
           }
