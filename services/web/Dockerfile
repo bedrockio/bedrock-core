@@ -1,6 +1,6 @@
 # Base layer: runtime essentials shared by the build and production stages.
 # pnpm is intentionally NOT installed here so it stays out of the production image.
-FROM node:26.3.0-alpine AS base
+FROM node:26.12.1-alpine AS base
 
 RUN apk add --update bash curl
 

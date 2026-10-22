@@ -1,5 +1,5 @@
 # Build stage: install production dependencies with pnpm.
-FROM node:26.3.0-alpine AS deps
+FROM node:26.12.1-alpine AS deps
 
 # devDependencies (vitest, eslint, etc.) are run on the host, not in the image.
 ARG NODE_ENV=production
@@ -14,7 +14,7 @@ RUN --mount=type=cache,target=/root/.local/share/pnpm/store --mount=type=cache,t
 
 # Runtime stage: node + production node_modules + source only. No pnpm or npm
 # caches, so the image stays small.
-FROM node:26.3.0-alpine
+FROM node:26.12.1-alpine
 
 # Note layers should be ordered from less to more likely to change.
 
