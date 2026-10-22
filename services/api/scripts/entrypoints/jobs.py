@@ -99,6 +99,10 @@ subprocess.run([
 # This preserves our logging configuration.
 sys.argv = ["yacron", "-c", "job.yml"]
 
+import asyncio
+
 from yacron.__main__ import main  # type: ignore
 
+# yacron 0.19.0 calls asyncio.get_event_loop(), which raises on Python 3.14.
+asyncio.set_event_loop(asyncio.new_event_loop())
 main()
