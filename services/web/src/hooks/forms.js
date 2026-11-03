@@ -1,4 +1,4 @@
-import { set } from 'lodash';
+import { set } from 'utils/object';
 import { useState } from 'react';
 
 export function useFields(current) {

@@ -1,4 +1,5 @@
-import { get, startCase } from 'lodash';
+import { startCase } from 'es-toolkit';
+import { get } from 'utils/object';
 import PropTypes from 'prop-types';
 import { use } from 'react';
 

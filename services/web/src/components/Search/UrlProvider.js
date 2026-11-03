@@ -1,5 +1,5 @@
 import { useLocation, useNavigate, useQuery } from '@bedrockio/router';
-import { camelCase, snakeCase } from 'lodash';
+import { camelCase, snakeCase } from 'es-toolkit';
 
 import Provider from './Provider';
 import { DEFAULT_SORT } from './const';

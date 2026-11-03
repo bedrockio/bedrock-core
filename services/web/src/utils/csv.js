@@ -1,4 +1,4 @@
-import { get, set } from 'lodash';
+import { get, set } from 'utils/object';
 
 export function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));

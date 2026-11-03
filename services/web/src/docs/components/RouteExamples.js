@@ -1,4 +1,4 @@
-import { get } from 'lodash';
+import { get } from 'utils/object';
 import React from 'react';
 
 import { getRoutePath } from 'docs/utils';

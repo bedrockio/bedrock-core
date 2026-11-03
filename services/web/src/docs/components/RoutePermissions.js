@@ -1,4 +1,5 @@
-import { get, startCase } from 'lodash';
+import { startCase } from 'es-toolkit';
+import { get } from 'utils/object';
 import React from 'react';
 
 import { getRoutePath } from 'docs/utils';

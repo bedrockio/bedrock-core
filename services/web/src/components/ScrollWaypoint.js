@@ -1,4 +1,4 @@
-import { omit } from 'lodash';
+import { omit } from 'es-toolkit';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 

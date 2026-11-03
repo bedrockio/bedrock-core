@@ -1,5 +1,5 @@
 import config from '@bedrockio/config';
-import { pick } from 'lodash-es';
+import { pick } from 'es-toolkit';
 
 const API_URL = config.get('API_URL');
 const ENV_NAME = config.get('ENV_NAME');
@@ -62,7 +62,7 @@ function getTransformedImage(arg, options) {
 }
 
 function getImageDimensions(options) {
-  const dimensions = pick(resolveParams(options), 'width', 'height');
+  const dimensions = pick(resolveParams(options), ['width', 'height']);
   return Object.keys(dimensions).length === 0 ? null : dimensions;
 }
 

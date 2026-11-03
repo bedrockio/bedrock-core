@@ -6,7 +6,8 @@ import mongoose from 'mongoose';
 import config from '@bedrockio/config';
 import Router from '@koa/router';
 
-import { get, set, merge, isEmpty, without, camelCase, kebabCase, startCase } from 'lodash-es';
+import { merge, without, camelCase, kebabCase, startCase } from 'es-toolkit';
+import { get, set } from './object.js';
 import packageJson from '../../package.json' with { type: 'json' };
 
 const pluralize = mongoose.pluralize();
@@ -359,7 +360,7 @@ async function recordRequest(ctx) {
     responseBody = JSON.parse(JSON.stringify(ctx.response.body || {}));
   }
 
-  const hasRequest = requestType && !isEmpty(requestBody);
+  const hasRequest = requestType && Object.keys(requestBody || {}).length > 0;
   const hasResponse = status < 500;
 
   const data = {

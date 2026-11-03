@@ -1,4 +1,4 @@
-import { memoize } from 'lodash';
+import { memoize } from 'es-toolkit';
 
 export const loadScript = memoize(function loadScript(src) {
   return new Promise(function (resolve, reject) {

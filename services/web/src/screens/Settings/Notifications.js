@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { pick } from 'lodash';
+import { pick } from 'es-toolkit';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 

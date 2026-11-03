@@ -1,4 +1,4 @@
-import { isPlainObject } from 'lodash-es';
+import { isPlainObject } from 'es-toolkit';
 import { useCallback, useEffect, useState } from 'react';
 
 import { useDebounce } from 'hooks/debounce';

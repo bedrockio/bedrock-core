@@ -1,6 +1,6 @@
 import { Redirect } from '@bedrockio/router';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { pick, startCase } from 'lodash';
+import { pick, startCase } from 'es-toolkit';
 import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';

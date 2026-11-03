@@ -1,4 +1,4 @@
-import { uniq } from 'lodash';
+import { uniq } from 'es-toolkit';
 import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
 

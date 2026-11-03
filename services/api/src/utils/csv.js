@@ -3,7 +3,8 @@ import { PassThrough, Readable } from 'stream';
 import csv from 'fast-csv';
 import config from '@bedrockio/config';
 import mongoose from 'mongoose';
-import { get, once, startCase } from 'lodash-es';
+import { once, startCase } from 'es-toolkit';
+import { get } from './object.js';
 
 import { serializeObject } from './serialize.js';
 

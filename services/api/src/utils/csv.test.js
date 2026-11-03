@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { kebabCase } from 'lodash-es';
+import { kebabCase } from 'es-toolkit';
 import { csvExport } from './csv.js';
 import { dedent as d } from './string.js';
 import { createAdmin } from './testing/index.js';

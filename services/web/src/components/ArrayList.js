@@ -1,4 +1,4 @@
-import { get } from 'lodash-es';
+import { get } from 'utils/object';
 
 export default function ArrayList(props) {
   const { array = [], field, fallback = '' } = props;

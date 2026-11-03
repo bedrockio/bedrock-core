@@ -1,4 +1,4 @@
-import { debounce } from 'lodash';
+import { debounce } from 'es-toolkit';
 import { useCallback } from 'react';
 
 const DEFAULT_TIMEOUT = 300;

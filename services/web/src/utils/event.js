@@ -1,4 +1,4 @@
-import { debounce } from 'lodash';
+import { debounce } from 'es-toolkit';
 
 const CUSTOM_HANDLERS = {
   onLongPress: (el, options) => {

@@ -1,4 +1,4 @@
-import { noop } from 'lodash';
+import { noop } from 'es-toolkit';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 

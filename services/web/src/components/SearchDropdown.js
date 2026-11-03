@@ -1,4 +1,4 @@
-import { debounce, isEmpty, uniqBy } from 'lodash';
+import { debounce, uniqBy } from 'es-toolkit';
 import { ChevronDown, X } from 'lucide-react';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -24,7 +24,7 @@ import { cn } from '@/lib/utils';
 import { request } from 'utils/api';
 
 function isValueObject(props) {
-  if (props.value && !isEmpty(props.value)) {
+  if (props.value && Object.keys(props.value).length) {
     return Array.isArray(props.value)
       ? typeof props.value[0] === 'object'
       : typeof props.value === 'object';
@@ -137,7 +137,10 @@ export default class SearchDropdown extends React.Component {
   };
 
   getAllItems() {
-    return uniqBy([...this.state.items, ...this.state.selectedItems], 'id');
+    return uniqBy(
+      [...this.state.items, ...this.state.selectedItems],
+      (item) => item.id,
+    );
   }
 
   getOptions() {

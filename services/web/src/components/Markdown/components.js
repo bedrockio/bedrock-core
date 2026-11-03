@@ -1,4 +1,4 @@
-import { deburr, kebabCase } from 'lodash';
+import { deburr, kebabCase } from 'es-toolkit';
 
 import Code from 'components/Code';
 import { ContentLink } from 'components/Link';

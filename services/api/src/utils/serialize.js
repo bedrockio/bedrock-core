@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { Stream } from 'stream';
-import { isPlainObject } from 'lodash-es';
+import { isPlainObject } from 'es-toolkit';
 
 function serializeDocument(doc, ctx) {
   const { authUser } = ctx.state || {};

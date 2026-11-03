@@ -2,7 +2,7 @@
 
 import readline from 'readline';
 import logger from '@bedrockio/logger';
-import { upperFirst, camelCase } from 'lodash-es';
+import { upperFirst, camelCase } from 'es-toolkit';
 import * as models from '../../src/models/index.js';
 import { initialize } from '../../src/utils/database.js';
 

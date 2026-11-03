@@ -1,4 +1,4 @@
-import { get } from 'lodash';
+import { get } from 'utils/object';
 import { useCallback, useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';

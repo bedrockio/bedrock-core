@@ -1,6 +1,6 @@
 /* global AppleID */
 
-import { once } from 'lodash';
+import { once } from 'es-toolkit';
 
 import { request } from 'utils/api';
 import { APPLE_RETURN_URL, APPLE_SERVICE_ID } from 'utils/env';

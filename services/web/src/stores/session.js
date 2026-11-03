@@ -1,5 +1,5 @@
 import { withRouter } from '@bedrockio/router';
-import { omit } from 'lodash';
+import { omit } from 'es-toolkit';
 
 import React, { useCallback, use, useEffect, useRef, useState } from 'react';
 
@@ -280,7 +280,7 @@ function SessionProvider({ children, location }) {
 
   const removeStored = useCallback(
     (key) => {
-      updateStored(omit(state.stored, key));
+      updateStored(omit(state.stored, [key]));
       trackSession('remove', key);
     },
     [state.stored, updateStored],

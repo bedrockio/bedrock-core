@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { lowerFirst } from 'lodash-es';
+import { lowerFirst } from 'es-toolkit';
 
 function fetchByParam(Model, options = {}) {
   const docName = options.as || lowerFirst(Model.modelName);

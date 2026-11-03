@@ -78,7 +78,7 @@ in dev and `serve/middleware/env.js` in production — and read via `src/utils/e
 - [Bedrock Router](https://github.com/bedrockio/router)
 - [Prettier](https://prettier.io/)
 - [Eslint](https://eslint.org/)
-- [Lodash](https://lodash.com/)
+- [es-toolkit](https://es-toolkit.dev/)
 
 ## Other Features
 
@@ -87,13 +87,14 @@ in dev and `serve/middleware/env.js` in production — and read via `src/utils/e
 - Code hotswapping
 - Static server
 
-## Lodash
+## es-toolkit
 
-When using Lodash always used named imports. This will allow tree-shaking to
-remove unneeded modules.
+Import utilities from `es-toolkit`, not `es-toolkit/compat`. Path helpers (`get`, `set`,
+`unset`) live in `utils/object`.
 
 ```js
-import { omit } from 'lodash';
+import { omit } from 'es-toolkit';
+import { get } from 'utils/object';
 ```
 
 ## API Documentation Portal

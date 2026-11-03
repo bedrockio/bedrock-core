@@ -1,4 +1,4 @@
-import { uniqBy } from 'lodash';
+import { uniqBy } from 'es-toolkit';
 import { Check, ChevronsUpDown, X } from 'lucide-react';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';

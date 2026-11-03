@@ -1,4 +1,3 @@
-import { isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
 
 import { Input } from '@/components/ui/input';
@@ -29,7 +28,7 @@ export default function DateRangeFilter(props) {
       delete range[part];
     }
 
-    value = isEmpty(range) ? null : range;
+    value = Object.keys(range).length ? range : null;
 
     setFilters({
       [name]: value,

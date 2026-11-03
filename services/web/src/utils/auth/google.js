@@ -1,6 +1,6 @@
 /* global google */
 
-import { once } from 'lodash';
+import { once } from 'es-toolkit';
 
 import { request } from 'utils/api';
 import { GOOGLE_CLIENT_ID } from 'utils/env';

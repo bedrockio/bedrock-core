@@ -1,4 +1,4 @@
-import { kebabCase } from 'lodash';
+import { kebabCase } from 'es-toolkit';
 
 import * as Authentication from './Authentication.mdx';
 import * as FederatedAuthentication from './FederatedAuthentication.mdx';

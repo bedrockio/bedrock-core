@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { noop } from 'lodash-es';
+import { noop } from 'es-toolkit';
 import { createTestModel } from '@bedrockio/model';
 import { fetchByParam, fetchByParamWithSlug } from './params.js';
 import { context, createUser, createUpload } from '../testing/index.js';

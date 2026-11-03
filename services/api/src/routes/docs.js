@@ -1,7 +1,7 @@
 import yd from '@bedrockio/yada';
 import Router from '@koa/router';
 import { validateBody } from '../utils/middleware/validate.js';
-import { set } from 'lodash-es';
+import { set } from '../utils/object.js';
 
 import { loadDefinition, saveDefinition, generateDefinition } from '../utils/openapi.js';
 

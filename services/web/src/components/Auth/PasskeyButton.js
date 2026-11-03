@@ -1,5 +1,5 @@
 import { useNavigate } from '@bedrockio/router';
-import { noop } from 'lodash';
+import { noop } from 'es-toolkit';
 import { Fingerprint } from 'lucide-react';
 
 import { useSession } from 'stores/session';

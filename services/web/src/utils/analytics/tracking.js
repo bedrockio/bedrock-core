@@ -3,7 +3,7 @@
 // Out of the box tracking with GTM.
 // For more see README.md
 
-import { pick } from 'lodash';
+import { pick } from 'es-toolkit';
 
 const ENABLED = typeof dataLayer !== 'undefined';
 
@@ -62,5 +62,5 @@ function sanitizeResponse(response) {
 }
 
 function sanitize(obj) {
-  return pick(obj.body, PARAM_WHITELIST);
+  return pick(obj || {}, PARAM_WHITELIST);
 }

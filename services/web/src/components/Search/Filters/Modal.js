@@ -1,4 +1,4 @@
-import { omit } from 'lodash';
+import { omit } from 'es-toolkit';
 import { SlidersHorizontal } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -28,11 +28,11 @@ function FilterModal(props) {
   }
 
   useEffect(() => {
-    setFilters({ ...omit(search.filters, 'keyword') });
+    setFilters({ ...omit(search.filters, ['keyword']) });
   }, [opened]);
 
   function getFilterCount() {
-    return Object.keys(omit(search.filters, 'keyword')).length;
+    return Object.keys(omit(search.filters, ['keyword'])).length;
   }
 
   function hasFilters() {

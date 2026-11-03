@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { debounce } from 'lodash';
+import { debounce } from 'es-toolkit';
 import { Check, ChevronsUpDown, LayoutGrid } from 'lucide-react';
 
 import { useSession } from 'stores/session';

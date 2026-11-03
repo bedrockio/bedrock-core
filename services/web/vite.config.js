@@ -6,7 +6,7 @@ import config from '@bedrockio/config';
 import mdx from '@mdx-js/rollup';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
-import { omitBy, template } from 'lodash-es';
+import { omitBy } from 'es-toolkit';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
@@ -40,7 +40,6 @@ export default defineConfig({
   publicDir: 'src/public',
   resolve: {
     alias: {
-      lodash: 'lodash-es',
       '@': path.resolve(__dirname, './src'),
       helpers: path.resolve(__dirname, './src/helpers'),
       screens: path.resolve(__dirname, './src/screens'),
@@ -111,10 +110,12 @@ function partials() {
       mode = config.mode;
     },
     async transformIndexHtml(html) {
+      // Partials are only injected into production builds.
       return html.replace(PARTIAL_REG, (_, file) => {
-        const p = path.resolve('src', file);
-        const t = template(readFileSync(p, 'utf-8'));
-        return t({ BUILD: mode === 'production' });
+        if (mode !== 'production') {
+          return '';
+        }
+        return readFileSync(path.resolve('src', file), 'utf-8');
       });
     },
   };

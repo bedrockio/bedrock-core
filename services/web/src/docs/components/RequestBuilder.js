@@ -1,4 +1,4 @@
-import { get, set } from 'lodash';
+import { get, set } from 'utils/object';
 import React, { useState } from 'react';
 
 import { Circle, Minus, Play, Plus, Trash2 } from 'lucide-react';

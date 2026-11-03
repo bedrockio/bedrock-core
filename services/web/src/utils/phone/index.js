@@ -1,4 +1,4 @@
-import { mapKeys } from 'lodash';
+import { mapKeys } from 'es-toolkit';
 
 import { COUNTRIES } from './const';
 

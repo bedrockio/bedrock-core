@@ -1,4 +1,4 @@
-import { get } from 'lodash';
+import { get } from 'utils/object';
 
 export function expandRoute(route) {
   const [method, path] = route.split(' ');

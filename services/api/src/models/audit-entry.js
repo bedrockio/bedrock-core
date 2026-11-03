@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { createSchema } from '@bedrockio/model';
-import { isEmpty, get } from 'lodash-es';
+import { get } from '../utils/object.js';
 
 import definition from './definitions/audit-entry.json' with { type: 'json' };
 
@@ -77,7 +77,7 @@ schema.statics.append = function (activity, options) {
   const objectFields = this.getObjectFields(options);
 
   // Dont append to the log if nothing changed
-  if (objectFields?.objectAfter && isEmpty(objectFields.objectAfter)) {
+  if (objectFields?.objectAfter && !Object.keys(objectFields.objectAfter).length) {
     return;
   }
 
