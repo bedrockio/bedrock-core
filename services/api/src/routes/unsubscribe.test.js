@@ -39,5 +39,16 @@ describe('/1/unsubscribe', () => {
         },
       ]);
     });
+
+    it('should reject access tokens issued for other actions', async () => {
+      const user = await createUser();
+      const token = createAccessToken(user, {
+        action: 'reset-password',
+        duration: '30m',
+      });
+
+      const response = await request('POST', '/1/unsubscribe', {}, { token });
+      expect(response).toHaveStatus(401);
+    });
   });
 });

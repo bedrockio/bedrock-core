@@ -43,6 +43,20 @@ describe('validateToken', () => {
     await expect(middleware(ctx)).rejects.toHaveProperty('message', 'Token type "user" does not match "sometype".');
   });
 
+  it('should confirm action specified in options', async () => {
+    const middleware = validateToken({
+      type: 'access',
+      action: 'reset-password',
+    });
+
+    const token = jwt.sign({ kid: 'access', action: 'unsubscribe' }, config.get('JWT_SECRET'));
+    const ctx = context({ headers: { authorization: `Bearer ${token}` } });
+    await expect(middleware(ctx)).rejects.toHaveProperty(
+      'message',
+      'Token action "unsubscribe" does not match "reset-password".',
+    );
+  });
+
   it('should fail if token doesnt have right signature', async () => {
     const middleware = validateToken();
     const token = jwt.sign({ kid: 'user' }, 'verysecret');

@@ -13,7 +13,7 @@ function validateToken(options = {}) {
       return next();
     }
 
-    const { type = 'user', optional } = options;
+    const { type = 'user', action, optional } = options;
 
     // ignoring signature for the moment
     const token = getToken(ctx, options);
@@ -38,6 +38,10 @@ function validateToken(options = {}) {
 
     if (payload.kid !== type) {
       throw new TokenError(`Token type "${payload.kid}" does not match "${type}".`);
+    }
+
+    if (action && payload.action !== action) {
+      throw new TokenError(`Token action "${payload.action}" does not match "${action}".`);
     }
 
     // confirming signature
