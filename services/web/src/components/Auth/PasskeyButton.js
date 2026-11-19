@@ -33,6 +33,7 @@ export default function PasskeyButton(props) {
 
   return (
     <Button
+      type="button"
       variant="outline"
       size="icon"
       className="size-[42px] rounded-full"
