@@ -1,4 +1,5 @@
 import Router from '@koa/router';
+import config from '@bedrockio/config';
 
 import meta from './meta.js';
 import docs from './docs.js';
@@ -21,7 +22,12 @@ const router = new Router({
 });
 
 router.use('/meta', meta.routes());
-router.use('/docs', docs.routes());
+
+// Docs editing writes to openapi.json on disk and is unauthenticated.
+if (config.get('ENV_NAME') === 'development') {
+  router.use('/docs', docs.routes());
+}
+
 router.use('/auth', auth.routes());
 router.use('/users', users.routes());
 router.use('/products', products.routes());
