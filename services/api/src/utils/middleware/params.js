@@ -17,6 +17,7 @@ function fetchByParam(Model, options = {}) {
         ctx.throw(403);
       }
       ctx.state[docName] = doc;
+      excludeFromUniqueChecks(ctx, doc);
     } catch (error) {
       ctx.throw(400, error);
     }
@@ -35,8 +36,18 @@ function fetchByParamWithSlug(Model, options) {
       ctx.throw(401);
     }
     ctx.state[docName] = doc;
+    excludeFromUniqueChecks(ctx, doc);
     return next();
   };
+}
+
+// Unique checks in update validation exclude the target document by an id in
+// the body, which clients have no reason to send. Take it from the document the
+// route already resolved. Update validation strips it again before assign.
+function excludeFromUniqueChecks(ctx, doc) {
+  if (ctx.method === 'PATCH' || ctx.method === 'PUT') {
+    ctx.request.body.id = doc.id;
+  }
 }
 
 async function checkAccess(ctx, doc, options = {}) {
@@ -49,6 +60,7 @@ async function checkAccess(ctx, doc, options = {}) {
 // when performing "self" checks for "writeAccess".
 function isSelf(ctx, next) {
   ctx.state.user = ctx.state.authUser;
+  excludeFromUniqueChecks(ctx, ctx.state.authUser);
   return next();
 }
 

@@ -61,6 +61,20 @@ describe('/1/users', () => {
       expect(updatedUser.name).toBe('Other Name');
     });
 
+    it('should allow submitting an unchanged email', async () => {
+      const user = await createUser({ email: 'self@bar.com' });
+      const response = await request('PATCH', '/1/users/me', { firstName: 'New', email: 'self@bar.com' }, { user });
+      expect(response).toHaveStatus(200);
+      expect(response.body.data.firstName).toBe('New');
+    });
+
+    it('should still reject an email taken by another user', async () => {
+      await createUser({ email: 'other@bar.com' });
+      const user = await createUser({ email: 'self@bar.com' });
+      const response = await request('PATCH', '/1/users/me', { email: 'other@bar.com' }, { user });
+      expect(response).toHaveStatus(400);
+    });
+
     it('should be able to patch the device token', async () => {
       let user = await createUser();
       const response = await request(
@@ -320,6 +334,27 @@ describe('/1/users', () => {
       expect(response.body.data.lastName).toBe('Name');
       const dbUser = await User.findById(user1.id);
       expect(dbUser.name).toEqual('New Name');
+    });
+
+    it('should allow submitting an unchanged email', async () => {
+      const admin = await createAdmin();
+      const user1 = await createUser({ email: 'old@bar.com' });
+      const response = await request(
+        'PATCH',
+        `/1/users/${user1.id}`,
+        { firstName: 'New', email: 'old@bar.com' },
+        { user: admin },
+      );
+      expect(response).toHaveStatus(200);
+      expect(response.body.data.firstName).toBe('New');
+    });
+
+    it('should still reject an email taken by another user', async () => {
+      const admin = await createAdmin();
+      await createUser({ email: 'taken@bar.com' });
+      const user1 = await createUser({ email: 'mine@bar.com' });
+      const response = await request('PATCH', `/1/users/${user1.id}`, { email: 'taken@bar.com' }, { user: admin });
+      expect(response).toHaveStatus(400);
     });
 
     it('should deny access to non-admins', async () => {

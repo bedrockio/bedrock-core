@@ -56,6 +56,26 @@ describe('renderTemplate', () => {
     expect(result.body).toBe('Hello from doc, Frank');
   });
 
+  it('should render a long template from document', async () => {
+    // A body longer than the filesystem name limit must not be resolved as a path.
+    const email = ['---', 'subject: Welcome', '---', '', 'Hello {{name}},', '', 'x'.repeat(500)].join('\n');
+    await Template.create({
+      name: 'long',
+      email,
+    });
+
+    const result = await renderTemplate({
+      channel: 'email',
+      template: 'long',
+      params: {
+        name: 'Frank',
+      },
+    });
+
+    expect(result.meta.subject).toBe('Welcome');
+    expect(result.body).toContain('Hello Frank,');
+  });
+
   it('should be able to pass a raw template with channel', async () => {
     const result = await renderTemplate({
       template: 'Hello',
