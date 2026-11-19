@@ -1,24 +1,21 @@
+import yd from '@bedrockio/yada';
 import { User } from '../../models/index.js';
+
+// Identify the account by exactly one of email or phone, so the channel a code
+// is sent to is never ambiguous.
+function validateIdentity(body) {
+  return yd.object(body).custom((val) => {
+    if (val.email && val.phone) {
+      throw new Error('Cannot provide both an email and a phone.');
+    } else if (!val.email && !val.phone) {
+      throw new Error('Either email or phone is required.');
+    }
+  });
+}
 
 async function findUser(ctx) {
   const { phone, email } = ctx.request.body;
-
-  let query;
-  if (phone) {
-    query = { phone };
-  } else if (email) {
-    query = { email };
-  } else {
-    if (phone === '') {
-      ctx.throw(400, 'Phone is required.');
-    } else if (email === '') {
-      ctx.throw(400, 'Email is required.');
-    } else {
-      ctx.throw(400, 'Phone or email is required.');
-    }
-  }
-
-  return await User.findOne(query);
+  return await User.findOne(phone ? { phone } : { email });
 }
 
-export { findUser };
+export { findUser, validateIdentity };

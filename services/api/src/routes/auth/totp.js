@@ -8,18 +8,20 @@ import { login, verifyLoginAttempts } from '../../utils/auth/index.js';
 import { verifyCode, verifyTotp, generateTotp, enableTotp, revokeTotp } from '../../utils/auth/totp.js';
 
 import { AuditEntry } from '../../models/index.js';
-import { findUser } from './utils.js';
+import { findUser, validateIdentity } from './utils.js';
 
 const router = new Router();
 
 router
   .post(
     '/login',
-    validateBody({
-      phone: yd.string().phone(),
-      email: yd.string().email(),
-      code: yd.string().length(6).required(),
-    }),
+    validateBody(
+      validateIdentity({
+        phone: yd.string().phone(),
+        email: yd.string().email(),
+        code: yd.string().length(6).required(),
+      }),
+    ),
     async (ctx) => {
       const { code } = ctx.request.body;
 
