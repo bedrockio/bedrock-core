@@ -97,7 +97,7 @@ environment variables.
 - `SERVER_HOST` - Host to bind to, defaults to `"0.0.0.0"`
 - `SERVER_PORT` - Port to bind to, defaults to `2300`
 - `MONGO_URI` - MongoDB URI to connect to, defaults to `mongodb://localhost/bedrock_dev`
-- `JWT_SECRET` - JWT secret used for token signing and encryption
+- `JWT_SECRET` - Required unique random JWT signing secret, at least 32 characters; there is no default.
 - `ADMIN_NAME` - Default dashboard admin user name `admin`
 - `ADMIN_EMAIL` - Default dashboard admin user `admin@bedrock.foundation`
 - `ADMIN_PASSWORD` - Default dashboard admin password
@@ -114,6 +114,16 @@ environment variables.
 - `TWILIO_MESSAGING_SERVICE_SID` - Twillio Messaging Service SID (required for MFA SMS)
 
 ## Secrets
+
+Before starting the API locally, generate a secret with `openssl rand -hex 32` and set
+`JWT_SECRET` in your shell environment or a gitignored `services/api/.env.local` file.
+Missing, blank, or shorter secrets prevent startup, including the former committed defaults.
+API tests generate a temporary random secret when none is supplied.
+
+Staging and production deployments read `JWT_SECRET` from the Kubernetes Secret named
+`secrets`. Provision it using the deployment [secrets](../../deployment#secrets) facility.
+Use the same secret for API replicas and CLI/jobs processes that exchange tokens. Changing
+the secret invalidates existing tokens; deployments using either former default must rotate it.
 
 No production secrets should ever be checked into your repository. Instead, use the deployment
 [secrets](../../deployment#secrets) facility to store secrets remotely.

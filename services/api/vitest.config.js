@@ -1,7 +1,9 @@
 import { defineConfig } from 'vitest/config';
+import { randomBytes } from 'node:crypto';
 
 process.env.ENV_NAME = 'test';
 process.env.LOG_LEVEL ||= 'warn';
+process.env.JWT_SECRET ||= randomBytes(32).toString('hex');
 
 export default defineConfig({
   test: {
