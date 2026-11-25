@@ -42,6 +42,8 @@ Each service's `pnpm-workspace.yaml` enables a few pnpm
 - `allowBuilds:` — an explicit allowlist of the only dependencies permitted to run install
   scripts (pnpm blocks all others by default). Add a package here if a build it needs is
   being skipped.
+- `strictDepBuilds: false` — when a package that isn't in `allowBuilds` has an install
+  script, pnpm skips the script and prints a warning instead of failing the install.
 
 ### Git worktrees
 
